@@ -126,6 +126,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             background: var(--color-dark);
             color: var(--color-light);
             z-index: 90;
@@ -142,6 +143,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             background: #111;
             z-index: 10000;
             display: flex;
@@ -178,8 +180,8 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full px-8 py-6 flex justify-between items-center z-50 text-black">
-        <a href="/" class="logo font-light tracking-[0.2em] text-sm uppercase hoverable">Wright Key Property</a>
+    <nav class="fixed top-0 left-0 w-full px-8 py-6 flex justify-between items-center z-50 text-white transition-all duration-300" id="main-nav">
+        <a href="/" class="logo font-medium tracking-[0.2em] text-sm uppercase hoverable">Wright Key Property</a>
         <div class="menu-btn cursor-pointer flex gap-2 items-center group hoverable">
             <span class="text-xs tracking-widest uppercase group-hover:opacity-70 transition-opacity">Menu</span>
             <div class="w-8 h-[1px] bg-current group-hover:w-12 transition-all duration-300"></div>
@@ -200,25 +202,41 @@
 
     <main class="smooth-wrapper">
 
-        <!-- Hero Section -->
-        <section class="relative pt-40 pb-20 px-6 md:px-20">
-            <div class="flex flex-col lg:flex-row justify-between items-center lg:items-end mb-24 border-b border-black/10 pb-12">
-                <div class="lg:w-2/3 text-center lg:text-left w-full">
-                    <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4">Capital Growth & Yield</span>
-                    <h1 class="text-5xl md:text-8xl serif italic font-light leading-none">Intelligent <br>Investment.</h1>
-                </div>
-                <div class="lg:w-1/3 mt-8 lg:mt-0 text-center lg:text-left w-full">
-                    <p class="text-gray-600 font-light text-sm leading-relaxed max-w-sm mx-auto lg:ml-auto lg:mr-0">
-                        We specialise in sourcing and developing high-yield HMO opportunities in London. A completely hands-off experience for the modern investor.
-                    </p>
-                </div>
+        <!-- Hero Section with Background Image -->
+        <section class="relative min-h-[70vh] md:min-h-screen flex items-center justify-center overflow-hidden">
+            <!-- Background Image -->
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop"
+                     alt="London Architecture"
+                     class="w-full h-full object-cover"
+                     id="hero-bg">
             </div>
 
-            <!-- Hero Image - Full Color -->
-            <div class="w-full h-[60vh] reveal-img-container transition-all duration-1000">
-                 <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop"
-                      class="reveal-img object-center" alt="London Architecture">
-                 <div class="reveal-overlay"></div>
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 z-10"></div>
+
+            <!-- Content -->
+            <div class="relative z-20 px-6 md:px-20 py-24 md:py-32 max-w-7xl mx-auto text-center">
+                <div class="max-w-4xl mx-auto">
+                    <span class="text-xs text-[#d4af37] uppercase tracking-[0.2em] block mb-4 md:mb-6 font-semibold">Capital Growth & Yield</span>
+                    <h1 class="text-5xl md:text-8xl lg:text-9xl serif italic font-normal leading-none text-white mb-6 md:mb-8" style="text-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+                        Intelligent Investment
+                    </h1>
+                    <p class="text-white/90 font-light text-base md:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto mb-8 md:mb-12 px-4 md:px-0" style="text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                        We specialise in sourcing and developing high-yield HMO opportunities in London. A completely hands-off experience for the modern investor.
+                    </p>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-stretch sm:items-center px-4 md:px-0">
+                        <a href="#contact" class="hoverable inline-flex items-center justify-center gap-2 bg-[#d4af37] hover:bg-[#c29d2f] text-white px-8 md:px-10 py-3 md:py-4 rounded-full text-xs md:text-sm uppercase tracking-[0.15em] font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105">
+                            Get Started
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                        <a href="#metrics" class="hoverable inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white px-8 md:px-10 py-3 md:py-4 rounded-full text-xs md:text-sm uppercase tracking-[0.15em] font-semibold transition-all duration-300 border border-white/30">
+                            View Metrics
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -256,7 +274,7 @@
         </section>
 
         <!-- Dark Contrast Section: The Numbers -->
-        <section class="py-20 md:py-32 px-6 md:px-20 bg-[#1a1a1a] text-[#f5f3ef]">
+        <section id="metrics" class="py-20 md:py-32 px-6 md:px-20 bg-[#1a1a1a] text-[#f5f3ef]">
             <div class="flex flex-col md:flex-row justify-between gap-12 md:gap-16">
                 <div class="md:w-1/2 text-center md:text-left">
                     <h2 class="text-4xl md:text-5xl serif italic font-light mb-6 md:mb-8">The Metrics.</h2>
