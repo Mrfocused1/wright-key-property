@@ -247,7 +247,7 @@
         <section class="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden px-6">
             <!-- Background Video with Parallax -->
             <div class="absolute inset-0 z-0">
-                <video autoplay muted loop playsinline class="hero-video">
+                <video autoplay muted loop playsinline class="hero-video" id="hero-video" poster="assets/hero-luxury-interior.jpg">
                     <source src="assets/hero-video.mp4" type="video/mp4">
                 </video>
                 <div class="hero-video-overlay"></div>
@@ -491,6 +491,18 @@
         // Register GSAP Plugins
         gsap.registerPlugin(ScrollTrigger);
 
+        // Force video autoplay on mobile
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo) {
+            heroVideo.play().catch(function(error) {
+                console.log("Video autoplay failed:", error);
+            });
+            // Also try playing on first user interaction
+            document.addEventListener('touchstart', function() {
+                heroVideo.play();
+            }, { once: true });
+        }
+
         // --- Custom Cursor Logic ---
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
@@ -622,9 +634,9 @@
             gsap.to(".marquee-wrapper", {
                 xPercent: -50,
                 repeat: -1,
-                duration: 15,
+                duration: 6,
                 ease: "linear",
-                repeatDelay: 2
+                repeatDelay: 3
             });
         }
 
