@@ -1,0 +1,36 @@
+{
+  "port": 3000,
+  "files": ["*.html", "*.css", "*.js"],
+  "server": {
+    "baseDir": "./",
+    "middleware": {
+      "0": null
+    }
+  },
+  "rewriteRules": [
+    {
+      "match": "^/coliving$",
+      "fn": function(req, res, match) {
+        return "/coliving.html";
+      }
+    },
+    {
+      "match": "^/search$",
+      "fn": function(req, res, match) {
+        return "/search.html";
+      }
+    },
+    {
+      "match": "^/investor$",
+      "fn": function(req, res, match) {
+        return "/investor.html";
+      }
+    },
+    {
+      "match": "^/property$",
+      "fn": function(req, res, match) {
+        return "/property.html";
+      }
+    }
+  ]
+}
