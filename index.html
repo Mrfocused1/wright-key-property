@@ -247,7 +247,7 @@
         <section class="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden px-6">
             <!-- Background Video with Parallax -->
             <div class="absolute inset-0 z-0">
-                <video autoplay muted loop playsinline class="hero-video" id="hero-video">
+                <video autoplay muted loop playsinline webkit-playsinline preload="auto" class="hero-video" id="hero-video">
                     <source src="assets/hero-video.mp4" type="video/mp4">
                 </video>
                 <div class="hero-video-overlay"></div>
@@ -491,16 +491,34 @@
         // Register GSAP Plugins
         gsap.registerPlugin(ScrollTrigger);
 
-        // Force video autoplay on mobile
+        // Video autoplay handling
         const heroVideo = document.getElementById('hero-video');
+
+        function playVideo() {
+            if (heroVideo) {
+                heroVideo.muted = true; // Ensure muted for autoplay policy
+                const playPromise = heroVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(function(error) {
+                        console.log("Video autoplay failed:", error);
+                    });
+                }
+            }
+        }
+
+        // Try to play immediately
         if (heroVideo) {
-            heroVideo.play().catch(function(error) {
-                console.log("Video autoplay failed:", error);
-            });
-            // Also try playing on first user interaction
-            document.addEventListener('touchstart', function() {
-                heroVideo.play();
-            }, { once: true });
+            // If video is ready, play it
+            if (heroVideo.readyState >= 3) {
+                playVideo();
+            } else {
+                // Wait for video to be ready
+                heroVideo.addEventListener('canplay', playVideo, { once: true });
+            }
+
+            // Fallback: try playing on first user interaction
+            document.addEventListener('touchstart', playVideo, { once: true });
+            document.addEventListener('click', playVideo, { once: true });
         }
 
         // --- Custom Cursor Logic ---
@@ -549,6 +567,8 @@
 
 
         function initSiteAnimations() {
+            // Try to play video again after loader finishes
+            playVideo();
 
             // Hero Text Reveal
             gsap.to('.text-reveal-inner', {
