@@ -491,34 +491,74 @@
         // Register GSAP Plugins
         gsap.registerPlugin(ScrollTrigger);
 
-        // Video autoplay handling
+        // Video autoplay handling - comprehensive mobile solution
         const heroVideo = document.getElementById('hero-video');
+        let videoIsPlaying = false;
 
         function playVideo() {
-            if (heroVideo) {
-                heroVideo.muted = true; // Ensure muted for autoplay policy
-                const playPromise = heroVideo.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(function(error) {
-                        console.log("Video autoplay failed:", error);
+            if (!heroVideo || videoIsPlaying) return;
+
+            // Ensure all autoplay requirements are met
+            heroVideo.muted = true;
+            heroVideo.playsInline = true;
+            heroVideo.webkitPlaysInline = true;
+            heroVideo.setAttribute('playsinline', '');
+            heroVideo.setAttribute('webkit-playsinline', '');
+
+            const playPromise = heroVideo.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        videoIsPlaying = true;
+                    })
+                    .catch(function(error) {
+                        console.log("Video autoplay attempt:", error.message);
+                        videoIsPlaying = false;
                     });
-                }
             }
         }
 
-        // Try to play immediately
         if (heroVideo) {
-            // If video is ready, play it
-            if (heroVideo.readyState >= 3) {
+            // Force load the video
+            heroVideo.load();
+
+            // Strategy 1: Multiple video ready events
+            heroVideo.addEventListener('loadedmetadata', playVideo);
+            heroVideo.addEventListener('loadeddata', playVideo);
+            heroVideo.addEventListener('canplay', playVideo);
+            heroVideo.addEventListener('canplaythrough', playVideo);
+
+            // Strategy 2: Check if already ready
+            if (heroVideo.readyState >= 2) {
                 playVideo();
-            } else {
-                // Wait for video to be ready
-                heroVideo.addEventListener('canplay', playVideo, { once: true });
             }
 
-            // Fallback: try playing on first user interaction
-            document.addEventListener('touchstart', playVideo, { once: true });
-            document.addEventListener('click', playVideo, { once: true });
+            // Strategy 3: Delayed retry attempts
+            setTimeout(playVideo, 100);
+            setTimeout(playVideo, 300);
+            setTimeout(playVideo, 600);
+            setTimeout(playVideo, 1000);
+            setTimeout(playVideo, 2000);
+
+            // Strategy 4: Window load event
+            window.addEventListener('load', playVideo);
+
+            // Strategy 5: Intersection Observer - play when visible
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            playVideo();
+                        }
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(heroVideo);
+            }
+
+            // Strategy 6: User interaction fallbacks
+            ['touchstart', 'touchend', 'click', 'scroll', 'mousemove'].forEach(event => {
+                document.addEventListener(event, playVideo, { once: true, passive: true });
+            });
         }
 
         // --- Custom Cursor Logic ---
