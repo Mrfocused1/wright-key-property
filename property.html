@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Property | Wright Key Property</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --color-dark: #1a1a1a;
+            --color-light: #f5f3ef;
+            --color-gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--color-light);
+            color: var(--color-dark);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Hide custom cursor on mobile and tablets */
+        @media (min-width: 1024px) {
+            body {
+                cursor: none;
+            }
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Custom Cursor - Desktop only */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .cursor-dot,
+            .cursor-outline {
+                display: block;
+            }
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--color-dark);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-color: var(--color-gold);
+        }
+
+        .smooth-wrapper { width: 100%; }
+
+        /* Reveal Image Overlay */
+        .reveal-img-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reveal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.2);
+        }
+
+        .reveal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-light);
+            z-index: 2;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--color-dark);
+            color: var(--color-light);
+            z-index: 90;
+            transform: translateY(-100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #111;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            pointer-events: none;
+        }
+
+        .loader.active {
+            pointer-events: all;
+        }
+
+        .loader-line {
+            width: 0%;
+            height: 1px;
+            background: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#d4af37] selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div class="loader active">
+        <div class="text-center">
+            <h2 class="text-3xl font-light serif italic tracking-widest opacity-0" id="loader-text">LOADING</h2>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full px-8 py-6 flex justify-between items-center z-50 mix-blend-difference text-[#f5f3ef]">
+        <a href="index.html" class="logo font-light tracking-[0.2em] text-sm uppercase hoverable">Wright Key Property</a>
+        <div class="menu-btn cursor-pointer flex gap-2 items-center group hoverable">
+            <span class="text-xs tracking-widest uppercase group-hover:opacity-70 transition-opacity">Menu</span>
+            <div class="w-8 h-[1px] bg-current group-hover:w-12 transition-all duration-300"></div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay">
+        <div class="flex flex-col gap-8 text-center">
+            <a href="index.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Home</a>
+            <a href="coliving.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Co-Living</a>
+            <a href="search.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Browse</a>
+            <a href="investor.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">For Investors</a>
+            <a href="index.html#contact" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Contact</a>
+            <div class="close-menu mt-12 cursor-pointer text-xs uppercase tracking-widest hoverable border rounded-full px-6 py-2 border-white/20 hover:bg-white hover:text-black transition-all">Close</div>
+        </div>
+    </div>
+
+    <main class="smooth-wrapper">
+
+        <!-- Hero Section -->
+        <section class="relative w-full h-[85vh] overflow-hidden">
+            <!-- Background Image -->
+            <div class="reveal-img-container h-full w-full">
+                <img id="hero-image"
+                     src="https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=1000&auto=format&fit=crop"
+                     alt="Property"
+                     class="reveal-img object-cover object-bottom brightness-[0.85]">
+                <div class="reveal-overlay bg-[#1a1a1a]"></div>
+            </div>
+
+            <!-- Content Overlay -->
+            <div class="absolute bottom-0 left-0 w-full p-6 md:p-20 text-white flex flex-col md:flex-row justify-between items-end">
+                <div>
+                    <span id="hero-status" class="text-xs uppercase tracking-[0.2em] mb-4 block text-[#d4af37]">Available Now</span>
+                    <h1 id="hero-title" class="text-6xl md:text-8xl serif italic font-light leading-none mb-2">Property Name</h1>
+                    <p id="hero-location" class="text-sm font-light tracking-widest uppercase opacity-80">Location</p>
+                </div>
+                <div class="mt-8 md:mt-0 text-right">
+                    <p class="text-3xl serif italic"><span id="hero-price">£0</span> <span class="text-xs font-sans not-italic text-white/60 uppercase tracking-widest">pcm</span></p>
+                    <p class="text-xs uppercase tracking-widest mt-2 opacity-60">Bills Included</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Specs Strip -->
+        <section id="specs-section" class="border-b border-black/10 py-8 px-6 md:px-20 flex flex-wrap gap-8 md:gap-20 text-xs uppercase tracking-widest text-gray-500">
+            <!-- Dynamically populated -->
+        </section>
+
+        <!-- Main Content: Description & Amenities -->
+        <section class="py-20 px-6 md:px-20">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <!-- Left: Description -->
+                <div class="lg:col-span-7 space-y-8">
+                    <h2 id="desc-title" class="text-4xl serif italic text-black">Refined Living.</h2>
+                    <div id="description-content" class="text-gray-600 font-light leading-relaxed space-y-6">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Right: Amenities List -->
+                <div class="lg:col-span-5 bg-white p-10 border border-black/5">
+                    <h3 class="text-lg serif text-black mb-8">Features & Amenities</h3>
+                    <ul id="amenities-list" class="space-y-4">
+                        <!-- Dynamically populated -->
+                    </ul>
+                    <div class="mt-10">
+                         <a href="#enquiry" class="block w-full text-center bg-[#1a1a1a] text-white py-4 text-xs uppercase tracking-widest hover:bg-[#d4af37] transition-colors hoverable">
+                            Book a Viewing
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Grid -->
+        <section class="py-12 px-6 md:px-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[100vh] md:h-[80vh]">
+                <!-- Large Left Image -->
+                <div class="reveal-img-container h-full w-full">
+                    <img id="gallery-1"
+                         src="https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?q=80&w=1000&auto=format&fit=crop"
+                         class="reveal-img" alt="Interior Details">
+                    <div class="reveal-overlay"></div>
+                </div>
+                <!-- Right Column (Stacked) -->
+                <div class="grid grid-rows-2 gap-4 h-full">
+                     <div class="reveal-img-container w-full h-full">
+                        <img id="gallery-2"
+                             src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=1000&auto=format&fit=crop"
+                             class="reveal-img" alt="Bedroom">
+                        <div class="reveal-overlay"></div>
+                    </div>
+                     <div class="reveal-img-container w-full h-full">
+                        <img id="gallery-3"
+                             src="https://images.unsplash.com/photo-1584622750111-9f67bfa8c618?q=80&w=1000&auto=format&fit=crop"
+                             class="reveal-img" alt="Workspace">
+                        <div class="reveal-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enquiry Form Section -->
+        <section id="enquiry" class="py-32 px-6 md:px-20 bg-white border-t border-black/5">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-16">
+                    <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4">Interest</span>
+                    <h2 class="text-5xl serif italic font-light mb-6">Enquire About This Space</h2>
+                    <p class="text-gray-500 font-light">Complete the form below to arrange a viewing for <strong id="enquiry-property-name"></strong>.</p>
+                </div>
+
+                <form class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-xs uppercase tracking-widest text-gray-400">Full Name</label>
+                            <input type="text" class="w-full bg-transparent border-b border-black/20 py-3 outline-none focus:border-black transition-colors hoverable">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs uppercase tracking-widest text-gray-400">Email Address</label>
+                            <input type="email" class="w-full bg-transparent border-b border-black/20 py-3 outline-none focus:border-black transition-colors hoverable">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-xs uppercase tracking-widest text-gray-400">Phone Number</label>
+                            <input type="tel" class="w-full bg-transparent border-b border-black/20 py-3 outline-none focus:border-black transition-colors hoverable">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs uppercase tracking-widest text-gray-400">Tenant Type</label>
+                            <div class="relative hoverable">
+                                <select class="w-full bg-transparent border-b border-black/20 py-3 outline-none focus:border-black transition-colors text-gray-700 appearance-none rounded-none cursor-pointer">
+                                    <option>Working Professional</option>
+                                    <option>Student</option>
+                                    <option>NHS Staff</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs uppercase tracking-widest text-gray-400">Message (Optional)</label>
+                        <textarea rows="3" class="w-full bg-transparent border-b border-black/20 py-3 outline-none focus:border-black transition-colors hoverable resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-8 text-center">
+                        <button class="bg-[#d4af37] text-black px-16 py-5 rounded-full text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-500 hoverable">
+                            Submit Enquiry
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-black text-white/40 py-12 px-6 border-t border-white/10">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-end text-center md:text-left">
+                <div>
+                    <h3 class="text-white text-2xl serif italic mb-2">Wright Key Property</h3>
+                    <p class="text-xs">© 2024 All Rights Reserved.</p>
+                </div>
+                <div class="flex gap-6 mt-6 md:mt-0 text-xs uppercase tracking-widest">
+                    <a href="index.html" class="hover:text-white transition-colors hoverable">Home</a>
+                    <a href="#" class="hover:text-white transition-colors hoverable">Instagram</a>
+                    <a href="#" class="hover:text-white transition-colors hoverable">LinkedIn</a>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Property Data Script -->
+    <script>
+        // Property database
+        const properties = {
+            'kensington': {
+                name: 'The Kensington Edit',
+                preloaderName: 'THE KENSINGTON',
+                location: 'Kensington • London W8',
+                price: '£1,450',
+                status: 'Available Now',
+                type: 'Studio Suite',
+                image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=1000&auto=format&fit=crop',
+                descTitle: 'Refined Living in W8.',
+                description: [
+                    'Situated on a quiet residential street moments from High Street Kensington, this meticulously refurbished studio suite offers a sanctuary from the city. Designed with the modern professional in mind, the space blends period character with contemporary convenience.',
+                    'The studio features bespoke joinery, providing ample storage and a seamless aesthetic. A dedicated workspace with ultra-fast fibre broadband ensures productivity, while the kitchenette comes fully equipped with Smeg appliances.',
+                    'Residents enjoy access to a private communal garden square, weekly cleaning services, and our dedicated community manager to handle any day-to-day needs.'
+                ],
+                specs: [
+                    { icon: 'home', text: 'Studio Suite' },
+                    { icon: 'maximize', text: '280 Sq Ft' },
+                    { icon: 'book-open', text: 'En-Suite Bath' },
+                    { icon: 'clock', text: 'Available Immediately' }
+                ],
+                amenities: [
+                    { label: 'Connectivity', value: '1GB Fibre Optic' },
+                    { label: 'Cleaning', value: 'Weekly Included' },
+                    { label: 'Bills', value: 'All Inclusive' },
+                    { label: 'Furnishing', value: 'Designer Package' },
+                    { label: 'Outdoor', value: 'Communal Garden' },
+                    { label: 'Transport', value: 'Kensington (5 min)' }
+                ],
+                gallery: [
+                    'https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1584622750111-9f67bfa8c618?q=80&w=1000&auto=format&fit=crop'
+                ]
+            },
+            'shoreditch': {
+                name: 'Shoreditch Loft',
+                preloaderName: 'SHOREDITCH LOFT',
+                location: 'Shoreditch • E1',
+                price: '£1,200',
+                status: 'Available Now',
+                type: 'Double Room',
+                image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1000&auto=format&fit=crop',
+                descTitle: 'Urban Living in Shoreditch.',
+                description: [
+                    'Located in the heart of Shoreditch creative district, this contemporary double room offers the perfect base for young professionals seeking vibrant city living.',
+                    'The space features exposed brick walls, high ceilings, and large windows flooding the room with natural light. A private balcony provides stunning city views.',
+                    'Shared living spaces include a fully-equipped modern kitchen, comfortable lounge area, and access to building amenities including bike storage and co-working space.'
+                ],
+                specs: [
+                    { icon: 'home', text: 'Double Room' },
+                    { icon: 'maximize', text: '180 Sq Ft' },
+                    { icon: 'book-open', text: 'Shared Bath' },
+                    { icon: 'clock', text: 'Available Now' }
+                ],
+                amenities: [
+                    { label: 'Connectivity', value: '1GB Fibre' },
+                    { label: 'Cleaning', value: 'Weekly' },
+                    { label: 'Bills', value: 'Included' },
+                    { label: 'Furnishing', value: 'Furnished' },
+                    { label: 'Outdoor', value: 'Balcony' },
+                    { label: 'Transport', value: 'Old Street (3 min)' }
+                ],
+                gallery: [
+                    'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=1000&auto=format&fit=crop'
+                ]
+            },
+            'chelsea': {
+                name: 'Chelsea Townhouse',
+                preloaderName: 'CHELSEA',
+                location: 'Chelsea • SW3',
+                price: '£1,600',
+                status: 'Available Now',
+                type: 'Master Room',
+                image: 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1000&auto=format&fit=crop',
+                descTitle: 'Elegant Chelsea Living.',
+                description: [
+                    'This exceptional master bedroom is located in a beautifully restored Victorian townhouse in one of Chelsea\'s most prestigious addresses.',
+                    'The room features original period details including high ceilings, ornate cornicing, and a marble fireplace, complemented by contemporary furnishings and modern amenities.',
+                    'Residents enjoy access to a private south-facing garden, perfect for al fresco dining and relaxation in the heart of London.'
+                ],
+                specs: [
+                    { icon: 'home', text: 'Master Room' },
+                    { icon: 'maximize', text: '320 Sq Ft' },
+                    { icon: 'book-open', text: 'En-Suite' },
+                    { icon: 'clock', text: 'Available Now' }
+                ],
+                amenities: [
+                    { label: 'Connectivity', value: '500MB Fibre' },
+                    { label: 'Cleaning', value: 'Twice Weekly' },
+                    { label: 'Bills', value: 'All Inclusive' },
+                    { label: 'Furnishing', value: 'Designer' },
+                    { label: 'Outdoor', value: 'Private Garden' },
+                    { label: 'Transport', value: 'Sloane Square (4 min)' }
+                ],
+                gallery: [
+                    'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1540518614846-7eded433c457?q=80&w=1000&auto=format&fit=crop'
+                ]
+            },
+            'greenwich': {
+                name: 'Greenwich Collection',
+                preloaderName: 'GREENWICH',
+                location: 'Greenwich • SE10',
+                price: '£1,100',
+                status: 'Available Now',
+                type: 'En-Suite Room',
+                image: 'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?q=80&w=1000&auto=format&fit=crop',
+                descTitle: 'Riverside Greenwich Living.',
+                description: [
+                    'Offering stunning river views, this en-suite room in Greenwich provides a peaceful retreat with excellent transport connections to Canary Wharf and Central London.',
+                    'The property features contemporary interiors with floor-to-ceiling windows, modern kitchen facilities, and a spacious living area perfect for socializing.',
+                    'Located moments from Greenwich Park and the historic Maritime Quarter, residents enjoy the best of both urban convenience and green space.'
+                ],
+                specs: [
+                    { icon: 'home', text: 'En-Suite Room' },
+                    { icon: 'maximize', text: '200 Sq Ft' },
+                    { icon: 'book-open', text: 'Private Bath' },
+                    { icon: 'clock', text: 'Available Now' }
+                ],
+                amenities: [
+                    { label: 'Connectivity', value: '500MB Fibre' },
+                    { label: 'Cleaning', value: 'Weekly' },
+                    { label: 'Bills', value: 'Included' },
+                    { label: 'Furnishing', value: 'Modern' },
+                    { label: 'View', value: 'River View' },
+                    { label: 'Transport', value: 'Greenwich (2 min)' }
+                ],
+                gallery: [
+                    'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=1000&auto=format&fit=crop'
+                ]
+            },
+            'hackney': {
+                name: 'Hackney Warehouse',
+                preloaderName: 'HACKNEY',
+                location: 'Hackney • E8',
+                price: '£1,350',
+                status: 'Available Now',
+                type: 'Double Room',
+                image: 'https://images.unsplash.com/photo-1512918760513-95f192972701?q=80&w=1000&auto=format&fit=crop',
+                descTitle: 'Industrial Chic in Hackney.',
+                description: [
+                    'This converted warehouse space in trendy Hackney offers a unique living experience with industrial charm and modern comfort combined.',
+                    'High ceilings, exposed brickwork, and steel beams create a distinctive loft-style aesthetic, while contemporary furnishings ensure comfort and functionality.',
+                    'The building features a communal rooftop terrace with panoramic city views, perfect for summer evenings and socializing with fellow residents.'
+                ],
+                specs: [
+                    { icon: 'home', text: 'Double Room' },
+                    { icon: 'maximize', text: '220 Sq Ft' },
+                    { icon: 'book-open', text: 'Shared Bath' },
+                    { icon: 'clock', text: 'Available Now' }
+                ],
+                amenities: [
+                    { label: 'Connectivity', value: '1GB Fibre' },
+                    { label: 'Cleaning', value: 'Weekly' },
+                    { label: 'Bills', value: 'All Inclusive' },
+                    { label: 'Furnishing', value: 'Industrial Style' },
+                    { label: 'Outdoor', value: 'Roof Terrace' },
+                    { label: 'Transport', value: 'London Fields (4 min)' }
+                ],
+                gallery: [
+                    'https://images.unsplash.com/photo-1512918760513-95f192972701?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1000&auto=format&fit=crop'
+                ]
+            },
+            'islington': {
+                name: 'Islington Terrace',
+                preloaderName: 'ISLINGTON',
+                location: 'Islington • N1',
+                price: '£1,550',
+                status: 'Available Now',
+                type: 'Studio',
+                image: 'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?q=80&w=1000&auto=format&fit=crop',
+                descTitle: 'Period Charm in Islington.',
+                description: [
+                    'This charming studio in a Georgian terrace combines period features with modern living, situated in one of North London\'s most desirable neighborhoods.',
+                    'Original sash windows, wooden floorboards, and decorative moldings blend seamlessly with contemporary kitchen and bathroom fittings.',
+                    'The vibrant Upper Street is on your doorstep, offering an array of independent shops, restaurants, and entertainment venues, while Angel station provides excellent transport links.'
+                ],
+                specs: [
+                    { icon: 'home', text: 'Studio' },
+                    { icon: 'maximize', text: '300 Sq Ft' },
+                    { icon: 'book-open', text: 'En-Suite' },
+                    { icon: 'clock', text: 'Available Now' }
+                ],
+                amenities: [
+                    { label: 'Connectivity', value: '500MB Fibre' },
+                    { label: 'Cleaning', value: 'Bi-Weekly' },
+                    { label: 'Bills', value: 'Included' },
+                    { label: 'Furnishing', value: 'Period Style' },
+                    { label: 'Features', value: 'Original Details' },
+                    { label: 'Transport', value: 'Angel (3 min)' }
+                ],
+                gallery: [
+                    'https://images.unsplash.com/photo-1484154218962-a1c002085d2f?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?q=80&w=1000&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1000&auto=format&fit=crop'
+                ]
+            }
+        };
+
+        // Get property ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const propertyId = urlParams.get('id') || 'kensington';
+        const property = properties[propertyId] || properties['kensington'];
+
+        // Update page title
+        document.getElementById('page-title').textContent = `${property.name} | Wright Key Property`;
+
+        // Update preloader
+        document.getElementById('loader-text').textContent = property.preloaderName;
+
+        // Update hero section
+        document.getElementById('hero-image').src = property.image;
+        document.getElementById('hero-image').alt = property.name;
+        document.getElementById('hero-status').textContent = property.status;
+        document.getElementById('hero-title').textContent = property.name;
+        document.getElementById('hero-location').textContent = property.location;
+        document.getElementById('hero-price').textContent = property.price;
+
+        // Update specs
+        const specsSection = document.getElementById('specs-section');
+        specsSection.innerHTML = property.specs.map(spec => `
+            <div class="flex items-center gap-3">
+                <i data-lucide="${spec.icon}" class="w-4 h-4"></i>
+                <span>${spec.text}</span>
+            </div>
+        `).join('');
+
+        // Update description
+        document.getElementById('desc-title').textContent = property.descTitle;
+        document.getElementById('description-content').innerHTML = property.description.map(p =>
+            `<p>${p}</p>`
+        ).join('');
+
+        // Update amenities
+        const amenitiesList = document.getElementById('amenities-list');
+        amenitiesList.innerHTML = property.amenities.map(amenity => `
+            <li class="flex items-center justify-between border-b border-black/5 pb-2">
+                <span class="text-sm text-gray-500 font-light">${amenity.label}</span>
+                <span class="text-sm text-black">${amenity.value}</span>
+            </li>
+        `).join('');
+
+        // Update gallery
+        document.getElementById('gallery-1').src = property.gallery[0];
+        document.getElementById('gallery-2').src = property.gallery[1];
+        document.getElementById('gallery-3').src = property.gallery[2];
+
+        // Update enquiry form
+        document.getElementById('enquiry-property-name').textContent = property.name;
+    </script>
+
+    <!-- GSAP & Animations Script -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Custom Cursor (Desktop only) ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const body = document.body;
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            gsap.to(cursorOutline, { x: posX, y: posY, duration: 0.15, ease: "power2.out" });
+        });
+
+        const hoverables = document.querySelectorAll('.hoverable');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => body.classList.remove('hovering'));
+        });
+
+        // --- Preloader ---
+        const loader = document.querySelector('.loader');
+        const isMobileDevice = window.innerWidth < 768;
+        const preloaderDuration = isMobileDevice ? 0.5 : 1;
+
+        const tlLoader = gsap.timeline();
+        tlLoader.to('#loader-text', { opacity: 1, duration: 0.3 * preloaderDuration, ease: "power2.out" })
+            .to('.loader-line', { width: '100%', duration: 0.6 * preloaderDuration, ease: "power2.inOut" })
+            .to('#loader-text, .loader-line', { opacity: 0, duration: 0.2 * preloaderDuration })
+            .to('.loader', {
+                opacity: 0,
+                duration: 0.3 * preloaderDuration,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    loader.style.visibility = 'hidden';
+                    loader.style.display = 'none';
+                    loader.classList.remove('active');
+                    document.body.style.overflow = '';
+                    initPageAnimations();
+                }
+            });
+
+        // Fallback timeout
+        setTimeout(() => {
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                loader.style.display = 'none';
+                loader.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }, 3000);
+
+        function initPageAnimations() {
+            // Reveal Overlay Images (Hero & Gallery)
+            const revealContainers = document.querySelectorAll('.reveal-img-container');
+            revealContainers.forEach(container => {
+                let overlay = container.querySelector('.reveal-overlay');
+                let img = container.querySelector('.reveal-img');
+
+                let tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top 85%",
+                    }
+                });
+
+                tl.to(overlay, {
+                    height: "0%",
+                    duration: 1.2,
+                    ease: "power4.inOut"
+                })
+                .to(img, {
+                    scale: 1,
+                    duration: 1.4,
+                    ease: "power2.out",
+                    delay: -1.2
+                });
+            });
+
+            // Parallax for all images (Desktop only)
+            if (!isMobileDevice) {
+                const images = document.querySelectorAll('.reveal-img');
+                images.forEach(img => {
+                     gsap.to(img, {
+                        yPercent: 15,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: img.parentElement,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+                });
+            }
+
+            // Text Reveals
+            gsap.from('h1', { y: 50, opacity: 0, duration: 1, delay: 0.5, ease: "power3.out" });
+            gsap.from('.lg\\:col-span-7 p', {
+                y: 30, opacity: 0, duration: 1, stagger: 0.2,
+                scrollTrigger: { trigger: '.lg\\:col-span-7', start: "top 80%" }
+            });
+            gsap.from('.border-b', {
+                scaleX: 0, transformOrigin: "left", duration: 1, stagger: 0.1,
+                scrollTrigger: { trigger: 'ul', start: "top 85%" }
+            });
+        }
+
+        // --- Navigation Logic ---
+        const menuBtn = document.querySelector('.menu-btn');
+        const closeMenu = document.querySelector('.close-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const tlMenu = gsap.timeline({ paused: true });
+
+        tlMenu.to(menuOverlay, { y: "0%", duration: 0.8, ease: "expo.inOut" })
+              .from(menuLinks, { y: 50, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" }, "-=0.4");
+
+        menuBtn.addEventListener('click', () => { tlMenu.play(); body.style.overflow = "hidden"; });
+        closeMenu.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
