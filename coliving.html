@@ -119,6 +119,20 @@
             z-index: 2;
         }
 
+        /* Fix for mobile - ensure content is visible without relying on JS animations */
+        @media (max-width: 767px) {
+            .reveal-overlay {
+                height: 0% !important;
+            }
+            .reveal-img {
+                transform: scale(1) !important;
+            }
+            #featured-spaces .group {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+        }
+
         /* Menu Overlay */
         .menu-overlay {
             position: fixed;
@@ -620,7 +634,7 @@
                     <h3 class="text-white text-2xl serif italic mb-2">Wright Key Property</h3>
                     <p class="text-xs">© 2024 All Rights Reserved.</p>
                 </div>
-                <div class="flex gap-6 mt-6 md:mt-0 text-xs uppercase tracking-widest">
+                <div class="flex justify-center md:justify-start gap-6 mt-6 md:mt-0 text-xs uppercase tracking-widest">
                     <a href="/" class="hover:text-white transition-colors hoverable">Home</a>
                     <a href="#" class="hover:text-white transition-colors hoverable">Instagram</a>
                     <a href="#" class="hover:text-white transition-colors hoverable">LinkedIn</a>
