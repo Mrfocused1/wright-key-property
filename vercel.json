@@ -1,0 +1,33 @@
+{
+  "rewrites": [
+    { "source": "/coliving", "destination": "/coliving.html" },
+    { "source": "/search", "destination": "/search.html" },
+    { "source": "/investor", "destination": "/investor.html" },
+    { "source": "/property", "destination": "/property.html" }
+  ],
+  "redirects": [
+    { "source": "/coliving.html", "destination": "/coliving", "permanent": true },
+    { "source": "/search.html", "destination": "/search", "permanent": true },
+    { "source": "/investor.html", "destination": "/investor", "permanent": true },
+    { "source": "/property.html", "destination": "/property", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}

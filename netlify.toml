@@ -1,0 +1,55 @@
+# Netlify configuration for clean URLs
+
+[build]
+  publish = "."
+  command = "echo 'No build command needed'"
+
+[[redirects]]
+  from = "/coliving"
+  to = "/coliving.html"
+  status = 200
+
+[[redirects]]
+  from = "/search"
+  to = "/search.html"
+  status = 200
+
+[[redirects]]
+  from = "/investor"
+  to = "/investor.html"
+  status = 200
+
+[[redirects]]
+  from = "/property"
+  to = "/property.html"
+  status = 200
+
+# Redirect .html URLs to clean URLs (301 permanent redirect)
+[[redirects]]
+  from = "/coliving.html"
+  to = "/coliving"
+  status = 301
+
+[[redirects]]
+  from = "/search.html"
+  to = "/search"
+  status = 301
+
+[[redirects]]
+  from = "/investor.html"
+  to = "/investor"
+  status = 301
+
+[[redirects]]
+  from = "/property.html"
+  to = "/property"
+  status = 301
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

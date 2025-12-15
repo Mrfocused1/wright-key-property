@@ -1,0 +1,28 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Redirect www to non-www (optional)
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# Force HTTPS (optional but recommended)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove .html extension if present in URL
+RewriteCond %{THE_REQUEST} ^GET\ (.*)\.html\ HTTP
+RewriteRule (.*)\.html$ $1 [R=301,L]
+
+# Add .html extension internally for existing files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+)$ $1.html [L,QSA]
+
+# Handle root index
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^$ index.html [L]
+
+# Custom 404 error page (optional)
+ErrorDocument 404 /404.html
