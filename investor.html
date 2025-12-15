@@ -307,63 +307,78 @@
         </section>
 
         <!-- The Process -->
-        <section class="py-20 md:py-32 px-6 md:px-20 bg-gray-50">
+        <section id="how-it-works" class="py-20 md:py-32 px-6 md:px-20 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
             <div class="text-center mb-12 md:mb-20">
-                <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4">The Journey</span>
-                <h2 class="text-4xl md:text-5xl serif font-light">How It Works</h2>
+                <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4 process-header">The Journey</span>
+                <h2 class="text-4xl md:text-5xl serif font-light process-header">How It Works</h2>
             </div>
 
-            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Timeline Connector (Desktop) -->
+            <div class="hidden lg:block max-w-5xl mx-auto mb-8 relative">
+                <div class="absolute top-1/2 left-0 right-0 h-[2px] bg-gray-200">
+                    <div class="timeline-progress absolute top-0 left-0 h-full bg-[#d4af37]" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
                 <!-- Step 1 -->
-                <div class="group hoverable bg-white p-8 rounded-lg border border-black/5 hover:border-[#d4af37] transition-all duration-300 hover:shadow-xl">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-[#d4af37] flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-lg">1</span>
+                <div class="process-card group hoverable bg-white p-8 rounded-2xl border border-black/5 hover:border-[#d4af37] transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0">
+                        <div class="step-number w-14 h-14 rounded-full bg-gradient-to-br from-[#d4af37] to-[#c29d2f] flex items-center justify-center shadow-lg transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                            <span class="text-white font-bold text-xl">1</span>
                         </div>
-                        <h3 class="text-xl md:text-2xl serif italic">Consultation</h3>
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        We analyze your capital and goals to build a tailored investment strategy.
-                    </p>
+                    <div class="pt-8">
+                        <h3 class="text-xl md:text-2xl serif italic mb-3 text-[#1a1a1a]">Consultation</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            We analyze your capital and goals to build a tailored investment strategy.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Step 2 -->
-                <div class="group hoverable bg-white p-8 rounded-lg border border-black/5 hover:border-[#d4af37] transition-all duration-300 hover:shadow-xl">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-[#1a1a1a] flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-lg">2</span>
+                <div class="process-card group hoverable bg-white p-8 rounded-2xl border border-black/5 hover:border-[#d4af37] transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0">
+                        <div class="step-number w-14 h-14 rounded-full bg-gradient-to-br from-[#1a1a1a] to-[#333] flex items-center justify-center shadow-lg transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                            <span class="text-white font-bold text-xl">2</span>
                         </div>
-                        <h3 class="text-xl md:text-2xl serif italic">Acquisition</h3>
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        We source, view, and negotiate the deal, securing it below market value.
-                    </p>
+                    <div class="pt-8">
+                        <h3 class="text-xl md:text-2xl serif italic mb-3 text-[#1a1a1a]">Acquisition</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            We source, view, and negotiate the deal, securing it below market value.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Step 3 -->
-                <div class="group hoverable bg-white p-8 rounded-lg border border-black/5 hover:border-[#d4af37] transition-all duration-300 hover:shadow-xl">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-[#1a1a1a] flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-lg">3</span>
+                <div class="process-card group hoverable bg-white p-8 rounded-2xl border border-black/5 hover:border-[#d4af37] transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0">
+                        <div class="step-number w-14 h-14 rounded-full bg-gradient-to-br from-[#1a1a1a] to-[#333] flex items-center justify-center shadow-lg transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                            <span class="text-white font-bold text-xl">3</span>
                         </div>
-                        <h3 class="text-xl md:text-2xl serif italic">Transformation</h3>
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Our team strips out and refurbishes the property to luxury standards.
-                    </p>
+                    <div class="pt-8">
+                        <h3 class="text-xl md:text-2xl serif italic mb-3 text-[#1a1a1a]">Transformation</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Our team strips out and refurbishes the property to luxury standards.
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Step 4 -->
-                <div class="group hoverable bg-white p-8 rounded-lg border border-black/5 hover:border-[#d4af37] transition-all duration-300 hover:shadow-xl">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-full bg-[#d4af37] flex items-center justify-center flex-shrink-0 shadow-lg">
-                            <span class="text-white font-bold text-lg">4</span>
+                <div class="process-card group hoverable bg-white p-8 rounded-2xl border border-black/5 hover:border-[#d4af37] transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 lg:left-8 lg:translate-x-0">
+                        <div class="step-number w-14 h-14 rounded-full bg-gradient-to-br from-[#d4af37] to-[#c29d2f] flex items-center justify-center shadow-lg transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                            <span class="text-white font-bold text-xl">4</span>
                         </div>
-                        <h3 class="text-xl md:text-2xl serif italic">Income</h3>
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed">
-                        Tenants move in. You receive monthly reports and returns.
-                    </p>
+                    <div class="pt-8">
+                        <h3 class="text-xl md:text-2xl serif italic mb-3 text-[#1a1a1a]">Income</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Tenants move in. You receive monthly reports and returns.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -537,22 +552,71 @@
                 );
             }
 
-            // Reveal Timeline Cards (immediate on page load)
-            const timelineSection = document.querySelector('section.bg-gray-50');
-            if (timelineSection) {
-                const timelineCards = timelineSection.querySelectorAll('.group.hoverable');
-                gsap.fromTo(timelineCards,
+            // Enhanced How It Works Animation with ScrollTrigger
+            const howItWorksSection = document.querySelector('#how-it-works');
+            if (howItWorksSection) {
+                // Animate header
+                gsap.from('.process-header', {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    scrollTrigger: {
+                        trigger: '#how-it-works',
+                        start: "top 80%"
+                    }
+                });
+
+                // Animate timeline progress bar
+                gsap.to('.timeline-progress', {
+                    width: "100%",
+                    duration: 2,
+                    ease: "power2.inOut",
+                    scrollTrigger: {
+                        trigger: '#how-it-works',
+                        start: "top 60%"
+                    }
+                });
+
+                // Animate process cards with stagger
+                const processCards = howItWorksSection.querySelectorAll('.process-card');
+                gsap.fromTo(processCards,
                     {
                         opacity: 0,
-                        y: 40
+                        y: 60,
+                        scale: 0.9
                     },
                     {
                         opacity: 1,
                         y: 0,
+                        scale: 1,
                         duration: 0.8,
+                        stagger: 0.2,
+                        ease: "back.out(1.2)",
+                        scrollTrigger: {
+                            trigger: '#how-it-works',
+                            start: "top 70%"
+                        }
+                    }
+                );
+
+                // Animate step numbers with bounce
+                const stepNumbers = howItWorksSection.querySelectorAll('.step-number');
+                gsap.fromTo(stepNumbers,
+                    {
+                        scale: 0,
+                        rotation: -180
+                    },
+                    {
+                        scale: 1,
+                        rotation: 0,
+                        duration: 0.6,
                         stagger: 0.15,
-                        delay: 1.2,
-                        ease: "power3.out"
+                        ease: "back.out(1.7)",
+                        scrollTrigger: {
+                            trigger: '#how-it-works',
+                            start: "top 70%"
+                        }
                     }
                 );
             }
