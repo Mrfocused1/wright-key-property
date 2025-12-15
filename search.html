@@ -180,7 +180,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full px-8 py-6 flex justify-between items-center z-50 mix-blend-difference text-[#1a1a1a]">
+    <nav class="fixed top-0 left-0 w-full px-8 py-6 flex justify-between items-center z-50 text-black">
         <a href="index.html" class="logo font-light tracking-[0.2em] text-sm uppercase hoverable">Wright Key Property</a>
         <div class="menu-btn cursor-pointer flex gap-2 items-center group hoverable">
             <span class="text-xs tracking-widest uppercase group-hover:opacity-70 transition-opacity">Menu</span>
@@ -194,7 +194,7 @@
             <a href="index.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Home</a>
             <a href="coliving.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Co-Living</a>
             <a href="search.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable text-[#d4af37]">Browse</a>
-            <a href="index.html#investors" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">For Investors</a>
+            <a href="investor.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">For Investors</a>
             <a href="index.html#contact" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Contact</a>
             <div class="close-menu mt-12 cursor-pointer text-xs uppercase tracking-widest hoverable border rounded-full px-6 py-2 border-white/20 hover:bg-white hover:text-black transition-all">Close</div>
         </div>
@@ -379,7 +379,7 @@
                 <!-- Property 5 -->
                 <a href="property.html?id=hackney" class="group cursor-pointer hoverable property-card block">
                     <div class="reveal-img-container aspect-[3/4] w-full mb-6 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1512918760513-95f192972701?q=80&w=1000&auto=format&fit=crop"
+                        <img src="https://images.unsplash.com/photo-1556020685-ae41abfc9365?q=80&w=1000&auto=format&fit=crop"
                              class="reveal-img group-hover:scale-105 transition-transform duration-700 ease-out" alt="Hackney">
                          <div class="reveal-overlay"></div>
                     </div>
@@ -403,7 +403,7 @@
                 <!-- Property 6 -->
                 <a href="property.html?id=islington" class="group cursor-pointer hoverable property-card block">
                     <div class="reveal-img-container aspect-[3/4] w-full mb-6 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1484154218962-a1c002085d2f?q=80&w=1000&auto=format&fit=crop"
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop"
                              class="reveal-img group-hover:scale-105 transition-transform duration-700 ease-out" alt="Islington">
                          <div class="reveal-overlay"></div>
                     </div>
@@ -583,6 +583,72 @@
         menuLinks.forEach(link => {
             link.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
         });
+
+        // --- Filter and Search Functionality ---
+        const locationFilter = document.querySelector('select[name="location"]') || document.querySelectorAll('.custom-select')[0];
+        const typeFilter = document.querySelector('select[name="type"]') || document.querySelectorAll('.custom-select')[1];
+        const budgetFilter = document.querySelector('select[name="budget"]') || document.querySelectorAll('.custom-select')[2];
+        const searchInput = document.querySelector('input[type="text"]');
+        const propertyCards = document.querySelectorAll('.property-card');
+
+        function filterProperties() {
+            const locationValue = locationFilter.value.toLowerCase();
+            const typeValue = typeFilter.value.toLowerCase();
+            const budgetValue = parseInt(budgetFilter.value) || 999999;
+            const searchValue = searchInput.value.toLowerCase();
+
+            propertyCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const location = card.querySelector('.text-gray-500').textContent.toLowerCase();
+                const priceText = card.querySelector('.serif').textContent;
+                const price = parseInt(priceText.replace(/[^0-9]/g, ''));
+                const features = card.querySelector('.text-xs').textContent.toLowerCase();
+
+                let showCard = true;
+
+                // Location filter
+                if (locationValue && !location.includes(locationValue)) {
+                    showCard = false;
+                }
+
+                // Type filter
+                if (typeValue && !features.includes(typeValue)) {
+                    showCard = false;
+                }
+
+                // Budget filter
+                if (price > budgetValue) {
+                    showCard = false;
+                }
+
+                // Search filter
+                if (searchValue && !title.includes(searchValue) && !location.includes(searchValue)) {
+                    showCard = false;
+                }
+
+                // Show/hide card with animation
+                if (showCard) {
+                    gsap.to(card, { opacity: 1, scale: 1, duration: 0.3, display: 'block' });
+                } else {
+                    gsap.to(card, { opacity: 0, scale: 0.95, duration: 0.3, onComplete: () => {
+                        card.style.display = 'none';
+                    }});
+                }
+            });
+        }
+
+        // Add event listeners
+        if (locationFilter) locationFilter.addEventListener('change', filterProperties);
+        if (typeFilter) typeFilter.addEventListener('change', filterProperties);
+        if (budgetFilter) budgetFilter.addEventListener('change', filterProperties);
+        if (searchInput) searchInput.addEventListener('input', filterProperties);
+
+        // Add name attributes to selects for proper filtering
+        if (locationFilter && !locationFilter.getAttribute('name')) {
+            document.querySelectorAll('.custom-select')[0].setAttribute('name', 'location');
+            document.querySelectorAll('.custom-select')[1].setAttribute('name', 'type');
+            document.querySelectorAll('.custom-select')[2].setAttribute('name', 'budget');
+        }
 
         // Initialize Lucide icons
         lucide.createIcons();
