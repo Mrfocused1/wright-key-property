@@ -284,7 +284,7 @@
         </section>
 
         <!-- About / Our Story Section -->
-        <section id="about" class="relative py-32 px-6 md:px-20 bg-[#f5f3ef]">
+        <section id="about" class="relative py-12 md:py-32 px-6 md:px-20 bg-[#f5f3ef]">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                 <!-- Left Vertical Text -->
                 <div class="hidden lg:block lg:col-span-1 relative">
@@ -469,7 +469,7 @@
 
         <!-- Footer -->
         <footer class="bg-[#1a1a1a] text-white/40 py-12 px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-end text-center md:text-left">
                 <div>
                     <h3 class="text-white text-2xl serif italic mb-2">Wright Key Property</h3>
                     <p class="text-xs">© 2024 All Rights Reserved.</p>
@@ -477,7 +477,7 @@
                         Photos by <a href="pexels-credits.json" class="hover:text-white transition-colors" target="_blank">Pexels Contributors</a>
                     </p>
                 </div>
-                <div class="flex gap-6 mt-6 md:mt-0 text-xs uppercase tracking-widest">
+                <div class="flex justify-center md:justify-start gap-6 mt-6 md:mt-0 text-xs uppercase tracking-widest">
                     <a href="#" class="hover:text-white transition-colors hoverable">Instagram</a>
                     <a href="#" class="hover:text-white transition-colors hoverable">LinkedIn</a>
                 </div>
@@ -618,12 +618,13 @@
                 });
             });
 
-            // Marquee Animation
+            // Marquee Animation - faster speed with longer pause before restart
             gsap.to(".marquee-wrapper", {
-                xPercent: -20,
+                xPercent: -50,
                 repeat: -1,
-                duration: 10,
-                ease: "linear"
+                duration: 15,
+                ease: "linear",
+                repeatDelay: 2
             });
         }
 
