@@ -86,6 +86,15 @@
             border-color: var(--color-gold);
         }
 
+        /* Light cursor when menu is open */
+        body.menu-open .cursor-dot {
+            background-color: #fff;
+        }
+
+        body.menu-open .cursor-outline {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
         /* Smooth Scroll Container */
         .smooth-wrapper {
             width: 100%;
@@ -631,17 +640,20 @@
         menuBtn.addEventListener('click', () => {
             tlMenu.play();
             body.style.overflow = "hidden"; // Prevent scrolling
+            body.classList.add('menu-open');
         });
 
         closeMenu.addEventListener('click', () => {
             tlMenu.reverse();
             body.style.overflow = "";
+            body.classList.remove('menu-open');
         });
 
         menuLinks.forEach(link => {
             link.addEventListener('click', () => {
                 tlMenu.reverse();
                 body.style.overflow = "";
+                body.classList.remove('menu-open');
             });
         });
 

@@ -85,6 +85,15 @@
             border-color: var(--color-gold);
         }
 
+        /* Light cursor when menu is open */
+        body.menu-open .cursor-dot {
+            background-color: #fff;
+        }
+
+        body.menu-open .cursor-outline {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
         .smooth-wrapper { width: 100%; }
 
         /* Reveal Image Overlay */
@@ -729,10 +738,22 @@
         tlMenu.to(menuOverlay, { y: "0%", duration: 0.8, ease: "expo.inOut" })
               .from(menuLinks, { y: 50, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" }, "-=0.4");
 
-        menuBtn.addEventListener('click', () => { tlMenu.play(); body.style.overflow = "hidden"; });
-        closeMenu.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
+        menuBtn.addEventListener('click', () => {
+            tlMenu.play();
+            body.style.overflow = "hidden";
+            body.classList.add('menu-open');
+        });
+        closeMenu.addEventListener('click', () => {
+            tlMenu.reverse();
+            body.style.overflow = "";
+            body.classList.remove('menu-open');
+        });
         menuLinks.forEach(link => {
-            link.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
+            link.addEventListener('click', () => {
+                tlMenu.reverse();
+                body.style.overflow = "";
+                body.classList.remove('menu-open');
+            });
         });
 
         // Initialize Lucide icons
