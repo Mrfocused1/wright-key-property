@@ -496,17 +496,18 @@
                 }
             });
 
-            // Reveal Process Steps
-            gsap.from('.group.hoverable', {
-                opacity: 0,
-                y: 30,
-                duration: 1,
-                stagger: 0.2,
-                scrollTrigger: {
-                    trigger: '.max-w-4xl',
-                    start: "top 75%"
-                }
-            });
+            // Reveal Three Pillars (immediate on page load)
+            const pillars = document.querySelectorAll('.py-20 .group.hoverable');
+            if (pillars.length > 0) {
+                gsap.from(pillars, {
+                    opacity: 0,
+                    y: 30,
+                    duration: 1,
+                    stagger: 0.2,
+                    delay: 0.5,
+                    ease: "power3.out"
+                });
+            }
         }
 
         // --- Navigation Logic ---
