@@ -29,3 +29,4 @@ yarn-error.log*
 # Optional: Uncomment if you want to re-fetch assets each time
 # assets/
 # pexels-credits.json
+.vercel
