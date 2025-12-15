@@ -500,16 +500,43 @@
             });
 
             // Reveal Three Pillars (immediate on page load)
-            const pillars = document.querySelectorAll('.py-20 .group.hoverable');
-            if (pillars.length > 0) {
-                gsap.from(pillars, {
-                    opacity: 0,
-                    y: 30,
-                    duration: 1,
-                    stagger: 0.2,
-                    delay: 0.5,
-                    ease: "power3.out"
-                });
+            const pillarsSection = document.querySelector('section.py-20:not(.bg-gray-50)');
+            if (pillarsSection) {
+                const pillars = pillarsSection.querySelectorAll('.group.hoverable');
+                gsap.fromTo(pillars,
+                    {
+                        opacity: 0,
+                        y: 30
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        stagger: 0.2,
+                        delay: 0.5,
+                        ease: "power3.out"
+                    }
+                );
+            }
+
+            // Reveal Timeline Cards (immediate on page load)
+            const timelineSection = document.querySelector('section.bg-gray-50');
+            if (timelineSection) {
+                const timelineCards = timelineSection.querySelectorAll('.group.hoverable');
+                gsap.fromTo(timelineCards,
+                    {
+                        opacity: 0,
+                        y: 40
+                    },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        stagger: 0.15,
+                        delay: 1.2,
+                        ease: "power3.out"
+                    }
+                );
             }
         }
 
