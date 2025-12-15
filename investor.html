@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wright Key Property | For Investors</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Manrope:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --color-dark: #1a1a1a;
+            --color-light: #f5f3ef;
+            --color-gold: #d4af37;
+        }
+
+        body {
+            background-color: var(--color-light);
+            color: var(--color-dark);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Hide custom cursor on mobile and tablets */
+        @media (min-width: 1024px) {
+            body {
+                cursor: none;
+            }
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Custom Cursor - Desktop only */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .cursor-dot,
+            .cursor-outline {
+                display: block;
+            }
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--color-dark);
+        }
+
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        body.hovering .cursor-outline {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(212, 175, 55, 0.1);
+            border-color: var(--color-gold);
+        }
+
+        .smooth-wrapper { width: 100%; }
+
+        /* Reveal Image Overlay */
+        .reveal-img-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reveal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.2);
+        }
+
+        .reveal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-light);
+            z-index: 2;
+        }
+
+        /* Menu Overlay */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--color-dark);
+            color: var(--color-light);
+            z-index: 90;
+            transform: translateY(-100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #111;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            pointer-events: none;
+        }
+
+        .loader.active {
+            pointer-events: all;
+        }
+
+        .loader-line {
+            width: 0%;
+            height: 1px;
+            background: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-[#d4af37] selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Preloader -->
+    <div class="loader active">
+        <div class="text-center">
+            <h2 class="text-3xl font-light serif italic tracking-widest opacity-0" id="loader-text">INVESTMENT</h2>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full px-8 py-6 flex justify-between items-center z-50 mix-blend-difference text-[#1a1a1a]">
+        <a href="index.html" class="logo font-light tracking-[0.2em] text-sm uppercase hoverable">Wright Key Property</a>
+        <div class="menu-btn cursor-pointer flex gap-2 items-center group hoverable">
+            <span class="text-xs tracking-widest uppercase group-hover:opacity-70 transition-opacity">Menu</span>
+            <div class="w-8 h-[1px] bg-current group-hover:w-12 transition-all duration-300"></div>
+        </div>
+    </nav>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay">
+        <div class="flex flex-col gap-8 text-center">
+            <a href="index.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Home</a>
+            <a href="coliving.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Co-Living</a>
+            <a href="search.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Browse</a>
+            <a href="investor.html" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable text-[#d4af37]">For Investors</a>
+            <a href="index.html#contact" class="menu-link text-5xl serif italic hover:text-[#d4af37] transition-colors hoverable">Contact</a>
+            <div class="close-menu mt-12 cursor-pointer text-xs uppercase tracking-widest hoverable border rounded-full px-6 py-2 border-white/20 hover:bg-white hover:text-black transition-all">Close</div>
+        </div>
+    </div>
+
+    <main class="smooth-wrapper">
+
+        <!-- Hero Section -->
+        <section class="relative pt-40 pb-20 px-6 md:px-20">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-24 border-b border-black/10 pb-12">
+                <div class="lg:w-2/3">
+                    <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4">Capital Growth & Yield</span>
+                    <h1 class="text-6xl md:text-8xl serif italic font-light leading-none">Intelligent <br>Investment.</h1>
+                </div>
+                <div class="lg:w-1/3 mt-8 lg:mt-0">
+                    <p class="text-gray-600 font-light text-sm leading-relaxed max-w-sm ml-auto">
+                        We specialise in sourcing and developing high-yield HMO opportunities in London. A completely hands-off experience for the modern investor.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Hero Image - Full Color -->
+            <div class="w-full h-[60vh] reveal-img-container transition-all duration-1000">
+                 <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop"
+                      class="reveal-img object-center" alt="London Architecture">
+                 <div class="reveal-overlay"></div>
+            </div>
+        </section>
+
+        <!-- The Strategy (3 Pillars) -->
+        <section class="py-20 px-6 md:px-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Pillar 1 -->
+                <div class="group hoverable">
+                    <span class="text-4xl serif italic text-[#d4af37] mb-6 block">01</span>
+                    <h3 class="text-2xl serif text-black mb-4">Sourcing</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-6">
+                        We leverage deep local networks to identify off-market properties with significant value-add potential. We don't just find houses; we find margins.
+                    </p>
+                    <div class="w-full h-[1px] bg-black/10 group-hover:bg-[#d4af37] transition-colors duration-500"></div>
+                </div>
+                <!-- Pillar 2 -->
+                <div class="group hoverable">
+                    <span class="text-4xl serif italic text-[#d4af37] mb-6 block">02</span>
+                    <h3 class="text-2xl serif text-black mb-4">Development</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-6">
+                        Our power team of architects and contractors handle the full refurbishment. We convert dated stock into luxury HMOs that command premium rents.
+                    </p>
+                    <div class="w-full h-[1px] bg-black/10 group-hover:bg-[#d4af37] transition-colors duration-500"></div>
+                </div>
+                <!-- Pillar 3 -->
+                <div class="group hoverable">
+                    <span class="text-4xl serif italic text-[#d4af37] mb-6 block">03</span>
+                    <h3 class="text-2xl serif text-black mb-4">Management</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-6">
+                        Truly passive income. We tenant the property with vetted professionals and NHS staff, handling all maintenance and compliance.
+                    </p>
+                    <div class="w-full h-[1px] bg-black/10 group-hover:bg-[#d4af37] transition-colors duration-500"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dark Contrast Section: The Numbers -->
+        <section class="py-32 px-6 md:px-20 bg-[#1a1a1a] text-[#f5f3ef]">
+            <div class="flex flex-col md:flex-row justify-between gap-16">
+                <div class="md:w-1/2">
+                    <h2 class="text-5xl serif italic font-light mb-8">The Metrics.</h2>
+                    <p class="text-gray-400 font-light max-w-md">
+                        Our model is built on data, not guesswork. We focus on areas with strong fundamentals: transport links, hospital proximity, and regeneration zones.
+                    </p>
+                    <button class="mt-12 border border-white/20 px-8 py-4 rounded-full text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all duration-300 hoverable">
+                        Request Case Studies
+                    </button>
+                </div>
+                <div class="md:w-1/2 grid grid-cols-2 gap-8">
+                    <div class="border border-white/10 p-8 flex flex-col justify-center text-center hover:border-[#d4af37] transition-colors hoverable">
+                        <span class="text-5xl serif text-[#d4af37] mb-2">8-12%</span>
+                        <span class="text-xs uppercase tracking-widest text-gray-400">Target Yield</span>
+                    </div>
+                    <div class="border border-white/10 p-8 flex flex-col justify-center text-center hover:border-[#d4af37] transition-colors hoverable">
+                        <span class="text-5xl serif text-[#d4af37] mb-2">3-6</span>
+                        <span class="text-xs uppercase tracking-widest text-gray-400">Months Refurb</span>
+                    </div>
+                    <div class="border border-white/10 p-8 flex flex-col justify-center text-center hover:border-[#d4af37] transition-colors hoverable">
+                        <span class="text-5xl serif text-[#d4af37] mb-2">100%</span>
+                        <span class="text-xs uppercase tracking-widest text-gray-400">Hands Off</span>
+                    </div>
+                    <div class="border border-white/10 p-8 flex flex-col justify-center text-center hover:border-[#d4af37] transition-colors hoverable">
+                        <span class="text-5xl serif text-[#d4af37] mb-2">London</span>
+                        <span class="text-xs uppercase tracking-widest text-gray-400">Prime Focus</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Process -->
+        <section class="py-32 px-6 md:px-20">
+            <div class="text-center mb-24">
+                <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4">The Journey</span>
+                <h2 class="text-5xl serif font-light">How It Works</h2>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-12 relative">
+                <!-- Vertical Line -->
+                <div class="absolute left-[15px] md:left-1/2 top-0 h-full w-[1px] bg-black/10 -translate-x-1/2"></div>
+
+                <!-- Step 1 -->
+                <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16 group hoverable">
+                    <div class="md:w-1/2 text-right hidden md:block">
+                        <h3 class="text-2xl serif italic">Consultation</h3>
+                        <p class="text-gray-500 text-sm mt-2">We analyze your capital and goals to build a tailored strategy.</p>
+                    </div>
+                    <div class="relative z-10 w-8 h-8 rounded-full bg-[#1a1a1a] border-4 border-[#f5f3ef] flex-shrink-0"></div>
+                    <div class="md:w-1/2 pl-12 md:pl-0">
+                         <h3 class="text-2xl serif italic md:hidden">Consultation</h3>
+                         <p class="text-gray-500 text-sm mt-2 md:hidden">We analyze your capital and goals to build a tailored strategy.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16 group hoverable">
+                    <div class="md:w-1/2 text-right hidden md:block"></div>
+                    <div class="relative z-10 w-8 h-8 rounded-full bg-[#1a1a1a] border-4 border-[#f5f3ef] flex-shrink-0"></div>
+                    <div class="md:w-1/2 pl-12 md:pl-0">
+                        <h3 class="text-2xl serif italic">Acquisition</h3>
+                        <p class="text-gray-500 text-sm mt-2">We source, view, and negotiate the deal, securing it below market value.</p>
+                    </div>
+                </div>
+
+                 <!-- Step 3 -->
+                <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16 group hoverable">
+                    <div class="md:w-1/2 text-right hidden md:block">
+                        <h3 class="text-2xl serif italic">Transformation</h3>
+                        <p class="text-gray-500 text-sm mt-2">Our team strips out and refurbishes the property to luxury standards.</p>
+                    </div>
+                    <div class="relative z-10 w-8 h-8 rounded-full bg-[#1a1a1a] border-4 border-[#f5f3ef] flex-shrink-0"></div>
+                    <div class="md:w-1/2 pl-12 md:pl-0">
+                         <h3 class="text-2xl serif italic md:hidden">Transformation</h3>
+                         <p class="text-gray-500 text-sm mt-2 md:hidden">Our team strips out and refurbishes the property to luxury standards.</p>
+                    </div>
+                </div>
+
+                 <!-- Step 4 -->
+                <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16 group hoverable">
+                    <div class="md:w-1/2 text-right hidden md:block"></div>
+                    <div class="relative z-10 w-8 h-8 rounded-full bg-[#d4af37] border-4 border-[#f5f3ef] flex-shrink-0 shadow-[0_0_20px_rgba(212,175,55,0.4)]"></div>
+                    <div class="md:w-1/2 pl-12 md:pl-0">
+                        <h3 class="text-2xl serif italic">Income</h3>
+                        <p class="text-gray-500 text-sm mt-2">Tenants move in. You receive monthly reports and returns.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-32 px-6 md:px-20 text-center bg-white border-t border-black/5">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-5xl md:text-6xl serif font-light mb-8">Partner With Us.</h2>
+                <p class="text-gray-500 mb-12">
+                    Access our private investor list to receive new off-market opportunities directly to your inbox.
+                </p>
+
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="text" placeholder="Name" class="w-full bg-transparent border-b border-black/20 py-4 outline-none focus:border-black transition-colors placeholder:text-gray-400 hoverable">
+                        <input type="email" placeholder="Email" class="w-full bg-transparent border-b border-black/20 py-4 outline-none focus:border-black transition-colors placeholder:text-gray-400 hoverable">
+                    </div>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <input type="text" placeholder="Phone" class="w-full bg-transparent border-b border-black/20 py-4 outline-none focus:border-black transition-colors placeholder:text-gray-400 hoverable">
+                        <div class="relative hoverable">
+                             <select class="w-full bg-transparent border-b border-black/20 py-4 outline-none focus:border-black transition-colors text-gray-500 appearance-none rounded-none">
+                                <option>Investment Budget</option>
+                                <option>£50k - £100k</option>
+                                <option>£100k - £250k</option>
+                                <option>£250k+</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="pt-8">
+                        <button class="bg-[#1a1a1a] text-white px-12 py-4 rounded-full text-xs uppercase tracking-widest hover:bg-[#d4af37] transition-colors hoverable w-full md:w-auto">
+                            Request Investor Pack
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-black text-white/40 py-12 px-6 border-t border-white/10">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-end text-center md:text-left">
+                <div>
+                    <h3 class="text-white text-2xl serif italic mb-2">Wright Key Property</h3>
+                    <p class="text-xs">© 2024 All Rights Reserved.</p>
+                </div>
+                <div class="flex gap-6 mt-6 md:mt-0 text-xs uppercase tracking-widest">
+                    <a href="index.html" class="hover:text-white transition-colors hoverable">Home</a>
+                    <a href="#" class="hover:text-white transition-colors hoverable">Instagram</a>
+                    <a href="#" class="hover:text-white transition-colors hoverable">LinkedIn</a>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Custom Cursor (Desktop only) ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const body = document.body;
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            gsap.to(cursorOutline, { x: posX, y: posY, duration: 0.15, ease: "power2.out" });
+        });
+
+        const hoverables = document.querySelectorAll('.hoverable');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => body.classList.remove('hovering'));
+        });
+
+        // --- Preloader ---
+        const loader = document.querySelector('.loader');
+        const isMobileDevice = window.innerWidth < 768;
+        const preloaderDuration = isMobileDevice ? 0.5 : 1;
+
+        const tlLoader = gsap.timeline();
+        tlLoader.to('#loader-text', { opacity: 1, duration: 0.3 * preloaderDuration, ease: "power2.out" })
+            .to('.loader-line', { width: '100%', duration: 0.6 * preloaderDuration, ease: "power2.inOut" })
+            .to('#loader-text, .loader-line', { opacity: 0, duration: 0.2 * preloaderDuration })
+            .to('.loader', {
+                opacity: 0,
+                duration: 0.3 * preloaderDuration,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    loader.style.visibility = 'hidden';
+                    loader.style.display = 'none';
+                    loader.classList.remove('active');
+                    document.body.style.overflow = '';
+                    initPageAnimations();
+                }
+            });
+
+        // Fallback timeout
+        setTimeout(() => {
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                loader.style.display = 'none';
+                loader.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }, 3000);
+
+        function initPageAnimations() {
+            // Hero Reveal
+            gsap.from('h1', { y: 100, opacity: 0, duration: 1.5, ease: "power4.out" });
+            gsap.from('.lg\\:w-1\\/3 p', { y: 50, opacity: 0, duration: 1, delay: 0.5, ease: "power3.out" });
+
+            // Reveal Overlay Images
+            const revealContainers = document.querySelectorAll('.reveal-img-container');
+            revealContainers.forEach(container => {
+                let overlay = container.querySelector('.reveal-overlay');
+                let img = container.querySelector('.reveal-img');
+
+                let tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: container,
+                        start: "top 85%",
+                    }
+                });
+
+                tl.to(overlay, {
+                    height: "0%",
+                    duration: 1.2,
+                    ease: "power4.inOut"
+                })
+                .to(img, {
+                    scale: 1,
+                    duration: 1.4,
+                    ease: "power2.out",
+                    delay: -1.2
+                });
+            });
+
+            // Reveal Numbers/Stats
+            gsap.from('.border-white\\/10', {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.1,
+                scrollTrigger: {
+                    trigger: '.grid-cols-2',
+                    start: "top 80%"
+                }
+            });
+
+            // Reveal Process Steps
+            gsap.from('.group.hoverable', {
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: '.max-w-4xl',
+                    start: "top 75%"
+                }
+            });
+        }
+
+        // --- Navigation Logic ---
+        const menuBtn = document.querySelector('.menu-btn');
+        const closeMenu = document.querySelector('.close-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const tlMenu = gsap.timeline({ paused: true });
+
+        tlMenu.to(menuOverlay, { y: "0%", duration: 0.8, ease: "expo.inOut" })
+              .from(menuLinks, { y: 50, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" }, "-=0.4");
+
+        menuBtn.addEventListener('click', () => { tlMenu.play(); body.style.overflow = "hidden"; });
+        closeMenu.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
+        menuLinks.forEach(link => {
+            link.addEventListener('click', () => { tlMenu.reverse(); body.style.overflow = ""; });
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
