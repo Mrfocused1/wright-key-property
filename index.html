@@ -618,12 +618,13 @@
                 });
             });
 
-            // Marquee Animation
+            // Marquee Animation - faster speed with longer pause before restart
             gsap.to(".marquee-wrapper", {
-                xPercent: -20,
+                xPercent: -50,
                 repeat: -1,
-                duration: 10,
-                ease: "linear"
+                duration: 15,
+                ease: "linear",
+                repeatDelay: 2
             });
         }
 
