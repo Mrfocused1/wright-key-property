@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-dark: #1a1a1a;
+    --color-light: #f5f3ef;
+    --color-gold: #d4af37;
+    --color-gray: #888888;
+  }
+
+  body {
+    @apply antialiased selection:bg-[#d4af37] selection:text-white;
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  h1, h2, h3, h4, .serif {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}

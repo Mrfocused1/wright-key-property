@@ -1,0 +1,48 @@
+{
+  "images": [
+    {
+      "filename": "hero-luxury-interior.jpg",
+      "photographer": "Lina Kivaka",
+      "url": "https://www.pexels.com/photo/white-and-brown-building-3639504/",
+      "pexelsUrl": "https://images.pexels.com/photos/3639504/pexels-photo-3639504.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "filename": "about-modern-interior.jpg",
+      "photographer": "Medhat Ayad",
+      "url": "https://www.pexels.com/photo/round-beige-and-brown-wooden-table-and-chair-447592/",
+      "pexelsUrl": "https://images.pexels.com/photos/447592/pexels-photo-447592.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "filename": "about-detail.jpg",
+      "photographer": "Monstera Production",
+      "url": "https://www.pexels.com/photo/interior-of-modern-bathroom-with-round-window-6621052/",
+      "pexelsUrl": "https://images.pexels.com/photos/6621052/pexels-photo-6621052.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
+    },
+    {
+      "filename": "investment-property.jpg",
+      "photographer": "Lina Kivaka",
+      "url": "https://www.pexels.com/photo/white-and-brown-building-3639504/",
+      "pexelsUrl": "https://images.pexels.com/photos/3639504/pexels-photo-3639504.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    },
+    {
+      "filename": "property-before.jpg",
+      "photographer": "John  Escudero",
+      "url": "https://www.pexels.com/photo/low-angle-shot-of-leeds-city-centre-10269509/",
+      "pexelsUrl": "https://images.pexels.com/photos/10269509/pexels-photo-10269509.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
+    },
+    {
+      "filename": "property-after.jpg",
+      "photographer": "Gül Işık",
+      "url": "https://www.pexels.com/photo/elegant-curved-staircase-and-draped-doorway-in-london-34415865/",
+      "pexelsUrl": "https://images.pexels.com/photos/34415865/pexels-photo-34415865.jpeg?auto=compress&cs=tinysrgb&h=650&w=940"
+    }
+  ],
+  "videos": [
+    {
+      "filename": "hero-video.mp4",
+      "user": "Kindel Media",
+      "url": "https://www.pexels.com/video/luxurious-bedroom-and-bathroom-7578550/",
+      "pexelsUrl": "https://videos.pexels.com/video-files/7578550/7578550-hd_1280_720_30fps.mp4"
+    }
+  ]
+}

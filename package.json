@@ -1,0 +1,34 @@
+{
+  "name": "wright-key-property",
+  "version": "1.0.0",
+  "description": "Wright Key Property - Luxury Co-Living Website",
+  "main": "index.html",
+  "scripts": {
+    "fetch-assets": "node fetch-pexels.js",
+    "dev": "npx http-server -p 3000 -o",
+    "build:css": "npx tailwindcss -i ./src/css/input.css -o ./dist/output.css --minify"
+  },
+  "keywords": [
+    "property",
+    "luxury",
+    "co-living",
+    "london",
+    "hmo"
+  ],
+  "author": "Wright Key Property",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "gsap": "^3.14.2",
+    "lucide": "^0.561.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "autoprefixer": "^10.4.23",
+    "http-server": "^14.1.1",
+    "playwright": "^1.57.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}
