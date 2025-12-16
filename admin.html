@@ -1293,10 +1293,10 @@ En-Suite
 
         // Load content from API
         async function loadContent() {
-            console.log('[Admin] Loading content...');
+            debugLog('Loading content...');
             try {
                 const url = '/api/content?t=' + Date.now();
-                console.log('[Admin] Fetching:', url);
+                debugLog('Fetching: ' + url);
                 const response = await fetch(url, {
                     cache: 'no-store',
                     headers: {
@@ -1305,21 +1305,21 @@ En-Suite
                     }
                 });
                 const data = await response.json();
-                console.log('[Admin] Load response:', JSON.stringify(data, null, 2));
+                debugLog('Load response:', { success: data.success, hasContent: !!data.content, debug: data.debug });
 
                 if (data.success && data.content) {
                     siteContent = data.content;
-                    console.log('[Admin] Content loaded, keys:', Object.keys(siteContent));
-                    console.log('[Admin] Hero headline1:', siteContent.hero?.headline1);
+                    debugLog('Content loaded, keys: ' + Object.keys(siteContent).join(', '));
+                    debugLog('Hero headline1: ' + (siteContent.hero?.headline1 || '(empty)'));
                     populateFields();
-                    console.log('[Admin] Fields populated');
+                    debugLog('Fields populated');
                 } else if (data.success && !data.content) {
-                    console.log('[Admin] No content saved yet');
+                    debugLog('No content saved yet');
                 } else {
-                    console.error('[Admin] Load failed:', data.error);
+                    debugLog('ERROR Load failed: ' + data.error);
                 }
             } catch (error) {
-                console.error('[Admin] Load error:', error);
+                debugLog('ERROR Load error: ' + error.message);
             }
         }
 
@@ -1540,12 +1540,12 @@ En-Suite
         // Save all content
         async function saveAllContent() {
             updateStatus('Saving...', 'text-yellow-500');
-            console.log('[Admin] Saving content...');
+            debugLog('Saving content...');
 
             try {
                 const content = gatherContent();
-                console.log('[Admin] Content to save:', JSON.stringify(content, null, 2));
-                console.log('[Admin] Hero headline1 being saved:', content.hero?.headline1);
+                debugLog('Hero headline1 to save: ' + (content.hero?.headline1 || '(empty)'));
+                debugLog('Content keys: ' + Object.keys(content).join(', '));
 
                 const response = await fetch('/api/content', {
                     method: 'POST',
@@ -1553,31 +1553,33 @@ En-Suite
                     body: JSON.stringify(content)
                 });
                 const data = await response.json();
-                console.log('[Admin] Save response:', JSON.stringify(data, null, 2));
+                debugLog('Save response:', { success: data.success, url: data.url, error: data.error, debug: data.debug });
 
                 if (data.success) {
                     siteContent = content;
-                    console.log('[Admin] Save successful, blob URL:', data.url);
+                    debugLog('Save successful! Blob: ' + data.url);
 
                     // Verify save by immediately reloading
-                    console.log('[Admin] Verifying save...');
+                    debugLog('Verifying save...');
                     const verifyResponse = await fetch('/api/content?verify=' + Date.now(), {
                         cache: 'no-store',
                         headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
                     });
                     const verifyData = await verifyResponse.json();
-                    console.log('[Admin] Verification response:', JSON.stringify(verifyData, null, 2));
+                    debugLog('Verify response:', { success: verifyData.success, hasContent: !!verifyData.content });
 
                     if (verifyData.success && verifyData.content) {
-                        console.log('[Admin] Verified hero headline1:', verifyData.content.hero?.headline1);
-                        if (verifyData.content.hero?.headline1 === content.hero?.headline1) {
-                            updateStatus('Saved & Verified', 'text-green-500');
+                        const verified = verifyData.content.hero?.headline1;
+                        debugLog('Verified headline1: ' + (verified || '(empty)'));
+                        if (verified === content.hero?.headline1) {
+                            updateStatus('Saved & Verified!', 'text-green-500');
+                            debugLog('SUCCESS: Content verified!');
                         } else {
-                            console.warn('[Admin] Verification mismatch!');
-                            console.warn('[Admin] Saved:', content.hero?.headline1);
-                            console.warn('[Admin] Loaded:', verifyData.content.hero?.headline1);
+                            debugLog('MISMATCH! Saved: ' + content.hero?.headline1 + ' vs Loaded: ' + verified);
                             updateStatus('Saved (verify mismatch)', 'text-yellow-500');
                         }
+                    } else {
+                        debugLog('Verify failed: ' + (verifyData.error || 'no content returned'));
                     }
 
                     setTimeout(() => {
@@ -1588,7 +1590,7 @@ En-Suite
                 }
             } catch (error) {
                 updateStatus('Error: ' + error.message, 'text-red-500');
-                console.error('[Admin] Save error:', error);
+                debugLog('ERROR saving: ' + error.message);
                 alert('Error saving content: ' + error.message);
             }
         }
@@ -1817,11 +1819,38 @@ En-Suite
             alert('URL copied to clipboard!');
         }
 
+        // Debug panel logging
+        const debugLogs = [];
+        function debugLog(msg, data = null) {
+            const time = new Date().toLocaleTimeString();
+            const logEntry = data ? `${time}: ${msg} ${JSON.stringify(data)}` : `${time}: ${msg}`;
+            debugLogs.push(logEntry);
+            if (debugLogs.length > 50) debugLogs.shift();
+            const panel = document.getElementById('debugPanel');
+            if (panel) {
+                panel.innerHTML = debugLogs.map(l => `<div class="py-1 border-b border-gray-700">${l}</div>`).join('');
+                panel.scrollTop = panel.scrollHeight;
+            }
+            console.log(msg, data || '');
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            debugLog('Page loaded, initializing...');
             loadContent();
             renderFormFields();
         });
     </script>
+
+    <!-- Debug Panel (toggle with button) -->
+    <div id="debugContainer" class="fixed bottom-0 left-0 right-0 z-50">
+        <button onclick="document.getElementById('debugPanel').classList.toggle('hidden')"
+                class="bg-gray-800 text-white px-4 py-2 text-xs w-full text-left">
+            Toggle Debug Log
+        </button>
+        <div id="debugPanel" class="hidden bg-gray-900 text-green-400 text-xs p-2 max-h-48 overflow-y-auto font-mono">
+            <div>Debug log initialized...</div>
+        </div>
+    </div>
 </body>
 </html>
