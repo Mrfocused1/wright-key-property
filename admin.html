@@ -12,6 +12,14 @@
         .save-indicator { transition: all 0.3s ease; }
         .save-indicator.saving { opacity: 1; }
         .save-indicator.saved { background: #22c55e; }
+        /* Toggle switch styles */
+        .toggle-switch { position: relative; width: 48px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.3s; border-radius: 24px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+        .toggle-switch input:checked + .toggle-slider { background-color: #22c55e; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+        .section-hidden { opacity: 0.5; }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -37,8 +45,10 @@
 
         <!-- Tabs -->
         <div class="flex gap-2 mb-8 flex-wrap">
-            <button class="tab-btn active px-4 py-2 rounded text-sm" onclick="showTab('hero')">Hero Section</button>
+            <button class="tab-btn active px-4 py-2 rounded text-sm" onclick="showTab('header')">Header/Menu</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('hero')">Hero Section</button>
             <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('about')">About Section</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('stats')">Stats Strip</button>
             <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('investors')">Investors Section</button>
             <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('sourcing')">Sourcing Section</button>
             <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('contact')">Contact Section</button>
@@ -46,10 +56,175 @@
             <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('media')">Media Library</button>
         </div>
 
-        <!-- Hero Section Tab -->
-        <div id="tab-hero" class="tab-content">
+        <!-- Header/Menu Tab -->
+        <div id="tab-header" class="tab-content">
             <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">Hero Section</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">Header & Navigation</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Header</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="header_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Logo Text</label>
+                        <input type="text" id="header_logo_text" class="w-full border rounded px-3 py-2" value="Wright Key Property">
+                    </div>
+
+                    <div class="pt-6 border-t">
+                        <h3 class="text-lg font-medium mb-4">Logo Image (Optional)</h3>
+                        <div class="flex items-center gap-4">
+                            <div id="logoPreview" class="w-48 h-16 bg-gray-200 rounded flex items-center justify-center">
+                                <span class="text-gray-400 text-sm">No logo</span>
+                            </div>
+                            <div>
+                                <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="uploadLogo(this)">
+                                <button onclick="document.getElementById('logoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
+                                    Upload Logo
+                                </button>
+                                <button onclick="removeLogo()" class="ml-2 text-red-500 text-sm hover:underline">Remove</button>
+                                <p class="text-xs text-gray-400 mt-2">Recommended: PNG with transparent background</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t">
+                        <h3 class="text-lg font-medium mb-4">Menu Items</h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 1</label>
+                                    <input type="text" id="menu_item1_text" class="w-full border rounded px-3 py-2 text-sm" value="Home">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item1_link" class="w-full border rounded px-3 py-2 text-sm" value="/">
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" id="menu_item1_visible" checked>
+                                        Show
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 2</label>
+                                    <input type="text" id="menu_item2_text" class="w-full border rounded px-3 py-2 text-sm" value="Browse">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item2_link" class="w-full border rounded px-3 py-2 text-sm" value="/search">
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" id="menu_item2_visible" checked>
+                                        Show
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 3</label>
+                                    <input type="text" id="menu_item3_text" class="w-full border rounded px-3 py-2 text-sm" value="Co-Living">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item3_link" class="w-full border rounded px-3 py-2 text-sm" value="/coliving">
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" id="menu_item3_visible" checked>
+                                        Show
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 4</label>
+                                    <input type="text" id="menu_item4_text" class="w-full border rounded px-3 py-2 text-sm" value="For Investors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item4_link" class="w-full border rounded px-3 py-2 text-sm" value="/investor">
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" id="menu_item4_visible" checked>
+                                        Show
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 5</label>
+                                    <input type="text" id="menu_item5_text" class="w-full border rounded px-3 py-2 text-sm" value="Contact">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item5_link" class="w-full border rounded px-3 py-2 text-sm" value="#contact">
+                                </div>
+                                <div class="flex items-end">
+                                    <label class="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" id="menu_item5_visible" checked>
+                                        Show
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Strip Tab -->
+        <div id="tab-stats" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">Stats Strip / Marquee</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Section</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="stats_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <p class="text-gray-500 text-sm mb-6">The scrolling text strip that appears between the About and Investors sections.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Marquee Items (one per line)</label>
+                        <textarea id="stats_items" class="w-full border rounded px-3 py-2" rows="8">London Service Area
+Luxury HMO Refurbishment
+Professional Tenants
+NHS Housing Partners
+Student Accommodation
+Guaranteed Rent Options</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Section Tab -->
+        <div id="tab-hero" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">Hero Section</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Section</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="hero_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -107,7 +282,16 @@
         <!-- About Section Tab -->
         <div id="tab-about" class="tab-content hidden">
             <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">About / Our Story Section</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">About / Our Story Section</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Section</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="about_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="space-y-6">
                     <div>
@@ -159,7 +343,16 @@
         <!-- Investors Section Tab -->
         <div id="tab-investors" class="tab-content hidden">
             <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">For Investors Section</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">For Investors Section</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Section</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="investors_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="space-y-6">
                     <div>
@@ -208,7 +401,16 @@
         <!-- Sourcing Section Tab -->
         <div id="tab-sourcing" class="tab-content hidden">
             <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">We Buy Properties Section</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">We Buy Properties Section</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Section</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sourcing_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="space-y-6">
                     <div>
@@ -256,7 +458,16 @@
         <!-- Contact Section Tab -->
         <div id="tab-contact" class="tab-content hidden">
             <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">Contact Section</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">Contact Section</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Section</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="contact_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="space-y-6">
                     <div>
@@ -325,7 +536,16 @@ By Appointment Only</textarea>
         <!-- Footer Tab -->
         <div id="tab-footer" class="tab-content hidden">
             <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">Footer</h2>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl serif italic">Footer</h2>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm text-gray-500">Show Footer</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="footer_visible" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="space-y-6">
                     <div>
@@ -400,6 +620,41 @@ By Appointment Only</textarea>
 
         // Populate form fields with loaded content
         function populateFields() {
+            // Visibility toggles
+            if (siteContent.visibility) {
+                document.getElementById('header_visible').checked = siteContent.visibility.header !== false;
+                document.getElementById('hero_visible').checked = siteContent.visibility.hero !== false;
+                document.getElementById('about_visible').checked = siteContent.visibility.about !== false;
+                document.getElementById('stats_visible').checked = siteContent.visibility.stats !== false;
+                document.getElementById('investors_visible').checked = siteContent.visibility.investors !== false;
+                document.getElementById('sourcing_visible').checked = siteContent.visibility.sourcing !== false;
+                document.getElementById('contact_visible').checked = siteContent.visibility.contact !== false;
+                document.getElementById('footer_visible').checked = siteContent.visibility.footer !== false;
+            }
+
+            // Header
+            if (siteContent.header) {
+                document.getElementById('header_logo_text').value = siteContent.header.logo_text || 'Wright Key Property';
+                if (siteContent.header.logo_url) {
+                    document.getElementById('logoPreview').innerHTML = `<img src="${siteContent.header.logo_url}" class="max-w-full max-h-full object-contain">`;
+                }
+                if (siteContent.header.menu_items) {
+                    siteContent.header.menu_items.forEach((item, i) => {
+                        const idx = i + 1;
+                        if (document.getElementById(`menu_item${idx}_text`)) {
+                            document.getElementById(`menu_item${idx}_text`).value = item.text || '';
+                            document.getElementById(`menu_item${idx}_link`).value = item.link || '';
+                            document.getElementById(`menu_item${idx}_visible`).checked = item.visible !== false;
+                        }
+                    });
+                }
+            }
+
+            // Stats
+            if (siteContent.stats) {
+                document.getElementById('stats_items').value = siteContent.stats.items || '';
+            }
+
             // Hero
             if (siteContent.hero) {
                 document.getElementById('hero_headline1').value = siteContent.hero.headline1 || '';
@@ -466,10 +721,10 @@ By Appointment Only</textarea>
                 document.getElementById('contact_email').value = siteContent.contact.email || '';
                 document.getElementById('contact_phone').value = siteContent.contact.phone || '';
                 document.getElementById('contact_address').value = siteContent.contact.address || '';
-                document.getElementById('form_name_placeholder').value = siteContent.contact.form_name || '';
-                document.getElementById('form_email_placeholder').value = siteContent.contact.form_email || '';
-                document.getElementById('form_message_placeholder').value = siteContent.contact.form_message || '';
-                document.getElementById('form_submit_text').value = siteContent.contact.form_submit || '';
+                document.getElementById('form_name_placeholder').value = siteContent.contact.form_name_placeholder || '';
+                document.getElementById('form_email_placeholder').value = siteContent.contact.form_email_placeholder || '';
+                document.getElementById('form_message_placeholder').value = siteContent.contact.form_message_placeholder || '';
+                document.getElementById('form_submit_text').value = siteContent.contact.form_submit_text || '';
                 document.getElementById('enquiry_option1').value = siteContent.contact.enquiry_option1 || '';
                 document.getElementById('enquiry_option2').value = siteContent.contact.enquiry_option2 || '';
             }
@@ -485,6 +740,30 @@ By Appointment Only</textarea>
         // Gather all content from form fields
         function gatherContent() {
             return {
+                visibility: {
+                    header: document.getElementById('header_visible').checked,
+                    hero: document.getElementById('hero_visible').checked,
+                    about: document.getElementById('about_visible').checked,
+                    stats: document.getElementById('stats_visible').checked,
+                    investors: document.getElementById('investors_visible').checked,
+                    sourcing: document.getElementById('sourcing_visible').checked,
+                    contact: document.getElementById('contact_visible').checked,
+                    footer: document.getElementById('footer_visible').checked
+                },
+                header: {
+                    logo_text: document.getElementById('header_logo_text').value,
+                    logo_url: siteContent.header?.logo_url || '',
+                    menu_items: [
+                        { text: document.getElementById('menu_item1_text').value, link: document.getElementById('menu_item1_link').value, visible: document.getElementById('menu_item1_visible').checked },
+                        { text: document.getElementById('menu_item2_text').value, link: document.getElementById('menu_item2_link').value, visible: document.getElementById('menu_item2_visible').checked },
+                        { text: document.getElementById('menu_item3_text').value, link: document.getElementById('menu_item3_link').value, visible: document.getElementById('menu_item3_visible').checked },
+                        { text: document.getElementById('menu_item4_text').value, link: document.getElementById('menu_item4_link').value, visible: document.getElementById('menu_item4_visible').checked },
+                        { text: document.getElementById('menu_item5_text').value, link: document.getElementById('menu_item5_link').value, visible: document.getElementById('menu_item5_visible').checked }
+                    ]
+                },
+                stats: {
+                    items: document.getElementById('stats_items').value
+                },
                 hero: {
                     headline1: document.getElementById('hero_headline1').value,
                     headline2: document.getElementById('hero_headline2').value,
@@ -530,10 +809,10 @@ By Appointment Only</textarea>
                     email: document.getElementById('contact_email').value,
                     phone: document.getElementById('contact_phone').value,
                     address: document.getElementById('contact_address').value,
-                    form_name: document.getElementById('form_name_placeholder').value,
-                    form_email: document.getElementById('form_email_placeholder').value,
-                    form_message: document.getElementById('form_message_placeholder').value,
-                    form_submit: document.getElementById('form_submit_text').value,
+                    form_name_placeholder: document.getElementById('form_name_placeholder').value,
+                    form_email_placeholder: document.getElementById('form_email_placeholder').value,
+                    form_message_placeholder: document.getElementById('form_message_placeholder').value,
+                    form_submit_text: document.getElementById('form_submit_text').value,
                     enquiry_option1: document.getElementById('enquiry_option1').value,
                     enquiry_option2: document.getElementById('enquiry_option2').value
                 },
@@ -582,6 +861,25 @@ By Appointment Only</textarea>
         }
 
         // Upload functions
+        async function uploadLogo(input) {
+            if (!input.files[0]) return;
+            try {
+                const url = await uploadFile(input.files[0]);
+                siteContent.header = siteContent.header || {};
+                siteContent.header.logo_url = url;
+                document.getElementById('logoPreview').innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain">`;
+                await saveAllContent();
+            } catch (error) {
+                alert('Error uploading logo: ' + error.message);
+            }
+        }
+
+        function removeLogo() {
+            siteContent.header = siteContent.header || {};
+            siteContent.header.logo_url = '';
+            document.getElementById('logoPreview').innerHTML = '<span class="text-gray-400 text-sm">No logo</span>';
+        }
+
         async function uploadFile(file, prefix = 'admin/') {
             const formData = new FormData();
             formData.append('file', file);
