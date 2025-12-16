@@ -10,6 +10,18 @@ module.exports = async function handler(request, response) {
 
   console.log('[Content API] Method:', request.method);
 
+  // Check for blob token
+  const hasToken = !!process.env.BLOB_READ_WRITE_TOKEN;
+  console.log('[Content API] BLOB_READ_WRITE_TOKEN present:', hasToken);
+
+  if (!hasToken) {
+    console.error('[Content API] ERROR: BLOB_READ_WRITE_TOKEN is not set!');
+    return response.status(500).json({
+      success: false,
+      error: 'Server configuration error: Blob storage token not configured'
+    });
+  }
+
   // GET - Load content
   if (request.method === 'GET') {
     try {
@@ -73,14 +85,43 @@ module.exports = async function handler(request, response) {
   // POST - Save content
   if (request.method === 'POST') {
     try {
-      const content = request.body;
-      console.log('[Content API POST] Received content keys:', content ? Object.keys(content) : 'null');
+      // Handle body parsing - Vercel may or may not auto-parse depending on config
+      let content = request.body;
 
-      if (!content) {
-        console.log('[Content API POST] No content provided');
+      // If body is a string, parse it as JSON
+      if (typeof content === 'string') {
+        try {
+          content = JSON.parse(content);
+          console.log('[Content API POST] Parsed string body to JSON');
+        } catch (e) {
+          console.error('[Content API POST] Failed to parse body string:', e.message);
+        }
+      }
+
+      // If body is still not an object, try reading from stream
+      if (!content || typeof content !== 'object') {
+        console.log('[Content API POST] Body not available, trying to read stream...');
+        try {
+          const chunks = [];
+          for await (const chunk of request) {
+            chunks.push(chunk);
+          }
+          const bodyString = Buffer.concat(chunks).toString('utf8');
+          console.log('[Content API POST] Read body from stream, length:', bodyString.length);
+          content = JSON.parse(bodyString);
+        } catch (e) {
+          console.error('[Content API POST] Failed to read/parse stream:', e.message);
+        }
+      }
+
+      console.log('[Content API POST] Received content keys:', content ? Object.keys(content) : 'null');
+      console.log('[Content API POST] Content type:', typeof content);
+
+      if (!content || typeof content !== 'object') {
+        console.log('[Content API POST] No valid content provided');
         return response.status(400).json({
           success: false,
-          error: 'No content provided'
+          error: 'No content provided or invalid format'
         });
       }
 
