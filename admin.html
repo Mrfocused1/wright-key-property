@@ -1842,13 +1842,13 @@ En-Suite
         });
     </script>
 
-    <!-- Debug Panel (toggle with button) -->
-    <div id="debugContainer" class="fixed bottom-0 left-0 right-0 z-50">
+    <!-- Debug Panel (toggle with button) - positioned above mobile browser bar -->
+    <div id="debugContainer" class="fixed bottom-20 left-2 right-2 z-50">
         <button onclick="document.getElementById('debugPanel').classList.toggle('hidden')"
-                class="bg-gray-800 text-white px-4 py-2 text-xs w-full text-left">
-            Toggle Debug Log
+                class="bg-red-600 text-white px-4 py-3 text-sm w-full text-center font-bold rounded-t-lg shadow-lg">
+            TAP HERE FOR DEBUG LOG
         </button>
-        <div id="debugPanel" class="hidden bg-gray-900 text-green-400 text-xs p-2 max-h-48 overflow-y-auto font-mono">
+        <div id="debugPanel" class="hidden bg-gray-900 text-green-400 text-xs p-2 max-h-48 overflow-y-auto font-mono rounded-b-lg">
             <div>Debug log initialized...</div>
         </div>
     </div>
