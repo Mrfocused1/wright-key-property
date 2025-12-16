@@ -1,22 +1,18 @@
-import { list } from '@vercel/blob';
+const { list } = require('@vercel/blob');
 
-export default async function handler(request) {
+module.exports = async function handler(request, response) {
   if (request.method !== 'GET') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const url = new URL(request.url);
-    const prefix = url.searchParams.get('prefix') || '';
+    const prefix = request.query.prefix || '';
 
     const { blobs } = await list({
       prefix: prefix,
     });
 
-    return new Response(JSON.stringify({
+    return response.status(200).json({
       success: true,
       blobs: blobs.map(blob => ({
         url: blob.url,
@@ -25,15 +21,9 @@ export default async function handler(request) {
         uploadedAt: blob.uploadedAt,
         downloadUrl: blob.downloadUrl,
       })),
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('List error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(500).json({ error: error.message });
   }
-}
+};

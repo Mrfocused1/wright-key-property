@@ -1,37 +1,25 @@
-import { del } from '@vercel/blob';
+const { del } = require('@vercel/blob');
 
-export default async function handler(request) {
+module.exports = async function handler(request, response) {
   if (request.method !== 'DELETE') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { url } = await request.json();
+    const { url } = request.body;
 
     if (!url) {
-      return new Response(JSON.stringify({ error: 'No URL provided' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return response.status(400).json({ error: 'No URL provided' });
     }
 
     await del(url);
 
-    return new Response(JSON.stringify({
+    return response.status(200).json({
       success: true,
       message: 'File deleted successfully',
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Delete error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(500).json({ error: error.message });
   }
-}
+};

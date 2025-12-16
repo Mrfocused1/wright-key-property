@@ -1,11 +1,8 @@
-import { list } from '@vercel/blob';
+const { list } = require('@vercel/blob');
 
-export default async function handler(request) {
+module.exports = async function handler(request, response) {
   if (request.method !== 'GET') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
@@ -15,13 +12,10 @@ export default async function handler(request) {
     });
 
     if (blobs.length === 0) {
-      return new Response(JSON.stringify({
+      return response.status(200).json({
         success: true,
         hasVideo: false,
         url: null,
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
       });
     }
 
@@ -31,24 +25,18 @@ export default async function handler(request) {
     );
     const latestVideo = sortedBlobs[0];
 
-    return new Response(JSON.stringify({
+    return response.status(200).json({
       success: true,
       hasVideo: true,
       url: latestVideo.url,
       pathname: latestVideo.pathname,
       uploadedAt: latestVideo.uploadedAt,
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Intro video fetch error:', error);
-    return new Response(JSON.stringify({
+    return response.status(500).json({
       error: error.message,
       hasVideo: false,
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
     });
   }
-}
+};
