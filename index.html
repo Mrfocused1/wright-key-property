@@ -603,7 +603,6 @@
 
         // --- Mobile Intro Video & Preloader Animation ---
         const isMobile = window.innerWidth <= 768;
-        const introVideoSrc = localStorage.getItem('mobileIntroVideo');
         const introVideo = document.getElementById('intro-video');
         const loaderContent = document.getElementById('loader-content');
 
@@ -620,12 +619,16 @@
                 });
         }
 
-        // Check for mobile intro video
-        if (isMobile && introVideoSrc && introVideo) {
+        function playIntroVideo(videoUrl) {
+            if (!introVideo || !videoUrl) {
+                runDefaultLoader();
+                return;
+            }
+
             // Hide default loader content, show video
             loaderContent.style.display = 'none';
             introVideo.classList.remove('hidden');
-            introVideo.src = introVideoSrc;
+            introVideo.src = videoUrl;
             introVideo.muted = true;
             introVideo.playsInline = true;
 
@@ -661,8 +664,32 @@
                 introVideo.classList.add('hidden');
                 runDefaultLoader();
             });
+        }
+
+        // Check for mobile intro video
+        if (isMobile) {
+            // First check localStorage for the intro video URL (set from upload page)
+            const introVideoUrl = localStorage.getItem('introVideoUrl');
+
+            if (introVideoUrl) {
+                playIntroVideo(introVideoUrl);
+            } else {
+                // Try to fetch from Vercel Blob API
+                fetch('/api/intro-video')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.hasIntroVideo && data.url) {
+                            playIntroVideo(data.url);
+                        } else {
+                            runDefaultLoader();
+                        }
+                    })
+                    .catch(() => {
+                        runDefaultLoader();
+                    });
+            }
         } else {
-            // Run default text loader
+            // Desktop - run default text loader
             runDefaultLoader();
         }
 
