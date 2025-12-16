@@ -78,17 +78,23 @@
 
                     <div class="pt-6 border-t">
                         <h3 class="text-lg font-medium mb-4">Logo Image (Optional)</h3>
-                        <div class="flex items-center gap-4">
-                            <div id="logoPreview" class="w-48 h-16 bg-gray-200 rounded flex items-center justify-center">
+                        <div class="flex items-start gap-4">
+                            <div id="logoPreview" class="w-48 h-16 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
                                 <span class="text-gray-400 text-sm">No logo</span>
                             </div>
-                            <div>
-                                <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="uploadLogo(this)">
-                                <button onclick="document.getElementById('logoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
-                                    Upload Logo
-                                </button>
-                                <button onclick="removeLogo()" class="ml-2 text-red-500 text-sm hover:underline">Remove</button>
-                                <p class="text-xs text-gray-400 mt-2">Recommended: PNG with transparent background</p>
+                            <div class="flex-1">
+                                <div class="flex gap-2 mb-2">
+                                    <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="uploadLogo(this)">
+                                    <button onclick="document.getElementById('logoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
+                                        Upload
+                                    </button>
+                                    <button onclick="removeLogo()" class="text-red-500 text-sm hover:underline px-2">Remove</button>
+                                </div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="logo_url_input" placeholder="Or paste image URL..." class="flex-1 border rounded px-3 py-2 text-sm">
+                                    <button onclick="setLogoUrl()" class="bg-gray-200 px-3 py-2 rounded text-sm hover:bg-gray-300">Set URL</button>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-2">Upload or paste URL. PNG with transparent background recommended.</p>
                             </div>
                         </div>
                     </div>
@@ -263,16 +269,23 @@ Guaranteed Rent Options</textarea>
 
                 <div class="mt-6 pt-6 border-t">
                     <h3 class="text-lg font-medium mb-4">Hero Video</h3>
-                    <div class="flex items-center gap-4">
-                        <div id="heroVideoPreview" class="w-48 h-32 bg-gray-200 rounded flex items-center justify-center">
+                    <div class="flex items-start gap-4">
+                        <div id="heroVideoPreview" class="w-48 h-32 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
                             <span class="text-gray-400 text-sm">No video</span>
                         </div>
-                        <div>
-                            <input type="file" id="heroVideoInput" accept="video/*" class="hidden" onchange="uploadHeroVideo(this)">
-                            <button onclick="document.getElementById('heroVideoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
-                                Upload Hero Video
-                            </button>
-                            <p class="text-xs text-gray-400 mt-2">Recommended: MP4, 1920x1080 or higher</p>
+                        <div class="flex-1">
+                            <div class="flex gap-2 mb-2">
+                                <input type="file" id="heroVideoInput" accept="video/*" class="hidden" onchange="uploadHeroVideo(this)">
+                                <button onclick="document.getElementById('heroVideoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
+                                    Upload
+                                </button>
+                                <button onclick="removeHeroVideo()" class="text-red-500 text-sm hover:underline px-2">Remove</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="hero_video_url_input" placeholder="Or paste video URL..." class="flex-1 border rounded px-3 py-2 text-sm">
+                                <button onclick="setHeroVideoUrl()" class="bg-gray-200 px-3 py-2 rounded text-sm hover:bg-gray-300">Set URL</button>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-2">Upload or paste URL. MP4, 1920x1080 or higher recommended.</p>
                         </div>
                     </div>
                 </div>
@@ -318,22 +331,36 @@ Guaranteed Rent Options</textarea>
 
                 <div class="mt-6 pt-6 border-t">
                     <h3 class="text-lg font-medium mb-4">About Images</h3>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Main Image</label>
                             <div id="aboutImage1Preview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
                                 <span class="text-gray-400 text-sm">No image</span>
                             </div>
-                            <input type="file" id="aboutImage1Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 1)">
-                            <button onclick="document.getElementById('aboutImage1Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                            <div class="flex gap-2 mb-2">
+                                <input type="file" id="aboutImage1Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 1)">
+                                <button onclick="document.getElementById('aboutImage1Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="removeAboutImage(1)" class="text-red-500 text-xs hover:underline">Remove</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="about_image1_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
+                                <button onclick="setAboutImageUrl(1)" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium mb-2">Detail Image</label>
                             <div id="aboutImage2Preview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
                                 <span class="text-gray-400 text-sm">No image</span>
                             </div>
-                            <input type="file" id="aboutImage2Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 2)">
-                            <button onclick="document.getElementById('aboutImage2Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                            <div class="flex gap-2 mb-2">
+                                <input type="file" id="aboutImage2Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 2)">
+                                <button onclick="document.getElementById('aboutImage2Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="removeAboutImage(2)" class="text-red-500 text-xs hover:underline">Remove</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="about_image2_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
+                                <button onclick="setAboutImageUrl(2)" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -392,8 +419,15 @@ Guaranteed Rent Options</textarea>
                     <div id="investorImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
                         <span class="text-gray-400 text-sm">No image</span>
                     </div>
-                    <input type="file" id="investorImageInput" accept="image/*" class="hidden" onchange="uploadInvestorImage(this)">
-                    <button onclick="document.getElementById('investorImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload Image</button>
+                    <div class="flex gap-2 mb-2">
+                        <input type="file" id="investorImageInput" accept="image/*" class="hidden" onchange="uploadInvestorImage(this)">
+                        <button onclick="document.getElementById('investorImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                        <button onclick="removeInvestorImage()" class="text-red-500 text-xs hover:underline">Remove</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="investor_image_url_input" placeholder="Or paste image URL..." class="flex-1 border rounded px-2 py-1 text-xs">
+                        <button onclick="setInvestorImageUrl()" class="bg-gray-200 px-2 py-1 rounded text-xs">Set URL</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -439,16 +473,30 @@ Guaranteed Rent Options</textarea>
                             <div id="beforeImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
                                 <span class="text-gray-400 text-sm">No image</span>
                             </div>
-                            <input type="file" id="beforeImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'before')">
-                            <button onclick="document.getElementById('beforeImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                            <div class="flex gap-2 mb-2">
+                                <input type="file" id="beforeImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'before')">
+                                <button onclick="document.getElementById('beforeImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="removeSourcingImage('before')" class="text-red-500 text-xs hover:underline">Remove</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="before_image_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
+                                <button onclick="setSourcingImageUrl('before')" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium mb-2">After Image</label>
                             <div id="afterImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
                                 <span class="text-gray-400 text-sm">No image</span>
                             </div>
-                            <input type="file" id="afterImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'after')">
-                            <button onclick="document.getElementById('afterImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                            <div class="flex gap-2 mb-2">
+                                <input type="file" id="afterImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'after')">
+                                <button onclick="document.getElementById('afterImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="removeSourcingImage('after')" class="text-red-500 text-xs hover:underline">Remove</button>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" id="after_image_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
+                                <button onclick="setSourcingImageUrl('after')" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -878,6 +926,95 @@ By Appointment Only</textarea>
             siteContent.header = siteContent.header || {};
             siteContent.header.logo_url = '';
             document.getElementById('logoPreview').innerHTML = '<span class="text-gray-400 text-sm">No logo</span>';
+        }
+
+        async function setLogoUrl() {
+            const url = document.getElementById('logo_url_input').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            siteContent.header = siteContent.header || {};
+            siteContent.header.logo_url = url;
+            document.getElementById('logoPreview').innerHTML = `<img src="${url}" class="max-w-full max-h-full object-contain">`;
+            document.getElementById('logo_url_input').value = '';
+            await saveAllContent();
+        }
+
+        async function setHeroVideoUrl() {
+            const url = document.getElementById('hero_video_url_input').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            siteContent.hero = siteContent.hero || {};
+            siteContent.hero.video_url = url;
+            document.getElementById('heroVideoPreview').innerHTML = `<video src="${url}" class="w-full h-full object-cover rounded" muted></video>`;
+            document.getElementById('hero_video_url_input').value = '';
+            await saveAllContent();
+        }
+
+        function removeHeroVideo() {
+            siteContent.hero = siteContent.hero || {};
+            siteContent.hero.video_url = '';
+            document.getElementById('heroVideoPreview').innerHTML = '<span class="text-gray-400 text-sm">No video</span>';
+        }
+
+        async function setAboutImageUrl(num) {
+            const url = document.getElementById('about_image' + num + '_url_input').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            siteContent.about = siteContent.about || {};
+            siteContent.about['image' + num + '_url'] = url;
+            document.getElementById('aboutImage' + num + 'Preview').innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded">`;
+            document.getElementById('about_image' + num + '_url_input').value = '';
+            await saveAllContent();
+        }
+
+        function removeAboutImage(num) {
+            siteContent.about = siteContent.about || {};
+            siteContent.about['image' + num + '_url'] = '';
+            document.getElementById('aboutImage' + num + 'Preview').innerHTML = '<span class="text-gray-400 text-sm">No image</span>';
+        }
+
+        async function setInvestorImageUrl() {
+            const url = document.getElementById('investor_image_url_input').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            siteContent.investors = siteContent.investors || {};
+            siteContent.investors.image_url = url;
+            document.getElementById('investorImagePreview').innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded">`;
+            document.getElementById('investor_image_url_input').value = '';
+            await saveAllContent();
+        }
+
+        function removeInvestorImage() {
+            siteContent.investors = siteContent.investors || {};
+            siteContent.investors.image_url = '';
+            document.getElementById('investorImagePreview').innerHTML = '<span class="text-gray-400 text-sm">No image</span>';
+        }
+
+        async function setSourcingImageUrl(type) {
+            const url = document.getElementById(type + '_image_url_input').value.trim();
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            siteContent.sourcing = siteContent.sourcing || {};
+            siteContent.sourcing[type + '_image'] = url;
+            document.getElementById(type + 'ImagePreview').innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded">`;
+            document.getElementById(type + '_image_url_input').value = '';
+            await saveAllContent();
+        }
+
+        function removeSourcingImage(type) {
+            siteContent.sourcing = siteContent.sourcing || {};
+            siteContent.sourcing[type + '_image'] = '';
+            document.getElementById(type + 'ImagePreview').innerHTML = '<span class="text-gray-400 text-sm">No image</span>';
         }
 
         async function uploadFile(file, prefix = 'admin/') {
