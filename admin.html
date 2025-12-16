@@ -1543,6 +1543,11 @@ En-Suite
             updateStatus('Saving...', 'text-yellow-500');
             debugLog('Saving content...');
 
+            // Debug: read raw DOM value BEFORE gatherContent
+            const rawInput = document.getElementById('hero_headline1');
+            debugLog('RAW INPUT VALUE: "' + (rawInput ? rawInput.value : 'NOT FOUND') + '"');
+            debugLog('RAW INPUT exists: ' + !!rawInput);
+
             try {
                 const content = gatherContent();
                 debugLog('Hero headline1 to save: ' + (content.hero?.headline1 || '(empty)'));
