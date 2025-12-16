@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,56 +13,111 @@
         .save-indicator.saving { opacity: 1; }
         .save-indicator.saved { background: #22c55e; }
         /* Toggle switch styles */
-        .toggle-switch { position: relative; width: 48px; height: 24px; }
+        .toggle-switch { position: relative; width: 48px; height: 24px; flex-shrink: 0; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.3s; border-radius: 24px; }
         .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
         .toggle-switch input:checked + .toggle-slider { background-color: #22c55e; }
         .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
         .section-hidden { opacity: 0.5; }
+
+        /* Mobile-first responsive tabs */
+        .tabs-container {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 0.5rem;
+        }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tab-btn { white-space: nowrap; flex-shrink: 0; }
+
+        /* Section header responsive */
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .section-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        /* Mobile content panels */
+        @media (max-width: 639px) {
+            .content-panel { padding: 1rem; }
+            .menu-item-grid { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
+            .menu-item-grid > div:last-child { padding-top: 0; }
+            .image-upload-row { flex-direction: column; }
+            .image-preview-mobile { width: 100%; height: 10rem; }
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen overflow-x-hidden">
 
     <!-- Header -->
-    <header class="bg-black text-white py-4 px-6 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="/" class="text-xl serif italic">Wright Key Property</a>
-                <span class="text-xs bg-[#d4af37] px-2 py-1 rounded">ADMIN</span>
+    <header class="bg-black text-white py-3 px-4 sm:py-4 sm:px-6 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto">
+            <!-- Mobile Header -->
+            <div class="flex flex-col gap-3 sm:hidden">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm serif italic">WKP</span>
+                        <span class="text-[10px] bg-[#d4af37] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
+                    </div>
+                    <a href="/" class="text-[10px] text-gray-400 hover:text-white">View Site</a>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <span id="saveStatusMobile" class="text-[10px] text-gray-400 truncate">All changes saved</span>
+                    <button onclick="saveAllContent()" class="bg-[#d4af37] text-black px-3 py-1.5 rounded text-[10px] uppercase tracking-wider hover:bg-[#b8962e] transition-colors flex-shrink-0">
+                        Save Changes
+                    </button>
+                </div>
             </div>
-            <div class="flex items-center gap-4">
-                <span id="saveStatus" class="text-xs text-gray-400">All changes saved</span>
-                <button onclick="saveAllContent()" class="bg-[#d4af37] text-black px-4 py-2 rounded text-xs uppercase tracking-wider hover:bg-[#b8962e] transition-colors">
-                    Save All Changes
-                </button>
-                <a href="/" class="text-xs text-gray-400 hover:text-white transition-colors">View Site</a>
+            <!-- Desktop Header -->
+            <div class="hidden sm:flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <a href="/" class="text-xl serif italic">Wright Key Property</a>
+                    <span class="text-xs bg-[#d4af37] px-2 py-1 rounded">ADMIN</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="saveStatus" class="text-xs text-gray-400">All changes saved</span>
+                    <button onclick="saveAllContent()" class="bg-[#d4af37] text-black px-4 py-2 rounded text-xs uppercase tracking-wider hover:bg-[#b8962e] transition-colors">
+                        Save All Changes
+                    </button>
+                    <a href="/" class="text-xs text-gray-400 hover:text-white transition-colors">View Site</a>
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-8">
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
 
         <!-- Tabs -->
-        <div class="flex gap-2 mb-8 flex-wrap">
-            <button class="tab-btn active px-4 py-2 rounded text-sm" onclick="showTab('header')">Header/Menu</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('hero')">Hero Section</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('about')">About Section</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('stats')">Stats Strip</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('investors')">Investors Section</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('sourcing')">Sourcing Section</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('contact')">Contact Section</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('footer')">Footer</button>
-            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('media')">Media Library</button>
+        <div class="tabs-container mb-6 sm:mb-8">
+            <button class="tab-btn active px-3 sm:px-4 py-2 rounded text-xs sm:text-sm" onclick="showTab('header')">Header</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('hero')">Hero</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('about')">About</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('stats')">Stats</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investors')">Investors</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('sourcing')">Sourcing</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('contact')">Contact</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('footer')">Footer</button>
+            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('media')">Media</button>
         </div>
 
         <!-- Header/Menu Tab -->
         <div id="tab-header" class="tab-content">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">Header & Navigation</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">Header & Navigation</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Header</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Header</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="header_visible" checked>
                             <span class="toggle-slider"></span>
@@ -70,113 +125,113 @@
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Logo Text</label>
-                        <input type="text" id="header_logo_text" class="w-full border rounded px-3 py-2" value="Wright Key Property">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Logo Text</label>
+                        <input type="text" id="header_logo_text" class="w-full border rounded px-3 py-2 text-sm" value="Wright Key Property">
                     </div>
 
-                    <div class="pt-6 border-t">
-                        <h3 class="text-lg font-medium mb-4">Logo Image (Optional)</h3>
-                        <div class="flex items-start gap-4">
-                            <div id="logoPreview" class="w-48 h-16 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                    <div class="pt-4 sm:pt-6 border-t">
+                        <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Logo Image (Optional)</h3>
+                        <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+                            <div id="logoPreview" class="w-full sm:w-48 h-20 sm:h-16 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
                                 <span class="text-gray-400 text-sm">No logo</span>
                             </div>
                             <div class="flex-1">
                                 <div class="flex gap-2 mb-2">
                                     <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="uploadLogo(this)">
-                                    <button onclick="document.getElementById('logoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
+                                    <button onclick="document.getElementById('logoInput').click()" class="bg-black text-white px-3 sm:px-4 py-2 rounded text-xs sm:text-sm hover:bg-gray-800 transition-colors">
                                         Upload
                                     </button>
-                                    <button onclick="removeLogo()" class="text-red-500 text-sm hover:underline px-2">Remove</button>
+                                    <button onclick="removeLogo()" class="text-red-500 text-xs sm:text-sm hover:underline px-2">Remove</button>
                                 </div>
                                 <div class="flex gap-2">
-                                    <input type="text" id="logo_url_input" placeholder="Or paste image URL..." class="flex-1 border rounded px-3 py-2 text-sm">
-                                    <button onclick="setLogoUrl()" class="bg-gray-200 px-3 py-2 rounded text-sm hover:bg-gray-300">Set URL</button>
+                                    <input type="text" id="logo_url_input" placeholder="Or paste image URL..." class="flex-1 border rounded px-3 py-2 text-xs sm:text-sm">
+                                    <button onclick="setLogoUrl()" class="bg-gray-200 px-2 sm:px-3 py-2 rounded text-xs sm:text-sm hover:bg-gray-300">Set URL</button>
                                 </div>
-                                <p class="text-xs text-gray-400 mt-2">Upload or paste URL. PNG with transparent background recommended.</p>
+                                <p class="text-[10px] sm:text-xs text-gray-400 mt-2">PNG with transparent background recommended.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-6 border-t">
-                        <h3 class="text-lg font-medium mb-4">Menu Items</h3>
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                    <div class="pt-4 sm:pt-6 border-t">
+                        <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Menu Items</h3>
+                        <div class="space-y-3 sm:space-y-4">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 1</label>
-                                    <input type="text" id="menu_item1_text" class="w-full border rounded px-3 py-2 text-sm" value="Home">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 1</label>
+                                    <input type="text" id="menu_item1_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Home">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item1_link" class="w-full border rounded px-3 py-2 text-sm" value="/">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item1_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/">
                                 </div>
-                                <div class="flex items-end">
-                                    <label class="flex items-center gap-2 text-sm">
+                                <div class="flex items-center sm:items-end">
+                                    <label class="flex items-center gap-2 text-xs sm:text-sm">
                                         <input type="checkbox" id="menu_item1_visible" checked>
                                         Show
                                     </label>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 2</label>
-                                    <input type="text" id="menu_item2_text" class="w-full border rounded px-3 py-2 text-sm" value="Browse">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 2</label>
+                                    <input type="text" id="menu_item2_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Browse">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item2_link" class="w-full border rounded px-3 py-2 text-sm" value="/search">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item2_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/search">
                                 </div>
-                                <div class="flex items-end">
-                                    <label class="flex items-center gap-2 text-sm">
+                                <div class="flex items-center sm:items-end">
+                                    <label class="flex items-center gap-2 text-xs sm:text-sm">
                                         <input type="checkbox" id="menu_item2_visible" checked>
                                         Show
                                     </label>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 3</label>
-                                    <input type="text" id="menu_item3_text" class="w-full border rounded px-3 py-2 text-sm" value="Co-Living">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 3</label>
+                                    <input type="text" id="menu_item3_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Co-Living">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item3_link" class="w-full border rounded px-3 py-2 text-sm" value="/coliving">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item3_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/coliving">
                                 </div>
-                                <div class="flex items-end">
-                                    <label class="flex items-center gap-2 text-sm">
+                                <div class="flex items-center sm:items-end">
+                                    <label class="flex items-center gap-2 text-xs sm:text-sm">
                                         <input type="checkbox" id="menu_item3_visible" checked>
                                         Show
                                     </label>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 4</label>
-                                    <input type="text" id="menu_item4_text" class="w-full border rounded px-3 py-2 text-sm" value="For Investors">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 4</label>
+                                    <input type="text" id="menu_item4_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="For Investors">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item4_link" class="w-full border rounded px-3 py-2 text-sm" value="/investor">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item4_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/investor">
                                 </div>
-                                <div class="flex items-end">
-                                    <label class="flex items-center gap-2 text-sm">
+                                <div class="flex items-center sm:items-end">
+                                    <label class="flex items-center gap-2 text-xs sm:text-sm">
                                         <input type="checkbox" id="menu_item4_visible" checked>
                                         Show
                                     </label>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-3 gap-4 p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Menu Item 5</label>
-                                    <input type="text" id="menu_item5_text" class="w-full border rounded px-3 py-2 text-sm" value="Contact">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 5</label>
+                                    <input type="text" id="menu_item5_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Contact">
                                 </div>
                                 <div>
-                                    <label class="block text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item5_link" class="w-full border rounded px-3 py-2 text-sm" value="#contact">
+                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
+                                    <input type="text" id="menu_item5_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="#contact">
                                 </div>
-                                <div class="flex items-end">
-                                    <label class="flex items-center gap-2 text-sm">
+                                <div class="flex items-center sm:items-end">
+                                    <label class="flex items-center gap-2 text-xs sm:text-sm">
                                         <input type="checkbox" id="menu_item5_visible" checked>
                                         Show
                                     </label>
@@ -190,11 +245,11 @@
 
         <!-- Stats Strip Tab -->
         <div id="tab-stats" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">Stats Strip / Marquee</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">Stats Strip / Marquee</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Section</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Section</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="stats_visible" checked>
                             <span class="toggle-slider"></span>
@@ -202,12 +257,12 @@
                     </div>
                 </div>
 
-                <p class="text-gray-500 text-sm mb-6">The scrolling text strip that appears between the About and Investors sections.</p>
+                <p class="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6">The scrolling text strip between the About and Investors sections.</p>
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Marquee Items (one per line)</label>
-                        <textarea id="stats_items" class="w-full border rounded px-3 py-2" rows="8">London Service Area
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Marquee Items (one per line)</label>
+                        <textarea id="stats_items" class="w-full border rounded px-3 py-2 text-sm" rows="6">London Service Area
 Luxury HMO Refurbishment
 Professional Tenants
 NHS Housing Partners
@@ -220,11 +275,11 @@ Guaranteed Rent Options</textarea>
 
         <!-- Hero Section Tab -->
         <div id="tab-hero" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">Hero Section</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">Hero Section</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Section</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Section</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="hero_visible" checked>
                             <span class="toggle-slider"></span>
@@ -232,60 +287,60 @@ Guaranteed Rent Options</textarea>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Main Headline (Line 1)</label>
-                        <input type="text" id="hero_headline1" class="w-full border rounded px-3 py-2" value="Unlocking">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline (Line 1)</label>
+                        <input type="text" id="hero_headline1" class="w-full border rounded px-3 py-2 text-sm" value="Unlocking">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Main Headline (Line 2)</label>
-                        <input type="text" id="hero_headline2" class="w-full border rounded px-3 py-2" value="Luxury">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline (Line 2)</label>
+                        <input type="text" id="hero_headline2" class="w-full border rounded px-3 py-2 text-sm" value="Luxury">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Main Headline (Line 3)</label>
-                        <input type="text" id="hero_headline3" class="w-full border rounded px-3 py-2" value="Living">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline (Line 3)</label>
+                        <input type="text" id="hero_headline3" class="w-full border rounded px-3 py-2 text-sm" value="Living">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Subheadline</label>
-                        <textarea id="hero_subheadline" class="w-full border rounded px-3 py-2" rows="2">Transforming properties into exceptional co-living spaces for professionals, NHS staff, and students.</textarea>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Subheadline</label>
+                        <textarea id="hero_subheadline" class="w-full border rounded px-3 py-2 text-sm" rows="2">Transforming properties into exceptional co-living spaces for professionals, NHS staff, and students.</textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">CTA Button 1 Text</label>
-                        <input type="text" id="hero_cta1_text" class="w-full border rounded px-3 py-2" value="Browse Properties">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 1 Text</label>
+                        <input type="text" id="hero_cta1_text" class="w-full border rounded px-3 py-2 text-sm" value="Browse Properties">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">CTA Button 1 Link</label>
-                        <input type="text" id="hero_cta1_link" class="w-full border rounded px-3 py-2" value="/search">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 1 Link</label>
+                        <input type="text" id="hero_cta1_link" class="w-full border rounded px-3 py-2 text-sm" value="/search">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">CTA Button 2 Text</label>
-                        <input type="text" id="hero_cta2_text" class="w-full border rounded px-3 py-2" value="Room Suites">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 2 Text</label>
+                        <input type="text" id="hero_cta2_text" class="w-full border rounded px-3 py-2 text-sm" value="Room Suites">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">CTA Button 2 Link</label>
-                        <input type="text" id="hero_cta2_link" class="w-full border rounded px-3 py-2" value="/coliving">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 2 Link</label>
+                        <input type="text" id="hero_cta2_link" class="w-full border rounded px-3 py-2 text-sm" value="/coliving">
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">Hero Video</h3>
-                    <div class="flex items-start gap-4">
-                        <div id="heroVideoPreview" class="w-48 h-32 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Hero Video</h3>
+                    <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <div id="heroVideoPreview" class="w-full sm:w-48 h-32 bg-gray-200 rounded flex items-center justify-center flex-shrink-0">
                             <span class="text-gray-400 text-sm">No video</span>
                         </div>
                         <div class="flex-1">
                             <div class="flex gap-2 mb-2">
                                 <input type="file" id="heroVideoInput" accept="video/*" class="hidden" onchange="uploadHeroVideo(this)">
-                                <button onclick="document.getElementById('heroVideoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
+                                <button onclick="document.getElementById('heroVideoInput').click()" class="bg-black text-white px-3 sm:px-4 py-2 rounded text-xs sm:text-sm hover:bg-gray-800 transition-colors">
                                     Upload
                                 </button>
-                                <button onclick="removeHeroVideo()" class="text-red-500 text-sm hover:underline px-2">Remove</button>
+                                <button onclick="removeHeroVideo()" class="text-red-500 text-xs sm:text-sm hover:underline px-2">Remove</button>
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" id="hero_video_url_input" placeholder="Or paste video URL..." class="flex-1 border rounded px-3 py-2 text-sm">
-                                <button onclick="setHeroVideoUrl()" class="bg-gray-200 px-3 py-2 rounded text-sm hover:bg-gray-300">Set URL</button>
+                                <input type="text" id="hero_video_url_input" placeholder="Or paste video URL..." class="flex-1 border rounded px-3 py-2 text-xs sm:text-sm">
+                                <button onclick="setHeroVideoUrl()" class="bg-gray-200 px-2 sm:px-3 py-2 rounded text-xs sm:text-sm hover:bg-gray-300">Set URL</button>
                             </div>
-                            <p class="text-xs text-gray-400 mt-2">Upload or paste URL. MP4, 1920x1080 or higher recommended.</p>
+                            <p class="text-[10px] sm:text-xs text-gray-400 mt-2">MP4, 1920x1080 or higher recommended.</p>
                         </div>
                     </div>
                 </div>
@@ -294,11 +349,11 @@ Guaranteed Rent Options</textarea>
 
         <!-- About Section Tab -->
         <div id="tab-about" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">About / Our Story Section</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">About / Our Story</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Section</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Section</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="about_visible" checked>
                             <span class="toggle-slider"></span>
@@ -306,60 +361,60 @@ Guaranteed Rent Options</textarea>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Section Label</label>
-                        <input type="text" id="about_label" class="w-full border rounded px-3 py-2" value="Our Story — 01">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="about_label" class="w-full border rounded px-3 py-2 text-sm" value="Our Story — 01">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Main Headline</label>
-                        <textarea id="about_headline" class="w-full border rounded px-3 py-2" rows="2">We breathe new life into dated properties, curating spaces that inspire connection.</textarea>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline</label>
+                        <textarea id="about_headline" class="w-full border rounded px-3 py-2 text-sm" rows="2">We breathe new life into dated properties, curating spaces that inspire connection.</textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Paragraph 1</label>
-                        <textarea id="about_paragraph1" class="w-full border rounded px-3 py-2" rows="3">At Wright Key Property, we don't just renovate; we reimagine. We specialize in acquiring HMO conversions and refurbishing them to a boutique luxury standard.</textarea>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Paragraph 1</label>
+                        <textarea id="about_paragraph1" class="w-full border rounded px-3 py-2 text-sm" rows="3">At Wright Key Property, we don't just renovate; we reimagine. We specialize in acquiring HMO conversions and refurbishing them to a boutique luxury standard.</textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Paragraph 2</label>
-                        <textarea id="about_paragraph2" class="w-full border rounded px-3 py-2" rows="3">Our service area is London, where the demand for high-quality, flexible living is ever-growing. We cater specifically to those who keep the city moving: working professionals and NHS staff.</textarea>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Paragraph 2</label>
+                        <textarea id="about_paragraph2" class="w-full border rounded px-3 py-2 text-sm" rows="3">Our service area is London, where the demand for high-quality, flexible living is ever-growing. We cater specifically to those who keep the city moving: working professionals and NHS staff.</textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Link Text</label>
-                        <input type="text" id="about_link_text" class="w-full border rounded px-3 py-2" value="Our Story">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Link Text</label>
+                        <input type="text" id="about_link_text" class="w-full border rounded px-3 py-2 text-sm" value="Our Story">
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">About Images</h3>
-                    <div class="grid grid-cols-2 gap-6">
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">About Images</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Main Image</label>
-                            <div id="aboutImage1Preview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                                <span class="text-gray-400 text-sm">No image</span>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Image</label>
+                            <div id="aboutImage1Preview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-xs sm:text-sm">No image</span>
                             </div>
                             <div class="flex gap-2 mb-2">
                                 <input type="file" id="aboutImage1Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 1)">
-                                <button onclick="document.getElementById('aboutImage1Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="document.getElementById('aboutImage1Input').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                                 <button onclick="removeAboutImage(1)" class="text-red-500 text-xs hover:underline">Remove</button>
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" id="about_image1_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
-                                <button onclick="setAboutImageUrl(1)" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                                <input type="text" id="about_image1_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1.5 text-xs">
+                                <button onclick="setAboutImageUrl(1)" class="bg-gray-200 px-2 py-1.5 rounded text-xs">Set</button>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Detail Image</label>
-                            <div id="aboutImage2Preview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                                <span class="text-gray-400 text-sm">No image</span>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Detail Image</label>
+                            <div id="aboutImage2Preview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-xs sm:text-sm">No image</span>
                             </div>
                             <div class="flex gap-2 mb-2">
                                 <input type="file" id="aboutImage2Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 2)">
-                                <button onclick="document.getElementById('aboutImage2Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="document.getElementById('aboutImage2Input').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                                 <button onclick="removeAboutImage(2)" class="text-red-500 text-xs hover:underline">Remove</button>
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" id="about_image2_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
-                                <button onclick="setAboutImageUrl(2)" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                                <input type="text" id="about_image2_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1.5 text-xs">
+                                <button onclick="setAboutImageUrl(2)" class="bg-gray-200 px-2 py-1.5 rounded text-xs">Set</button>
                             </div>
                         </div>
                     </div>
@@ -369,11 +424,11 @@ Guaranteed Rent Options</textarea>
 
         <!-- Investors Section Tab -->
         <div id="tab-investors" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">For Investors Section</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">For Investors</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Section</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Section</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="investors_visible" checked>
                             <span class="toggle-slider"></span>
@@ -381,52 +436,52 @@ Guaranteed Rent Options</textarea>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Section Label</label>
-                        <input type="text" id="investors_label" class="w-full border rounded px-3 py-2" value="Investment Opportunities">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="investors_label" class="w-full border rounded px-3 py-2 text-sm" value="Investment Opportunities">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Main Headline</label>
-                        <input type="text" id="investors_headline" class="w-full border rounded px-3 py-2" value="Hands-off Investment">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline</label>
+                        <input type="text" id="investors_headline" class="w-full border rounded px-3 py-2 text-sm" value="Hands-off Investment">
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">Investment Cards</h3>
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Investment Cards</h3>
 
-                    <div class="space-y-6">
-                        <div class="p-4 border rounded">
-                            <h4 class="font-medium mb-3">Card 1</h4>
-                            <input type="text" id="investor_card1_title" class="w-full border rounded px-3 py-2 mb-2" value="Sourcing Deals">
-                            <textarea id="investor_card1_desc" class="w-full border rounded px-3 py-2" rows="2">We leverage our extensive network to find off-market properties with high potential, bypassing the competitive open market.</textarea>
+                    <div class="space-y-4 sm:space-y-6">
+                        <div class="p-3 sm:p-4 border rounded">
+                            <h4 class="font-medium mb-2 sm:mb-3 text-sm sm:text-base">Card 1</h4>
+                            <input type="text" id="investor_card1_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Sourcing Deals">
+                            <textarea id="investor_card1_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">We leverage our extensive network to find off-market properties with high potential, bypassing the competitive open market.</textarea>
                         </div>
-                        <div class="p-4 border rounded">
-                            <h4 class="font-medium mb-3">Card 2</h4>
-                            <input type="text" id="investor_card2_title" class="w-full border rounded px-3 py-2 mb-2" value="Power Team">
-                            <textarea id="investor_card2_desc" class="w-full border rounded px-3 py-2" rows="2">From architects to contractors, we have a trusted team in place to execute refurbishments to a luxury standard on time and budget.</textarea>
+                        <div class="p-3 sm:p-4 border rounded">
+                            <h4 class="font-medium mb-2 sm:mb-3 text-sm sm:text-base">Card 2</h4>
+                            <input type="text" id="investor_card2_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Power Team">
+                            <textarea id="investor_card2_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">From architects to contractors, we have a trusted team in place to execute refurbishments to a luxury standard on time and budget.</textarea>
                         </div>
-                        <div class="p-4 border rounded">
-                            <h4 class="font-medium mb-3">Card 3</h4>
-                            <input type="text" id="investor_card3_title" class="w-full border rounded px-3 py-2 mb-2" value="Passive Income">
-                            <textarea id="investor_card3_desc" class="w-full border rounded px-3 py-2" rows="2">Enjoy the returns of property investment without the headache. We manage the process from acquisition to tenanting.</textarea>
+                        <div class="p-3 sm:p-4 border rounded">
+                            <h4 class="font-medium mb-2 sm:mb-3 text-sm sm:text-base">Card 3</h4>
+                            <input type="text" id="investor_card3_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Passive Income">
+                            <textarea id="investor_card3_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Enjoy the returns of property investment without the headache. We manage the process from acquisition to tenanting.</textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">Investment Image</h3>
-                    <div id="investorImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                        <span class="text-gray-400 text-sm">No image</span>
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Investment Image</h3>
+                    <div id="investorImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                        <span class="text-gray-400 text-xs sm:text-sm">No image</span>
                     </div>
                     <div class="flex gap-2 mb-2">
                         <input type="file" id="investorImageInput" accept="image/*" class="hidden" onchange="uploadInvestorImage(this)">
-                        <button onclick="document.getElementById('investorImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                        <button onclick="document.getElementById('investorImageInput').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                         <button onclick="removeInvestorImage()" class="text-red-500 text-xs hover:underline">Remove</button>
                     </div>
                     <div class="flex gap-2">
-                        <input type="text" id="investor_image_url_input" placeholder="Or paste image URL..." class="flex-1 border rounded px-2 py-1 text-xs">
-                        <button onclick="setInvestorImageUrl()" class="bg-gray-200 px-2 py-1 rounded text-xs">Set URL</button>
+                        <input type="text" id="investor_image_url_input" placeholder="Or paste image URL..." class="flex-1 border rounded px-2 py-1.5 text-xs">
+                        <button onclick="setInvestorImageUrl()" class="bg-gray-200 px-2 py-1.5 rounded text-xs">Set URL</button>
                     </div>
                 </div>
             </div>
@@ -434,11 +489,11 @@ Guaranteed Rent Options</textarea>
 
         <!-- Sourcing Section Tab -->
         <div id="tab-sourcing" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">We Buy Properties Section</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">We Buy Properties</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Section</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Section</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="sourcing_visible" checked>
                             <span class="toggle-slider"></span>
@@ -446,56 +501,56 @@ Guaranteed Rent Options</textarea>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Headline (Line 1)</label>
-                        <input type="text" id="sourcing_headline1" class="w-full border rounded px-3 py-2" value="We Buy Properties">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Headline (Line 1)</label>
+                        <input type="text" id="sourcing_headline1" class="w-full border rounded px-3 py-2 text-sm" value="We Buy Properties">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Headline (Line 2 - Italic)</label>
-                        <input type="text" id="sourcing_headline2" class="w-full border rounded px-3 py-2" value="In Any Condition.">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Headline (Line 2 - Italic)</label>
+                        <input type="text" id="sourcing_headline2" class="w-full border rounded px-3 py-2 text-sm" value="In Any Condition.">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Description</label>
-                        <textarea id="sourcing_description" class="w-full border rounded px-3 py-2" rows="3">Have a dated property? An HMO conversion that needs work? We offer a swift, hassle-free selling process for property owners in London.</textarea>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Description</label>
+                        <textarea id="sourcing_description" class="w-full border rounded px-3 py-2 text-sm" rows="3">Have a dated property? An HMO conversion that needs work? We offer a swift, hassle-free selling process for property owners in London.</textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Button Text</label>
-                        <input type="text" id="sourcing_button_text" class="w-full border rounded px-3 py-2" value="Get an Offer">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Button Text</label>
+                        <input type="text" id="sourcing_button_text" class="w-full border rounded px-3 py-2 text-sm" value="Get an Offer">
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">Before/After Images</h3>
-                    <div class="grid grid-cols-2 gap-4">
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Before/After Images</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Before Image</label>
-                            <div id="beforeImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                                <span class="text-gray-400 text-sm">No image</span>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Before Image</label>
+                            <div id="beforeImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-xs sm:text-sm">No image</span>
                             </div>
                             <div class="flex gap-2 mb-2">
                                 <input type="file" id="beforeImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'before')">
-                                <button onclick="document.getElementById('beforeImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="document.getElementById('beforeImageInput').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                                 <button onclick="removeSourcingImage('before')" class="text-red-500 text-xs hover:underline">Remove</button>
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" id="before_image_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
-                                <button onclick="setSourcingImageUrl('before')" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                                <input type="text" id="before_image_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1.5 text-xs">
+                                <button onclick="setSourcingImageUrl('before')" class="bg-gray-200 px-2 py-1.5 rounded text-xs">Set</button>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">After Image</label>
-                            <div id="afterImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                                <span class="text-gray-400 text-sm">No image</span>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">After Image</label>
+                            <div id="afterImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-xs sm:text-sm">No image</span>
                             </div>
                             <div class="flex gap-2 mb-2">
                                 <input type="file" id="afterImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'after')">
-                                <button onclick="document.getElementById('afterImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                                <button onclick="document.getElementById('afterImageInput').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                                 <button onclick="removeSourcingImage('after')" class="text-red-500 text-xs hover:underline">Remove</button>
                             </div>
                             <div class="flex gap-2">
-                                <input type="text" id="after_image_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1 text-xs">
-                                <button onclick="setSourcingImageUrl('after')" class="bg-gray-200 px-2 py-1 rounded text-xs">Set</button>
+                                <input type="text" id="after_image_url_input" placeholder="Or paste URL..." class="flex-1 border rounded px-2 py-1.5 text-xs">
+                                <button onclick="setSourcingImageUrl('after')" class="bg-gray-200 px-2 py-1.5 rounded text-xs">Set</button>
                             </div>
                         </div>
                     </div>
@@ -505,11 +560,11 @@ Guaranteed Rent Options</textarea>
 
         <!-- Contact Section Tab -->
         <div id="tab-contact" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">Contact Section</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">Contact Section</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Section</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Section</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="contact_visible" checked>
                             <span class="toggle-slider"></span>
@@ -517,64 +572,64 @@ Guaranteed Rent Options</textarea>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Section Label</label>
-                        <input type="text" id="contact_label" class="w-full border rounded px-3 py-2" value="Start the Conversation">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="contact_label" class="w-full border rounded px-3 py-2 text-sm" value="Start the Conversation">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Main Headline</label>
-                        <input type="text" id="contact_headline" class="w-full border rounded px-3 py-2" value="Let's Talk.">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline</label>
+                        <input type="text" id="contact_headline" class="w-full border rounded px-3 py-2 text-sm" value="Let's Talk.">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Email</label>
-                            <input type="email" id="contact_email" class="w-full border rounded px-3 py-2" value="jbwrightkeyproperty@gmail.com">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Email</label>
+                            <input type="email" id="contact_email" class="w-full border rounded px-3 py-2 text-sm" value="jbwrightkeyproperty@gmail.com">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Phone</label>
-                            <input type="text" id="contact_phone" class="w-full border rounded px-3 py-2" value="07852149077">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Phone</label>
+                            <input type="text" id="contact_phone" class="w-full border rounded px-3 py-2 text-sm" value="07852149077">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Office Address</label>
-                        <textarea id="contact_address" class="w-full border rounded px-3 py-2" rows="2">London, UK
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Office Address</label>
+                        <textarea id="contact_address" class="w-full border rounded px-3 py-2 text-sm" rows="2">London, UK
 By Appointment Only</textarea>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">Form Fields</h3>
-                    <div class="space-y-4">
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Form Fields</h3>
+                    <div class="space-y-3 sm:space-y-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Name Field Placeholder</label>
-                            <input type="text" id="form_name_placeholder" class="w-full border rounded px-3 py-2" value="Your Name">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Name Placeholder</label>
+                            <input type="text" id="form_name_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Your Name">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Email Field Placeholder</label>
-                            <input type="text" id="form_email_placeholder" class="w-full border rounded px-3 py-2" value="Email Address">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Email Placeholder</label>
+                            <input type="text" id="form_email_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Email Address">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Message Field Placeholder</label>
-                            <input type="text" id="form_message_placeholder" class="w-full border rounded px-3 py-2" value="Your Message">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Message Placeholder</label>
+                            <input type="text" id="form_message_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Your Message">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Submit Button Text</label>
-                            <input type="text" id="form_submit_text" class="w-full border rounded px-3 py-2" value="Send Message">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Submit Button Text</label>
+                            <input type="text" id="form_submit_text" class="w-full border rounded px-3 py-2 text-sm" value="Send Message">
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="text-lg font-medium mb-4">Enquiry Type Options</h3>
-                    <div class="space-y-2">
+                <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Enquiry Type Options</h3>
+                    <div class="space-y-3 sm:space-y-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Option 1</label>
-                            <input type="text" id="enquiry_option1" class="w-full border rounded px-3 py-2" value="Enquiry for Lettings">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Option 1</label>
+                            <input type="text" id="enquiry_option1" class="w-full border rounded px-3 py-2 text-sm" value="Enquiry for Lettings">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Option 2</label>
-                            <input type="text" id="enquiry_option2" class="w-full border rounded px-3 py-2" value="Enquiry for Investing">
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Option 2</label>
+                            <input type="text" id="enquiry_option2" class="w-full border rounded px-3 py-2 text-sm" value="Enquiry for Investing">
                         </div>
                     </div>
                 </div>
@@ -583,11 +638,11 @@ By Appointment Only</textarea>
 
         <!-- Footer Tab -->
         <div id="tab-footer" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl serif italic">Footer</h2>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">Footer</h2>
                     <div class="flex items-center gap-3">
-                        <span class="text-sm text-gray-500">Show Footer</span>
+                        <span class="text-xs sm:text-sm text-gray-500">Show Footer</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="footer_visible" checked>
                             <span class="toggle-slider"></span>
@@ -595,18 +650,18 @@ By Appointment Only</textarea>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Company Name</label>
-                        <input type="text" id="footer_company" class="w-full border rounded px-3 py-2" value="Wright Key Property">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Company Name</label>
+                        <input type="text" id="footer_company" class="w-full border rounded px-3 py-2 text-sm" value="Wright Key Property">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Copyright Text</label>
-                        <input type="text" id="footer_copyright" class="w-full border rounded px-3 py-2" value="© 2024 All Rights Reserved.">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Copyright Text</label>
+                        <input type="text" id="footer_copyright" class="w-full border rounded px-3 py-2 text-sm" value="© 2024 All Rights Reserved.">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Instagram URL</label>
-                        <input type="text" id="footer_instagram" class="w-full border rounded px-3 py-2" value="https://instagram.com/jb_wrightkeyproperty">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Instagram URL</label>
+                        <input type="text" id="footer_instagram" class="w-full border rounded px-3 py-2 text-sm" value="https://instagram.com/jb_wrightkeyproperty">
                     </div>
                 </div>
             </div>
@@ -614,18 +669,18 @@ By Appointment Only</textarea>
 
         <!-- Media Library Tab -->
         <div id="tab-media" class="tab-content hidden">
-            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
-                <h2 class="text-2xl serif italic mb-6">Media Library</h2>
-                <p class="text-gray-500 mb-4">Manage all uploaded images and videos. Click on any item to copy its URL.</p>
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Media Library</h2>
+                <p class="text-gray-500 text-xs sm:text-sm mb-4">Manage all uploaded images and videos. Click on any item to copy its URL.</p>
 
-                <div class="mb-6">
+                <div class="mb-4 sm:mb-6">
                     <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="uploadMedia(this)" multiple>
-                    <button onclick="document.getElementById('mediaUploadInput').click()" class="bg-[#d4af37] text-black px-4 py-2 rounded text-sm hover:bg-[#b8962e] transition-colors">
+                    <button onclick="document.getElementById('mediaUploadInput').click()" class="bg-[#d4af37] text-black px-3 sm:px-4 py-2 rounded text-xs sm:text-sm hover:bg-[#b8962e] transition-colors">
                         Upload New Media
                     </button>
                 </div>
 
-                <div id="mediaGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div id="mediaGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
                     <!-- Media items will be loaded here -->
                 </div>
             </div>
@@ -872,12 +927,22 @@ By Appointment Only</textarea>
             };
         }
 
+        // Helper to update status on both desktop and mobile
+        function updateStatus(text, colorClass) {
+            const statusEl = document.getElementById('saveStatus');
+            const statusMobile = document.getElementById('saveStatusMobile');
+            [statusEl, statusMobile].forEach(el => {
+                if (el) {
+                    el.textContent = text;
+                    el.classList.remove('text-gray-400', 'text-yellow-500', 'text-green-500', 'text-red-500');
+                    el.classList.add(colorClass);
+                }
+            });
+        }
+
         // Save all content
         async function saveAllContent() {
-            const statusEl = document.getElementById('saveStatus');
-            statusEl.textContent = 'Saving...';
-            statusEl.classList.remove('text-gray-400');
-            statusEl.classList.add('text-yellow-500');
+            updateStatus('Saving...', 'text-yellow-500');
 
             try {
                 const content = gatherContent();
@@ -890,20 +955,15 @@ By Appointment Only</textarea>
 
                 if (data.success) {
                     siteContent = content;
-                    statusEl.textContent = 'All changes saved';
-                    statusEl.classList.remove('text-yellow-500');
-                    statusEl.classList.add('text-green-500');
+                    updateStatus('Saved', 'text-green-500');
                     setTimeout(() => {
-                        statusEl.classList.remove('text-green-500');
-                        statusEl.classList.add('text-gray-400');
+                        updateStatus('All changes saved', 'text-gray-400');
                     }, 2000);
                 } else {
                     throw new Error(data.error);
                 }
             } catch (error) {
-                statusEl.textContent = 'Error saving';
-                statusEl.classList.remove('text-yellow-500');
-                statusEl.classList.add('text-red-500');
+                updateStatus('Error saving', 'text-red-500');
                 console.error('Save error:', error);
             }
         }
