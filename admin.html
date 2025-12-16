@@ -67,6 +67,7 @@
                     <div class="flex items-center gap-2">
                         <span class="text-sm serif italic">WKP</span>
                         <span class="text-[10px] bg-[#d4af37] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
+                        <button onclick="document.getElementById('debugPanel').classList.toggle('hidden')" class="bg-red-600 text-white text-[10px] px-2 py-1 rounded ml-2">DEBUG</button>
                     </div>
                     <a href="/" class="text-[10px] text-gray-400 hover:text-white">View Site</a>
                 </div>
@@ -1842,15 +1843,9 @@ En-Suite
         });
     </script>
 
-    <!-- Debug Panel (toggle with button) -->
-    <div id="debugContainer" class="fixed bottom-0 left-0 right-0 z-50">
-        <button onclick="document.getElementById('debugPanel').classList.toggle('hidden')"
-                class="bg-gray-800 text-white px-4 py-2 text-xs w-full text-left">
-            Toggle Debug Log
-        </button>
-        <div id="debugPanel" class="hidden bg-gray-900 text-green-400 text-xs p-2 max-h-48 overflow-y-auto font-mono">
-            <div>Debug log initialized...</div>
-        </div>
+    <!-- Debug Panel - positioned at top, below header -->
+    <div id="debugPanel" class="hidden fixed top-24 left-2 right-2 z-40 bg-gray-900 text-green-400 text-xs p-2 max-h-48 overflow-y-auto font-mono rounded-lg shadow-xl border-2 border-red-600">
+        <div>Debug log ready - make changes and save to see logs...</div>
     </div>
 </body>
 </html>
