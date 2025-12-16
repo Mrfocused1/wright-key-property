@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Media | Wright Key Property</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        .serif { font-family: 'Cormorant Garamond', serif; }
+        .drop-zone {
+            border: 2px dashed #d4af37;
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #b8962e;
+        }
+        .upload-item {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-[#f5f3ef] min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-black text-white py-6 px-6">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl serif italic">Wright Key Property</a>
+            <span class="text-xs uppercase tracking-widest text-white/60">Media Upload</span>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+
+        <!-- Upload Section -->
+        <section class="mb-12">
+            <h1 class="text-4xl serif italic mb-2">Upload Media</h1>
+            <p class="text-gray-500 mb-8">Upload images and videos for your website. Files are stored in your browser.</p>
+
+            <!-- Drop Zone -->
+            <div id="dropZone" class="drop-zone rounded-lg p-12 text-center cursor-pointer bg-white">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                </div>
+                <p class="text-xl serif italic mb-2">Drag & drop files here</p>
+                <p class="text-gray-400 text-sm mb-4">or click to browse</p>
+                <p class="text-xs text-gray-400">Supports: JPG, PNG, GIF, MP4, WebM</p>
+                <input type="file" id="fileInput" class="hidden" multiple accept="image/*,video/*">
+            </div>
+        </section>
+
+        <!-- Uploaded Files Gallery -->
+        <section id="gallerySection" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl serif italic">Uploaded Files</h2>
+                <button id="clearAll" class="text-xs uppercase tracking-widest text-red-500 hover:text-red-700 transition-colors">
+                    Clear All
+                </button>
+            </div>
+
+            <div id="gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Uploaded items will appear here -->
+            </div>
+        </section>
+
+        <!-- Instructions -->
+        <section class="mt-12 bg-white rounded-lg p-8">
+            <h3 class="text-xl serif italic mb-4">How to use uploaded files</h3>
+            <div class="space-y-4 text-sm text-gray-600">
+                <p><strong>For Mobile Intro Video:</strong> Upload your video, then click "Set as Intro Video" on the video card.</p>
+                <p><strong>For Property Images:</strong> Copy the file URL and use it in your property listings.</p>
+                <p class="text-xs text-gray-400 mt-4">Note: Files are stored in your browser's IndexedDB. For permanent storage, download and add to your assets folder.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white/40 py-8 px-6 mt-12">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-xs">© 2024 Wright Key Property. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // IndexedDB Setup
+        const DB_NAME = 'WrightKeyMedia';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'uploads';
+        let db;
+
+        // Initialize IndexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+                    if (!database.objectStoreNames.contains(STORE_NAME)) {
+                        database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+            });
+        }
+
+        // Save file to IndexedDB
+        function saveFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const fileData = {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size,
+                        data: reader.result,
+                        uploadedAt: new Date().toISOString()
+                    };
+
+                    const transaction = db.transaction([STORE_NAME], 'readwrite');
+                    const store = transaction.objectStore(STORE_NAME);
+                    const request = store.add(fileData);
+
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                };
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Get all files from IndexedDB
+        function getAllFiles() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.getAll();
+
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Delete file from IndexedDB
+        function deleteFile(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.delete(id);
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Clear all files
+        function clearAllFiles() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const store = transaction.objectStore(STORE_NAME);
+                const request = store.clear();
+
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // Format file size
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // Render gallery
+        async function renderGallery() {
+            const files = await getAllFiles();
+            const gallery = document.getElementById('gallery');
+            const gallerySection = document.getElementById('gallerySection');
+
+            if (files.length === 0) {
+                gallerySection.classList.add('hidden');
+                return;
+            }
+
+            gallerySection.classList.remove('hidden');
+            gallery.innerHTML = '';
+
+            files.forEach(file => {
+                const isVideo = file.type.startsWith('video/');
+                const item = document.createElement('div');
+                item.className = 'upload-item bg-white rounded-lg overflow-hidden shadow-sm';
+
+                item.innerHTML = `
+                    <div class="aspect-video bg-gray-100 relative overflow-hidden">
+                        ${isVideo
+                            ? `<video src="${file.data}" class="w-full h-full object-cover" muted></video>
+                               <div class="absolute inset-0 flex items-center justify-center">
+                                   <svg class="w-12 h-12 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                                       <path d="M8 5v14l11-7z"/>
+                                   </svg>
+                               </div>`
+                            : `<img src="${file.data}" class="w-full h-full object-cover" alt="${file.name}">`
+                        }
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm font-medium truncate mb-1">${file.name}</p>
+                        <p class="text-xs text-gray-400 mb-3">${formatSize(file.size)} • ${isVideo ? 'Video' : 'Image'}</p>
+                        <div class="flex gap-2">
+                            ${isVideo ? `
+                                <button onclick="setAsIntroVideo(${file.id})" class="flex-1 bg-[#d4af37] text-white text-xs py-2 px-3 rounded hover:bg-[#b8962e] transition-colors">
+                                    Set as Intro Video
+                                </button>
+                            ` : ''}
+                            <button onclick="copyFileData(${file.id})" class="flex-1 border border-gray-200 text-xs py-2 px-3 rounded hover:bg-gray-50 transition-colors">
+                                Copy URL
+                            </button>
+                            <button onclick="removeFile(${file.id})" class="text-red-500 text-xs py-2 px-3 rounded hover:bg-red-50 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                gallery.appendChild(item);
+            });
+        }
+
+        // Set video as intro video
+        async function setAsIntroVideo(id) {
+            const files = await getAllFiles();
+            const file = files.find(f => f.id === id);
+            if (file) {
+                localStorage.setItem('mobileIntroVideo', file.data);
+                localStorage.setItem('mobileIntroVideoName', file.name);
+                alert('Video set as mobile intro! The homepage will now show this video during loading on mobile devices.');
+            }
+        }
+
+        // Copy file data URL
+        async function copyFileData(id) {
+            const files = await getAllFiles();
+            const file = files.find(f => f.id === id);
+            if (file) {
+                await navigator.clipboard.writeText(file.data);
+                alert('File URL copied to clipboard!');
+            }
+        }
+
+        // Remove file
+        async function removeFile(id) {
+            if (confirm('Delete this file?')) {
+                await deleteFile(id);
+                renderGallery();
+            }
+        }
+
+        // Handle file upload
+        async function handleFiles(files) {
+            for (const file of files) {
+                if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                    await saveFile(file);
+                }
+            }
+            renderGallery();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initDB();
+            renderGallery();
+
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            // Click to upload
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+                fileInput.value = '';
+            });
+
+            // Drag and drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            // Clear all
+            document.getElementById('clearAll').addEventListener('click', async () => {
+                if (confirm('Delete all uploaded files?')) {
+                    await clearAllFiles();
+                    localStorage.removeItem('mobileIntroVideo');
+                    localStorage.removeItem('mobileIntroVideoName');
+                    renderGallery();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
