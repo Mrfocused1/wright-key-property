@@ -846,7 +846,9 @@
         // --- Load Dynamic Content from Admin ---
         async function loadDynamicContent() {
             try {
-                const response = await fetch('/api/content');
+                const response = await fetch('/api/content?t=' + Date.now(), {
+                    cache: 'no-store'
+                });
                 const data = await response.json();
 
                 if (!data.success || !data.content) return;

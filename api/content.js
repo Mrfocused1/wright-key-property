@@ -3,6 +3,11 @@ const { put, list, del } = require('@vercel/blob');
 const CONTENT_FILE = 'site-content.json';
 
 module.exports = async function handler(request, response) {
+  // Add cache control headers to prevent caching
+  response.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  response.setHeader('Pragma', 'no-cache');
+  response.setHeader('Expires', '0');
+
   // GET - Load content
   if (request.method === 'GET') {
     try {
