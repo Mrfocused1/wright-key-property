@@ -1,32 +1,79 @@
-import { put } from '@vercel/blob';
+const { put } = require('@vercel/blob');
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-export default async function handler(request) {
+module.exports = async function handler(request, response) {
   if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const formData = await request.formData();
-    const file = formData.get('file');
+    // For Vercel, we need to handle the file from the request body
+    const chunks = [];
+    for await (const chunk of request) {
+      chunks.push(chunk);
+    }
+    const buffer = Buffer.concat(chunks);
 
-    if (!file) {
-      return new Response(JSON.stringify({ error: 'No file provided' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    // Parse multipart form data manually or use a simpler approach
+    const contentType = request.headers['content-type'] || '';
+
+    if (!contentType.includes('multipart/form-data')) {
+      return response.status(400).json({ error: 'Content-Type must be multipart/form-data' });
     }
 
-    const filename = formData.get('filename') || file.name;
-    const isIntroVideo = formData.get('isIntroVideo') === 'true';
+    // Extract boundary
+    const boundary = contentType.split('boundary=')[1];
+    if (!boundary) {
+      return response.status(400).json({ error: 'No boundary found' });
+    }
+
+    // Simple multipart parser
+    const parts = buffer.toString('binary').split('--' + boundary);
+    let file = null;
+    let filename = 'upload';
+    let isIntroVideo = false;
+    let fileContentType = 'application/octet-stream';
+
+    for (const part of parts) {
+      if (part.includes('Content-Disposition')) {
+        const nameMatch = part.match(/name="([^"]+)"/);
+        const filenameMatch = part.match(/filename="([^"]+)"/);
+
+        if (nameMatch) {
+          const fieldName = nameMatch[1];
+
+          if (filenameMatch) {
+            // This is a file field
+            filename = filenameMatch[1];
+            const contentTypeMatch = part.match(/Content-Type:\s*([^\r\n]+)/);
+            if (contentTypeMatch) {
+              fileContentType = contentTypeMatch[1].trim();
+            }
+            // Get file content (after double newline)
+            const contentStart = part.indexOf('\r\n\r\n') + 4;
+            const contentEnd = part.lastIndexOf('\r\n');
+            if (contentStart > 3 && contentEnd > contentStart) {
+              file = Buffer.from(part.slice(contentStart, contentEnd), 'binary');
+            }
+          } else {
+            // This is a regular field
+            const valueStart = part.indexOf('\r\n\r\n') + 4;
+            const valueEnd = part.lastIndexOf('\r\n');
+            if (valueStart > 3 && valueEnd > valueStart) {
+              const value = part.slice(valueStart, valueEnd).trim();
+              if (fieldName === 'filename') {
+                filename = value;
+              } else if (fieldName === 'isIntroVideo') {
+                isIntroVideo = value === 'true';
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (!file) {
+      return response.status(400).json({ error: 'No file provided' });
+    }
 
     // Create a path prefix for organization
     const prefix = isIntroVideo ? 'intro-video/' : 'uploads/';
@@ -34,23 +81,24 @@ export default async function handler(request) {
 
     const blob = await put(pathname, file, {
       access: 'public',
-      addRandomSuffix: !isIntroVideo, // Don't add random suffix for intro video so we can find it easily
+      contentType: fileContentType,
+      addRandomSuffix: !isIntroVideo,
     });
 
-    return new Response(JSON.stringify({
+    return response.status(200).json({
       success: true,
       url: blob.url,
       pathname: blob.pathname,
       downloadUrl: blob.downloadUrl,
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Upload error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(500).json({ error: error.message });
   }
-}
+};
+
+module.exports.config = {
+  api: {
+    bodyParser: false,
+  },
+};
