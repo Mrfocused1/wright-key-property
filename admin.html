@@ -51,8 +51,6 @@
         /* Mobile content panels */
         @media (max-width: 639px) {
             .content-panel { padding: 1rem; }
-            .menu-item-grid { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
-            .menu-item-grid > div:last-child { padding-top: 0; }
             .image-upload-row { flex-direction: column; }
             .image-preview-mobile { width: 100%; height: 10rem; }
         }
@@ -98,17 +96,60 @@
 
     <main class="max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
 
-        <!-- Tabs -->
-        <div class="tabs-container mb-6 sm:mb-8">
-            <button class="tab-btn active px-3 sm:px-4 py-2 rounded text-xs sm:text-sm" onclick="showTab('header')">Header</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('hero')">Hero</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('about')">About</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('stats')">Stats</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investors')">Investors</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('sourcing')">Sourcing</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('contact')">Contact</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('footer')">Footer</button>
-            <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('media')">Media</button>
+        <!-- Page Selector -->
+        <div class="mb-4 sm:mb-6">
+            <label class="block text-xs sm:text-sm text-gray-500 mb-2">Select Page to Edit</label>
+            <div class="flex flex-wrap gap-2">
+                <button class="page-btn active px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-[#d4af37] bg-[#d4af37] text-white" onclick="selectPage('home')">Home</button>
+                <button class="page-btn px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-gray-300 bg-white text-gray-700" onclick="selectPage('coliving')">Co-Living</button>
+                <button class="page-btn px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-gray-300 bg-white text-gray-700" onclick="selectPage('investor')">Investor</button>
+                <button class="page-btn px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-gray-300 bg-white text-gray-700" onclick="selectPage('search')">Search</button>
+            </div>
+        </div>
+
+        <!-- Tabs for Home Page -->
+        <div id="home-tabs" class="page-tabs">
+            <div class="tabs-container mb-6 sm:mb-8">
+                <button class="tab-btn active px-3 sm:px-4 py-2 rounded text-xs sm:text-sm" onclick="showTab('header')">Header</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('hero')">Hero</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('about')">About</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('stats')">Stats</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investors')">Investors</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('sourcing')">Sourcing</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('contact')">Contact</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('footer')">Footer</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('media')">Media</button>
+            </div>
+        </div>
+
+        <!-- Tabs for Co-Living Page -->
+        <div id="coliving-tabs" class="page-tabs hidden">
+            <div class="tabs-container mb-6 sm:mb-8">
+                <button class="tab-btn active px-3 sm:px-4 py-2 rounded text-xs sm:text-sm" onclick="showTab('coliving-hero')">Hero</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('coliving-community')">Community</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('coliving-amenities')">Amenities</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('coliving-spaces')">Featured Spaces</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('coliving-cta')">CTA Section</button>
+            </div>
+        </div>
+
+        <!-- Tabs for Investor Page -->
+        <div id="investor-tabs" class="page-tabs hidden">
+            <div class="tabs-container mb-6 sm:mb-8">
+                <button class="tab-btn active px-3 sm:px-4 py-2 rounded text-xs sm:text-sm" onclick="showTab('investor-hero')">Hero</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-strategy')">Strategy</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-metrics')">Metrics</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-process')">Process</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-cta')">CTA Section</button>
+            </div>
+        </div>
+
+        <!-- Tabs for Search Page -->
+        <div id="search-tabs" class="page-tabs hidden">
+            <div class="tabs-container mb-6 sm:mb-8">
+                <button class="tab-btn active px-3 sm:px-4 py-2 rounded text-xs sm:text-sm" onclick="showTab('search-hero')">Hero</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('search-filters')">Filters</button>
+            </div>
         </div>
 
         <!-- Header/Menu Tab -->
@@ -157,14 +198,10 @@
                     <div class="pt-4 sm:pt-6 border-t">
                         <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Menu Items</h3>
                         <div class="space-y-3 sm:space-y-4">
-                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
                                     <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 1</label>
                                     <input type="text" id="menu_item1_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Home">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item1_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/">
                                 </div>
                                 <div class="flex items-center sm:items-end">
                                     <label class="flex items-center gap-2 text-xs sm:text-sm">
@@ -173,14 +210,10 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
                                     <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 2</label>
                                     <input type="text" id="menu_item2_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Browse">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item2_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/search">
                                 </div>
                                 <div class="flex items-center sm:items-end">
                                     <label class="flex items-center gap-2 text-xs sm:text-sm">
@@ -189,14 +222,10 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
                                     <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 3</label>
                                     <input type="text" id="menu_item3_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Co-Living">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item3_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/coliving">
                                 </div>
                                 <div class="flex items-center sm:items-end">
                                     <label class="flex items-center gap-2 text-xs sm:text-sm">
@@ -205,14 +234,10 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
                                     <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 4</label>
                                     <input type="text" id="menu_item4_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="For Investors">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item4_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="/investor">
                                 </div>
                                 <div class="flex items-center sm:items-end">
                                     <label class="flex items-center gap-2 text-xs sm:text-sm">
@@ -221,14 +246,10 @@
                                     </label>
                                 </div>
                             </div>
-                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
+                            <div class="menu-item-grid grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 p-3 sm:p-4 border rounded">
                                 <div>
                                     <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Menu Item 5</label>
                                     <input type="text" id="menu_item5_text" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="Contact">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Link</label>
-                                    <input type="text" id="menu_item5_link" class="w-full border rounded px-2 sm:px-3 py-1.5 sm:py-2 text-sm" value="#contact">
                                 </div>
                                 <div class="flex items-center sm:items-end">
                                     <label class="flex items-center gap-2 text-xs sm:text-sm">
@@ -599,38 +620,21 @@ By Appointment Only</textarea>
                 </div>
 
                 <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
-                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Form Fields</h3>
-                    <div class="space-y-3 sm:space-y-4">
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Name Placeholder</label>
-                            <input type="text" id="form_name_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Your Name">
-                        </div>
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Email Placeholder</label>
-                            <input type="text" id="form_email_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Email Address">
-                        </div>
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Message Placeholder</label>
-                            <input type="text" id="form_message_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Your Message">
-                        </div>
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Submit Button Text</label>
-                            <input type="text" id="form_submit_text" class="w-full border rounded px-3 py-2 text-sm" value="Send Message">
-                        </div>
+                    <div class="flex justify-between items-center mb-3 sm:mb-4">
+                        <h3 class="text-base sm:text-lg font-medium">Form Fields</h3>
+                        <button onclick="addFormField()" class="bg-[#d4af37] text-black px-3 py-1.5 rounded text-xs hover:bg-[#b8962e] transition-colors">
+                            + Add Field
+                        </button>
+                    </div>
+                    <div id="formFieldsContainer" class="space-y-3 sm:space-y-4">
+                        <!-- Dynamic form fields will be rendered here -->
                     </div>
                 </div>
 
                 <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
-                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Enquiry Type Options</h3>
-                    <div class="space-y-3 sm:space-y-4">
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Option 1</label>
-                            <input type="text" id="enquiry_option1" class="w-full border rounded px-3 py-2 text-sm" value="Enquiry for Lettings">
-                        </div>
-                        <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Option 2</label>
-                            <input type="text" id="enquiry_option2" class="w-full border rounded px-3 py-2 text-sm" value="Enquiry for Investing">
-                        </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Submit Button Text</label>
+                        <input type="text" id="form_submit_text" class="w-full border rounded px-3 py-2 text-sm" value="Send Message">
                     </div>
                 </div>
             </div>
@@ -686,11 +690,547 @@ By Appointment Only</textarea>
             </div>
         </div>
 
+        <!-- ==================== CO-LIVING PAGE SECTIONS ==================== -->
+
+        <!-- Co-Living Hero -->
+        <div id="tab-coliving-hero" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Co-Living Hero Section</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Label Text</label>
+                        <input type="text" id="coliving_hero_label" class="w-full border rounded px-3 py-2 text-sm" value="London Living Redefined">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline</label>
+                        <input type="text" id="coliving_hero_headline" class="w-full border rounded px-3 py-2 text-sm" value="Curated Co-Living">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Subheadline</label>
+                        <textarea id="coliving_hero_subheadline" class="w-full border rounded px-3 py-2 text-sm" rows="3">Exceptional rooms in the heart of London. We cater to those who drive the city forward, creating spaces that foster community without compromising on luxury.</textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 1 Text</label>
+                            <input type="text" id="coliving_hero_cta1_text" class="w-full border rounded px-3 py-2 text-sm" value="View Properties">
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 2 Text</label>
+                            <input type="text" id="coliving_hero_cta2_text" class="w-full border rounded px-3 py-2 text-sm" value="Learn More">
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Background Image URL</label>
+                        <input type="text" id="coliving_hero_bg" class="w-full border rounded px-3 py-2 text-sm" placeholder="https://...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Co-Living Community -->
+        <div id="tab-coliving-community" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Community Section (Who We Serve)</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="coliving_community_label" class="w-full border rounded px-3 py-2 text-sm" value="Our Community">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Title</label>
+                        <input type="text" id="coliving_community_title" class="w-full border rounded px-3 py-2 text-sm" value="Who We Serve">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Description</label>
+                        <textarea id="coliving_community_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">We create bespoke living experiences for London's most vital communities.</textarea>
+                    </div>
+
+                    <!-- Card 1: Professionals -->
+                    <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                        <h4 class="font-medium mb-3 text-sm sm:text-base">Card 1: Young Professionals</h4>
+                        <input type="text" id="coliving_card1_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Young Professionals">
+                        <textarea id="coliving_card1_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Designed for ambitious individuals building their careers in the heart of London.</textarea>
+                    </div>
+
+                    <!-- Card 2: NHS -->
+                    <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                        <h4 class="font-medium mb-3 text-sm sm:text-base">Card 2: NHS Staff</h4>
+                        <input type="text" id="coliving_card2_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="NHS Staff">
+                        <textarea id="coliving_card2_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Supporting those who support us all. Convenient locations, flexible terms.</textarea>
+                    </div>
+
+                    <!-- Card 3: Students -->
+                    <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                        <h4 class="font-medium mb-3 text-sm sm:text-base">Card 3: Students</h4>
+                        <input type="text" id="coliving_card3_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Students">
+                        <textarea id="coliving_card3_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Elevate your university experience. Modern, safe, and social spaces.</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Co-Living Amenities -->
+        <div id="tab-coliving-amenities" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">The Standard (Amenities)</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="coliving_amenities_label" class="w-full border rounded px-3 py-2 text-sm" value="The Standard">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Title</label>
+                        <input type="text" id="coliving_amenities_title" class="w-full border rounded px-3 py-2 text-sm" value="Inclusive Living">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Description</label>
+                        <textarea id="coliving_amenities_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">We take care of the details so you can focus on living.</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Amenity 1</label>
+                            <input type="text" id="coliving_amenity1_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="High-Speed Wifi">
+                            <input type="text" id="coliving_amenity1_desc" class="w-full border rounded px-2 py-1.5 text-xs" value="Fibre optic broadband included">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Amenity 2</label>
+                            <input type="text" id="coliving_amenity2_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="All Bills Included">
+                            <input type="text" id="coliving_amenity2_desc" class="w-full border rounded px-2 py-1.5 text-xs" value="Gas, electricity, water covered">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Amenity 3</label>
+                            <input type="text" id="coliving_amenity3_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Weekly Cleaning">
+                            <input type="text" id="coliving_amenity3_desc" class="w-full border rounded px-2 py-1.5 text-xs" value="Common areas professionally cleaned">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Amenity 4</label>
+                            <input type="text" id="coliving_amenity4_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Community Manager">
+                            <input type="text" id="coliving_amenity4_desc" class="w-full border rounded px-2 py-1.5 text-xs" value="Dedicated support for any issues">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Amenity 5</label>
+                            <input type="text" id="coliving_amenity5_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Fully Furnished">
+                            <input type="text" id="coliving_amenity5_desc" class="w-full border rounded px-2 py-1.5 text-xs" value="Designer furniture packages">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Amenity 6</label>
+                            <input type="text" id="coliving_amenity6_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Prime Locations">
+                            <input type="text" id="coliving_amenity6_desc" class="w-full border rounded px-2 py-1.5 text-xs" value="Close to transport and amenities">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Co-Living Featured Spaces -->
+        <div id="tab-coliving-spaces" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Featured Spaces</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="coliving_spaces_label" class="w-full border rounded px-3 py-2 text-sm" value="Availability">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Title</label>
+                        <input type="text" id="coliving_spaces_title" class="w-full border rounded px-3 py-2 text-sm" value="Featured Spaces">
+                    </div>
+                    <p class="text-xs text-gray-500">Note: Properties are managed separately. This section controls the labels only.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Co-Living CTA -->
+        <div id="tab-coliving-cta" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">CTA Section</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Label</label>
+                        <input type="text" id="coliving_cta_label" class="w-full border rounded px-3 py-2 text-sm" value="Interested?">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Headline</label>
+                        <input type="text" id="coliving_cta_headline" class="w-full border rounded px-3 py-2 text-sm" value="Book a viewing today.">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Subtext</label>
+                        <input type="text" id="coliving_cta_subtext" class="w-full border rounded px-3 py-2 text-sm" value="Spaces fill quickly.">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Button Text</label>
+                        <input type="text" id="coliving_cta_button" class="w-full border rounded px-3 py-2 text-sm" value="Contact Team">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== INVESTOR PAGE SECTIONS ==================== -->
+
+        <!-- Investor Hero -->
+        <div id="tab-investor-hero" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Investor Hero Section</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Label Text</label>
+                        <input type="text" id="investor_hero_label" class="w-full border rounded px-3 py-2 text-sm" value="Capital Growth & Yield">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline</label>
+                        <input type="text" id="investor_hero_headline" class="w-full border rounded px-3 py-2 text-sm" value="Intelligent Investment">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Subheadline</label>
+                        <textarea id="investor_hero_subheadline" class="w-full border rounded px-3 py-2 text-sm" rows="3">We specialise in sourcing and developing high-yield HMO opportunities in London. A completely hands-off experience for the modern investor.</textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 1 Text</label>
+                            <input type="text" id="investor_hero_cta1_text" class="w-full border rounded px-3 py-2 text-sm" value="Get Started">
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button 2 Text</label>
+                            <input type="text" id="investor_hero_cta2_text" class="w-full border rounded px-3 py-2 text-sm" value="View Metrics">
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Background Image URL</label>
+                        <input type="text" id="investor_hero_bg" class="w-full border rounded px-3 py-2 text-sm" placeholder="https://...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor Strategy -->
+        <div id="tab-investor-strategy" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Strategy (3 Pillars)</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                        <h4 class="font-medium mb-3 text-sm sm:text-base">Pillar 1: Sourcing</h4>
+                        <input type="text" id="investor_pillar1_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Sourcing">
+                        <textarea id="investor_pillar1_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">We leverage deep local networks to identify off-market properties with significant value-add potential.</textarea>
+                    </div>
+                    <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                        <h4 class="font-medium mb-3 text-sm sm:text-base">Pillar 2: Development</h4>
+                        <input type="text" id="investor_pillar2_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Development">
+                        <textarea id="investor_pillar2_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Our power team of architects and contractors handle the full refurbishment.</textarea>
+                    </div>
+                    <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                        <h4 class="font-medium mb-3 text-sm sm:text-base">Pillar 3: Management</h4>
+                        <input type="text" id="investor_pillar3_title" class="w-full border rounded px-3 py-2 mb-2 text-sm" value="Management">
+                        <textarea id="investor_pillar3_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Truly passive income. We tenant the property with vetted professionals and NHS staff.</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor Metrics -->
+        <div id="tab-investor-metrics" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Metrics Section</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Title</label>
+                        <input type="text" id="investor_metrics_title" class="w-full border rounded px-3 py-2 text-sm" value="The Metrics.">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Description</label>
+                        <textarea id="investor_metrics_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Our model is built on data, not guesswork. We focus on areas with strong fundamentals.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Button Text</label>
+                        <input type="text" id="investor_metrics_button" class="w-full border rounded px-3 py-2 text-sm" value="Request Case Studies">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t">
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Stat 1</label>
+                            <input type="text" id="investor_stat1_value" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="12%">
+                            <input type="text" id="investor_stat1_label" class="w-full border rounded px-2 py-1.5 text-xs" value="Target Yield">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Stat 2</label>
+                            <input type="text" id="investor_stat2_value" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="6 Months">
+                            <input type="text" id="investor_stat2_label" class="w-full border rounded px-2 py-1.5 text-xs" value="Avg Refurb Time">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Stat 3</label>
+                            <input type="text" id="investor_stat3_value" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="100%">
+                            <input type="text" id="investor_stat3_label" class="w-full border rounded px-2 py-1.5 text-xs" value="Hands Off">
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Stat 4</label>
+                            <input type="text" id="investor_stat4_value" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="50+">
+                            <input type="text" id="investor_stat4_label" class="w-full border rounded px-2 py-1.5 text-xs" value="Properties">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor Process -->
+        <div id="tab-investor-process" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">The Process (How It Works)</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Label</label>
+                        <input type="text" id="investor_process_label" class="w-full border rounded px-3 py-2 text-sm" value="The Journey">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Section Title</label>
+                        <input type="text" id="investor_process_title" class="w-full border rounded px-3 py-2 text-sm" value="How It Works">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t">
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Step 1</label>
+                            <input type="text" id="investor_step1_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Consultation">
+                            <textarea id="investor_step1_desc" class="w-full border rounded px-2 py-1.5 text-xs" rows="2">We analyze your capital and goals to build a tailored investment strategy.</textarea>
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Step 2</label>
+                            <input type="text" id="investor_step2_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Acquisition">
+                            <textarea id="investor_step2_desc" class="w-full border rounded px-2 py-1.5 text-xs" rows="2">We source, view, and negotiate the deal, securing it below market value.</textarea>
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Step 3</label>
+                            <input type="text" id="investor_step3_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Transformation">
+                            <textarea id="investor_step3_desc" class="w-full border rounded px-2 py-1.5 text-xs" rows="2">Our team strips out and refurbishes the property to luxury standards.</textarea>
+                        </div>
+                        <div class="p-3 border rounded">
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Step 4</label>
+                            <input type="text" id="investor_step4_title" class="w-full border rounded px-2 py-1.5 mb-1 text-sm" value="Income">
+                            <textarea id="investor_step4_desc" class="w-full border rounded px-2 py-1.5 text-xs" rows="2">Tenants move in. You receive monthly reports and returns.</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor CTA -->
+        <div id="tab-investor-cta" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">CTA / Partner Section</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Headline</label>
+                        <input type="text" id="investor_cta_headline" class="w-full border rounded px-3 py-2 text-sm" value="Partner With Us.">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Description</label>
+                        <textarea id="investor_cta_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">Access our private investor list to receive new off-market opportunities directly to your inbox.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Form Button Text</label>
+                        <input type="text" id="investor_cta_button" class="w-full border rounded px-3 py-2 text-sm" value="Request Investor Pack">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SEARCH PAGE SECTIONS ==================== -->
+
+        <!-- Search Hero -->
+        <div id="tab-search-hero" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Search Page Hero</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Label Text</label>
+                        <input type="text" id="search_hero_label" class="w-full border rounded px-3 py-2 text-sm" value="The Collection">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Main Headline</label>
+                        <input type="text" id="search_hero_headline" class="w-full border rounded px-3 py-2 text-sm" value="Find Your Space">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Subheadline</label>
+                        <textarea id="search_hero_subheadline" class="w-full border rounded px-3 py-2 text-sm" rows="3">Discover exceptional properties across London's most sought-after neighbourhoods. From luxury studios to premium apartments.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">CTA Button Text</label>
+                        <input type="text" id="search_hero_cta_text" class="w-full border rounded px-3 py-2 text-sm" value="Browse Properties">
+                    </div>
+                    <div class="pt-4 border-t">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Background Image URL</label>
+                        <input type="text" id="search_hero_bg" class="w-full border rounded px-3 py-2 text-sm" placeholder="https://...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Filters -->
+        <div id="tab-search-filters" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <h2 class="text-xl sm:text-2xl serif italic mb-4 sm:mb-6">Filter Options</h2>
+                <div class="space-y-4 sm:space-y-6">
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Location Options (one per line)</label>
+                        <textarea id="search_locations" class="w-full border rounded px-3 py-2 text-sm" rows="6">Kensington
+Chelsea
+Shoreditch
+Greenwich
+Hackney</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Property Type Options (one per line)</label>
+                        <textarea id="search_types" class="w-full border rounded px-3 py-2 text-sm" rows="4">Studio
+En-Suite
+1 Bedroom
+2 Bedroom</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Search Placeholder</label>
+                        <input type="text" id="search_placeholder" class="w-full border rounded px-3 py-2 text-sm" value="Search by keyword...">
+                    </div>
+                    <div>
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Load More Button Text</label>
+                        <input type="text" id="search_loadmore_text" class="w-full border rounded px-3 py-2 text-sm" value="Load More Spaces">
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
         // Content storage
         let siteContent = {};
+        let currentPage = 'home';
+
+        // Dynamic form fields storage
+        let formFields = [
+            { label: 'Name', type: 'text', placeholder: 'Your Name', required: true },
+            { label: 'Email', type: 'email', placeholder: 'Your Email', required: true },
+            { label: 'Enquiry Type', type: 'select', placeholder: '', required: true, options: ['Property Enquiry', 'Investor Enquiry', 'Sell My Property', 'Other'] },
+            { label: 'Message', type: 'textarea', placeholder: 'Your Message', required: true }
+        ];
+
+        // Field types available
+        const fieldTypes = [
+            { value: 'text', label: 'Text Input' },
+            { value: 'email', label: 'Email Input' },
+            { value: 'tel', label: 'Phone Input' },
+            { value: 'textarea', label: 'Text Area' },
+            { value: 'select', label: 'Dropdown Select' }
+        ];
+
+        // Add a new form field
+        function addFormField() {
+            formFields.push({
+                label: 'New Field',
+                type: 'text',
+                placeholder: 'Enter value...',
+                required: false,
+                options: []
+            });
+            renderFormFields();
+        }
+
+        // Remove a form field
+        function removeFormField(index) {
+            if (formFields.length <= 1) {
+                alert('You must have at least one form field');
+                return;
+            }
+            formFields.splice(index, 1);
+            renderFormFields();
+        }
+
+        // Update field property
+        function updateFieldProp(index, prop, value) {
+            formFields[index][prop] = value;
+            if (prop === 'type') {
+                // If changing to select, initialize options array
+                if (value === 'select' && !formFields[index].options) {
+                    formFields[index].options = ['Option 1'];
+                }
+                renderFormFields();
+            }
+        }
+
+        // Add option to select field
+        function addFieldOption(index) {
+            if (!formFields[index].options) {
+                formFields[index].options = [];
+            }
+            formFields[index].options.push('New Option');
+            renderFormFields();
+        }
+
+        // Remove option from select field
+        function removeFieldOption(fieldIndex, optionIndex) {
+            if (formFields[fieldIndex].options.length <= 1) {
+                alert('You must have at least one option');
+                return;
+            }
+            formFields[fieldIndex].options.splice(optionIndex, 1);
+            renderFormFields();
+        }
+
+        // Update option value
+        function updateFieldOption(fieldIndex, optionIndex, value) {
+            formFields[fieldIndex].options[optionIndex] = value;
+        }
+
+        // Render all form fields
+        function renderFormFields() {
+            const container = document.getElementById('formFieldsContainer');
+            if (!container) return;
+
+            container.innerHTML = formFields.map((field, index) => `
+                <div class="p-3 sm:p-4 border rounded bg-gray-50">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="text-xs sm:text-sm font-medium text-gray-600">Field ${index + 1}</span>
+                        <button onclick="removeFormField(${index})" class="text-red-500 text-xs hover:underline">Remove</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Label</label>
+                            <input type="text" value="${field.label}" onchange="updateFieldProp(${index}, 'label', this.value)" class="w-full border rounded px-2 py-1.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Type</label>
+                            <select onchange="updateFieldProp(${index}, 'type', this.value)" class="w-full border rounded px-2 py-1.5 text-sm">
+                                ${fieldTypes.map(t => `<option value="${t.value}" ${field.type === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] sm:text-xs text-gray-500 mb-1">Placeholder</label>
+                            <input type="text" value="${field.placeholder || ''}" onchange="updateFieldProp(${index}, 'placeholder', this.value)" class="w-full border rounded px-2 py-1.5 text-sm">
+                        </div>
+                        <div class="flex items-end">
+                            <label class="flex items-center gap-2 text-xs sm:text-sm">
+                                <input type="checkbox" ${field.required ? 'checked' : ''} onchange="updateFieldProp(${index}, 'required', this.checked)">
+                                Required
+                            </label>
+                        </div>
+                    </div>
+                    ${field.type === 'select' ? `
+                        <div class="mt-3 pt-3 border-t">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-[10px] sm:text-xs text-gray-500">Options</span>
+                                <button onclick="addFieldOption(${index})" class="text-[#d4af37] text-xs hover:underline">+ Add Option</button>
+                            </div>
+                            <div class="space-y-2">
+                                ${(field.options || []).map((opt, optIndex) => `
+                                    <div class="flex gap-2">
+                                        <input type="text" value="${opt}" onchange="updateFieldOption(${index}, ${optIndex}, this.value)" class="flex-1 border rounded px-2 py-1 text-xs">
+                                        <button onclick="removeFieldOption(${index}, ${optIndex})" class="text-red-500 text-xs hover:underline px-1">×</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
 
         // Tab switching
         function showTab(tabName) {
@@ -704,6 +1244,50 @@ By Appointment Only</textarea>
 
             if (tabName === 'media') {
                 loadMediaLibrary();
+            }
+        }
+
+        // Page switching
+        function selectPage(pageName) {
+            currentPage = pageName;
+
+            // Update page buttons
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-[#d4af37]', 'text-white', 'border-[#d4af37]');
+                btn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
+            });
+            event.target.classList.add('active', 'bg-[#d4af37]', 'text-white', 'border-[#d4af37]');
+            event.target.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
+
+            // Hide all page tabs and content
+            document.querySelectorAll('.page-tabs').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+
+            // Show selected page tabs
+            document.getElementById(pageName + '-tabs').classList.remove('hidden');
+
+            // Show first tab of selected page
+            const firstTabsMap = {
+                'home': 'header',
+                'coliving': 'coliving-hero',
+                'investor': 'investor-hero',
+                'search': 'search-hero'
+            };
+            document.getElementById('tab-' + firstTabsMap[pageName]).classList.remove('hidden');
+
+            // Update active tab button
+            const tabsContainer = document.getElementById(pageName + '-tabs');
+            if (tabsContainer) {
+                const tabBtns = tabsContainer.querySelectorAll('.tab-btn');
+                tabBtns.forEach((btn, idx) => {
+                    if (idx === 0) {
+                        btn.classList.add('active');
+                        btn.classList.remove('bg-white');
+                    } else {
+                        btn.classList.remove('active');
+                        btn.classList.add('bg-white');
+                    }
+                });
             }
         }
 
@@ -746,7 +1330,6 @@ By Appointment Only</textarea>
                         const idx = i + 1;
                         if (document.getElementById(`menu_item${idx}_text`)) {
                             document.getElementById(`menu_item${idx}_text`).value = item.text || '';
-                            document.getElementById(`menu_item${idx}_link`).value = item.link || '';
                             document.getElementById(`menu_item${idx}_visible`).checked = item.visible !== false;
                         }
                     });
@@ -824,12 +1407,12 @@ By Appointment Only</textarea>
                 document.getElementById('contact_email').value = siteContent.contact.email || '';
                 document.getElementById('contact_phone').value = siteContent.contact.phone || '';
                 document.getElementById('contact_address').value = siteContent.contact.address || '';
-                document.getElementById('form_name_placeholder').value = siteContent.contact.form_name_placeholder || '';
-                document.getElementById('form_email_placeholder').value = siteContent.contact.form_email_placeholder || '';
-                document.getElementById('form_message_placeholder').value = siteContent.contact.form_message_placeholder || '';
                 document.getElementById('form_submit_text').value = siteContent.contact.form_submit_text || '';
-                document.getElementById('enquiry_option1').value = siteContent.contact.enquiry_option1 || '';
-                document.getElementById('enquiry_option2').value = siteContent.contact.enquiry_option2 || '';
+                // Load dynamic form fields
+                if (siteContent.contact.form_fields) {
+                    formFields = siteContent.contact.form_fields;
+                    renderFormFields();
+                }
             }
 
             // Footer
@@ -857,11 +1440,11 @@ By Appointment Only</textarea>
                     logo_text: document.getElementById('header_logo_text').value,
                     logo_url: siteContent.header?.logo_url || '',
                     menu_items: [
-                        { text: document.getElementById('menu_item1_text').value, link: document.getElementById('menu_item1_link').value, visible: document.getElementById('menu_item1_visible').checked },
-                        { text: document.getElementById('menu_item2_text').value, link: document.getElementById('menu_item2_link').value, visible: document.getElementById('menu_item2_visible').checked },
-                        { text: document.getElementById('menu_item3_text').value, link: document.getElementById('menu_item3_link').value, visible: document.getElementById('menu_item3_visible').checked },
-                        { text: document.getElementById('menu_item4_text').value, link: document.getElementById('menu_item4_link').value, visible: document.getElementById('menu_item4_visible').checked },
-                        { text: document.getElementById('menu_item5_text').value, link: document.getElementById('menu_item5_link').value, visible: document.getElementById('menu_item5_visible').checked }
+                        { text: document.getElementById('menu_item1_text').value, visible: document.getElementById('menu_item1_visible').checked },
+                        { text: document.getElementById('menu_item2_text').value, visible: document.getElementById('menu_item2_visible').checked },
+                        { text: document.getElementById('menu_item3_text').value, visible: document.getElementById('menu_item3_visible').checked },
+                        { text: document.getElementById('menu_item4_text').value, visible: document.getElementById('menu_item4_visible').checked },
+                        { text: document.getElementById('menu_item5_text').value, visible: document.getElementById('menu_item5_visible').checked }
                     ]
                 },
                 stats: {
@@ -912,12 +1495,8 @@ By Appointment Only</textarea>
                     email: document.getElementById('contact_email').value,
                     phone: document.getElementById('contact_phone').value,
                     address: document.getElementById('contact_address').value,
-                    form_name_placeholder: document.getElementById('form_name_placeholder').value,
-                    form_email_placeholder: document.getElementById('form_email_placeholder').value,
-                    form_message_placeholder: document.getElementById('form_message_placeholder').value,
                     form_submit_text: document.getElementById('form_submit_text').value,
-                    enquiry_option1: document.getElementById('enquiry_option1').value,
-                    enquiry_option2: document.getElementById('enquiry_option2').value
+                    form_fields: formFields
                 },
                 footer: {
                     company: document.getElementById('footer_company').value,
@@ -1193,7 +1772,10 @@ By Appointment Only</textarea>
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadContent);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadContent();
+            renderFormFields();
+        });
     </script>
 </body>
 </html>
