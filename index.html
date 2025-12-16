@@ -603,7 +603,6 @@
 
         // --- Mobile Intro Video & Preloader Animation ---
         const isMobile = window.innerWidth <= 768;
-        const introVideoSrc = localStorage.getItem('mobileIntroVideo');
         const introVideo = document.getElementById('intro-video');
         const loaderContent = document.getElementById('loader-content');
 
@@ -620,12 +619,11 @@
                 });
         }
 
-        // Check for mobile intro video
-        if (isMobile && introVideoSrc && introVideo) {
+        function playIntroVideo(videoUrl) {
             // Hide default loader content, show video
             loaderContent.style.display = 'none';
             introVideo.classList.remove('hidden');
-            introVideo.src = introVideoSrc;
+            introVideo.src = videoUrl;
             introVideo.muted = true;
             introVideo.playsInline = true;
 
@@ -661,6 +659,24 @@
                 introVideo.classList.add('hidden');
                 runDefaultLoader();
             });
+        }
+
+        // Check for mobile intro video from Vercel Blob
+        if (isMobile && introVideo) {
+            // Fetch intro video URL from API
+            fetch('/api/intro-video')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.hasVideo && data.url) {
+                        playIntroVideo(data.url);
+                    } else {
+                        runDefaultLoader();
+                    }
+                })
+                .catch(() => {
+                    // If API fails, run default loader
+                    runDefaultLoader();
+                });
         } else {
             // Run default text loader
             runDefaultLoader();
