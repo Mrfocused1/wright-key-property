@@ -121,6 +121,11 @@
             height: 100%;
             background-color: var(--color-light);
             z-index: 2;
+            animation: fallback-overlay 0.8s ease-out 5s forwards;
+        }
+
+        @keyframes fallback-overlay {
+            to { transform: translateX(100%); }
         }
 
         /* Typography Utilities */
@@ -357,7 +362,7 @@
         </section>
 
         <!-- For Investors Section (Dark Mode) -->
-        <section id="section-investors" class="relative py-32 bg-[#1a1a1a] text-[#f5f3ef]">
+        <section id="section-investors" class="relative py-16 md:py-32 bg-[#1a1a1a] text-[#f5f3ef]">
             <div class="absolute top-0 right-10 h-full w-[1px] bg-white/10 hidden md:block"></div>
 
             <div class="container mx-auto px-6 md:px-20">
@@ -406,8 +411,8 @@
         </section>
 
         <!-- Sourcing / We Buy Section -->
-        <section id="section-sourcing" class="py-32 px-6 md:px-20 bg-[#f5f3ef]">
-            <div class="flex flex-col md:flex-row items-center gap-16">
+        <section id="section-sourcing" class="py-16 md:py-32 px-6 md:px-20 bg-[#f5f3ef]">
+            <div class="flex flex-col md:flex-row items-center gap-8 md:gap-16">
                 <div class="w-full md:w-1/2">
                     <h2 class="text-5xl md:text-7xl serif font-light mb-8 leading-none">
                         <span id="sourcing-headline1">We Buy Properties</span> <br>
