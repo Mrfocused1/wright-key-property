@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Wright Key Property</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        .serif { font-family: 'Cormorant Garamond', serif; }
+        .tab-btn.active { background: #d4af37; color: white; }
+        .save-indicator { transition: all 0.3s ease; }
+        .save-indicator.saving { opacity: 1; }
+        .save-indicator.saved { background: #22c55e; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-black text-white py-4 px-6 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="/" class="text-xl serif italic">Wright Key Property</a>
+                <span class="text-xs bg-[#d4af37] px-2 py-1 rounded">ADMIN</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="saveStatus" class="text-xs text-gray-400">All changes saved</span>
+                <button onclick="saveAllContent()" class="bg-[#d4af37] text-black px-4 py-2 rounded text-xs uppercase tracking-wider hover:bg-[#b8962e] transition-colors">
+                    Save All Changes
+                </button>
+                <a href="/" class="text-xs text-gray-400 hover:text-white transition-colors">View Site</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-8">
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-8 flex-wrap">
+            <button class="tab-btn active px-4 py-2 rounded text-sm" onclick="showTab('hero')">Hero Section</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('about')">About Section</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('investors')">Investors Section</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('sourcing')">Sourcing Section</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('contact')">Contact Section</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('footer')">Footer</button>
+            <button class="tab-btn px-4 py-2 rounded text-sm bg-white" onclick="showTab('media')">Media Library</button>
+        </div>
+
+        <!-- Hero Section Tab -->
+        <div id="tab-hero" class="tab-content">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">Hero Section</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Main Headline (Line 1)</label>
+                        <input type="text" id="hero_headline1" class="w-full border rounded px-3 py-2" value="Unlocking">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Main Headline (Line 2)</label>
+                        <input type="text" id="hero_headline2" class="w-full border rounded px-3 py-2" value="Luxury">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Main Headline (Line 3)</label>
+                        <input type="text" id="hero_headline3" class="w-full border rounded px-3 py-2" value="Living">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Subheadline</label>
+                        <textarea id="hero_subheadline" class="w-full border rounded px-3 py-2" rows="2">Transforming properties into exceptional co-living spaces for professionals, NHS staff, and students.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">CTA Button 1 Text</label>
+                        <input type="text" id="hero_cta1_text" class="w-full border rounded px-3 py-2" value="Browse Properties">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">CTA Button 1 Link</label>
+                        <input type="text" id="hero_cta1_link" class="w-full border rounded px-3 py-2" value="/search">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">CTA Button 2 Text</label>
+                        <input type="text" id="hero_cta2_text" class="w-full border rounded px-3 py-2" value="Room Suites">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">CTA Button 2 Link</label>
+                        <input type="text" id="hero_cta2_link" class="w-full border rounded px-3 py-2" value="/coliving">
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">Hero Video</h3>
+                    <div class="flex items-center gap-4">
+                        <div id="heroVideoPreview" class="w-48 h-32 bg-gray-200 rounded flex items-center justify-center">
+                            <span class="text-gray-400 text-sm">No video</span>
+                        </div>
+                        <div>
+                            <input type="file" id="heroVideoInput" accept="video/*" class="hidden" onchange="uploadHeroVideo(this)">
+                            <button onclick="document.getElementById('heroVideoInput').click()" class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors">
+                                Upload Hero Video
+                            </button>
+                            <p class="text-xs text-gray-400 mt-2">Recommended: MP4, 1920x1080 or higher</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section Tab -->
+        <div id="tab-about" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">About / Our Story Section</h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Section Label</label>
+                        <input type="text" id="about_label" class="w-full border rounded px-3 py-2" value="Our Story — 01">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Main Headline</label>
+                        <textarea id="about_headline" class="w-full border rounded px-3 py-2" rows="2">We breathe new life into dated properties, curating spaces that inspire connection.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Paragraph 1</label>
+                        <textarea id="about_paragraph1" class="w-full border rounded px-3 py-2" rows="3">At Wright Key Property, we don't just renovate; we reimagine. We specialize in acquiring HMO conversions and refurbishing them to a boutique luxury standard.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Paragraph 2</label>
+                        <textarea id="about_paragraph2" class="w-full border rounded px-3 py-2" rows="3">Our service area is London, where the demand for high-quality, flexible living is ever-growing. We cater specifically to those who keep the city moving: working professionals and NHS staff.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Link Text</label>
+                        <input type="text" id="about_link_text" class="w-full border rounded px-3 py-2" value="Our Story">
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">About Images</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Main Image</label>
+                            <div id="aboutImage1Preview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-sm">No image</span>
+                            </div>
+                            <input type="file" id="aboutImage1Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 1)">
+                            <button onclick="document.getElementById('aboutImage1Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Detail Image</label>
+                            <div id="aboutImage2Preview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-sm">No image</span>
+                            </div>
+                            <input type="file" id="aboutImage2Input" accept="image/*" class="hidden" onchange="uploadAboutImage(this, 2)">
+                            <button onclick="document.getElementById('aboutImage2Input').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investors Section Tab -->
+        <div id="tab-investors" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">For Investors Section</h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Section Label</label>
+                        <input type="text" id="investors_label" class="w-full border rounded px-3 py-2" value="Investment Opportunities">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Main Headline</label>
+                        <input type="text" id="investors_headline" class="w-full border rounded px-3 py-2" value="Hands-off Investment">
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">Investment Cards</h3>
+
+                    <div class="space-y-6">
+                        <div class="p-4 border rounded">
+                            <h4 class="font-medium mb-3">Card 1</h4>
+                            <input type="text" id="investor_card1_title" class="w-full border rounded px-3 py-2 mb-2" value="Sourcing Deals">
+                            <textarea id="investor_card1_desc" class="w-full border rounded px-3 py-2" rows="2">We leverage our extensive network to find off-market properties with high potential, bypassing the competitive open market.</textarea>
+                        </div>
+                        <div class="p-4 border rounded">
+                            <h4 class="font-medium mb-3">Card 2</h4>
+                            <input type="text" id="investor_card2_title" class="w-full border rounded px-3 py-2 mb-2" value="Power Team">
+                            <textarea id="investor_card2_desc" class="w-full border rounded px-3 py-2" rows="2">From architects to contractors, we have a trusted team in place to execute refurbishments to a luxury standard on time and budget.</textarea>
+                        </div>
+                        <div class="p-4 border rounded">
+                            <h4 class="font-medium mb-3">Card 3</h4>
+                            <input type="text" id="investor_card3_title" class="w-full border rounded px-3 py-2 mb-2" value="Passive Income">
+                            <textarea id="investor_card3_desc" class="w-full border rounded px-3 py-2" rows="2">Enjoy the returns of property investment without the headache. We manage the process from acquisition to tenanting.</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">Investment Image</h3>
+                    <div id="investorImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                        <span class="text-gray-400 text-sm">No image</span>
+                    </div>
+                    <input type="file" id="investorImageInput" accept="image/*" class="hidden" onchange="uploadInvestorImage(this)">
+                    <button onclick="document.getElementById('investorImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload Image</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sourcing Section Tab -->
+        <div id="tab-sourcing" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">We Buy Properties Section</h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Headline (Line 1)</label>
+                        <input type="text" id="sourcing_headline1" class="w-full border rounded px-3 py-2" value="We Buy Properties">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Headline (Line 2 - Italic)</label>
+                        <input type="text" id="sourcing_headline2" class="w-full border rounded px-3 py-2" value="In Any Condition.">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Description</label>
+                        <textarea id="sourcing_description" class="w-full border rounded px-3 py-2" rows="3">Have a dated property? An HMO conversion that needs work? We offer a swift, hassle-free selling process for property owners in London.</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Button Text</label>
+                        <input type="text" id="sourcing_button_text" class="w-full border rounded px-3 py-2" value="Get an Offer">
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">Before/After Images</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Before Image</label>
+                            <div id="beforeImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-sm">No image</span>
+                            </div>
+                            <input type="file" id="beforeImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'before')">
+                            <button onclick="document.getElementById('beforeImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">After Image</label>
+                            <div id="afterImagePreview" class="w-full h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
+                                <span class="text-gray-400 text-sm">No image</span>
+                            </div>
+                            <input type="file" id="afterImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'after')">
+                            <button onclick="document.getElementById('afterImageInput').click()" class="bg-black text-white px-3 py-1 rounded text-xs">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section Tab -->
+        <div id="tab-contact" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">Contact Section</h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Section Label</label>
+                        <input type="text" id="contact_label" class="w-full border rounded px-3 py-2" value="Start the Conversation">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Main Headline</label>
+                        <input type="text" id="contact_headline" class="w-full border rounded px-3 py-2" value="Let's Talk.">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input type="email" id="contact_email" class="w-full border rounded px-3 py-2" value="jbwrightkeyproperty@gmail.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Phone</label>
+                            <input type="text" id="contact_phone" class="w-full border rounded px-3 py-2" value="07852149077">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Office Address</label>
+                        <textarea id="contact_address" class="w-full border rounded px-3 py-2" rows="2">London, UK
+By Appointment Only</textarea>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">Form Fields</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Name Field Placeholder</label>
+                            <input type="text" id="form_name_placeholder" class="w-full border rounded px-3 py-2" value="Your Name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email Field Placeholder</label>
+                            <input type="text" id="form_email_placeholder" class="w-full border rounded px-3 py-2" value="Email Address">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Message Field Placeholder</label>
+                            <input type="text" id="form_message_placeholder" class="w-full border rounded px-3 py-2" value="Your Message">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Submit Button Text</label>
+                            <input type="text" id="form_submit_text" class="w-full border rounded px-3 py-2" value="Send Message">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="text-lg font-medium mb-4">Enquiry Type Options</h3>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Option 1</label>
+                            <input type="text" id="enquiry_option1" class="w-full border rounded px-3 py-2" value="Enquiry for Lettings">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Option 2</label>
+                            <input type="text" id="enquiry_option2" class="w-full border rounded px-3 py-2" value="Enquiry for Investing">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Tab -->
+        <div id="tab-footer" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">Footer</h2>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Company Name</label>
+                        <input type="text" id="footer_company" class="w-full border rounded px-3 py-2" value="Wright Key Property">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Copyright Text</label>
+                        <input type="text" id="footer_copyright" class="w-full border rounded px-3 py-2" value="© 2024 All Rights Reserved.">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Instagram URL</label>
+                        <input type="text" id="footer_instagram" class="w-full border rounded px-3 py-2" value="https://instagram.com/jb_wrightkeyproperty">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Media Library Tab -->
+        <div id="tab-media" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-6 shadow-sm mb-6">
+                <h2 class="text-2xl serif italic mb-6">Media Library</h2>
+                <p class="text-gray-500 mb-4">Manage all uploaded images and videos. Click on any item to copy its URL.</p>
+
+                <div class="mb-6">
+                    <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="uploadMedia(this)" multiple>
+                    <button onclick="document.getElementById('mediaUploadInput').click()" class="bg-[#d4af37] text-black px-4 py-2 rounded text-sm hover:bg-[#b8962e] transition-colors">
+                        Upload New Media
+                    </button>
+                </div>
+
+                <div id="mediaGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <!-- Media items will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Content storage
+        let siteContent = {};
+
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active', 'bg-[#d4af37]', 'text-white'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.add('bg-white'));
+
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            event.target.classList.add('active');
+            event.target.classList.remove('bg-white');
+
+            if (tabName === 'media') {
+                loadMediaLibrary();
+            }
+        }
+
+        // Load content from API
+        async function loadContent() {
+            try {
+                const response = await fetch('/api/content');
+                const data = await response.json();
+                if (data.success && data.content) {
+                    siteContent = data.content;
+                    populateFields();
+                }
+            } catch (error) {
+                console.log('No existing content found, using defaults');
+            }
+        }
+
+        // Populate form fields with loaded content
+        function populateFields() {
+            // Hero
+            if (siteContent.hero) {
+                document.getElementById('hero_headline1').value = siteContent.hero.headline1 || '';
+                document.getElementById('hero_headline2').value = siteContent.hero.headline2 || '';
+                document.getElementById('hero_headline3').value = siteContent.hero.headline3 || '';
+                document.getElementById('hero_subheadline').value = siteContent.hero.subheadline || '';
+                document.getElementById('hero_cta1_text').value = siteContent.hero.cta1_text || '';
+                document.getElementById('hero_cta1_link').value = siteContent.hero.cta1_link || '';
+                document.getElementById('hero_cta2_text').value = siteContent.hero.cta2_text || '';
+                document.getElementById('hero_cta2_link').value = siteContent.hero.cta2_link || '';
+                if (siteContent.hero.video_url) {
+                    document.getElementById('heroVideoPreview').innerHTML = `<video src="${siteContent.hero.video_url}" class="w-full h-full object-cover rounded" muted></video>`;
+                }
+            }
+
+            // About
+            if (siteContent.about) {
+                document.getElementById('about_label').value = siteContent.about.label || '';
+                document.getElementById('about_headline').value = siteContent.about.headline || '';
+                document.getElementById('about_paragraph1').value = siteContent.about.paragraph1 || '';
+                document.getElementById('about_paragraph2').value = siteContent.about.paragraph2 || '';
+                document.getElementById('about_link_text').value = siteContent.about.link_text || '';
+                if (siteContent.about.image1_url) {
+                    document.getElementById('aboutImage1Preview').innerHTML = `<img src="${siteContent.about.image1_url}" class="w-full h-full object-cover rounded">`;
+                }
+                if (siteContent.about.image2_url) {
+                    document.getElementById('aboutImage2Preview').innerHTML = `<img src="${siteContent.about.image2_url}" class="w-full h-full object-cover rounded">`;
+                }
+            }
+
+            // Investors
+            if (siteContent.investors) {
+                document.getElementById('investors_label').value = siteContent.investors.label || '';
+                document.getElementById('investors_headline').value = siteContent.investors.headline || '';
+                document.getElementById('investor_card1_title').value = siteContent.investors.card1_title || '';
+                document.getElementById('investor_card1_desc').value = siteContent.investors.card1_desc || '';
+                document.getElementById('investor_card2_title').value = siteContent.investors.card2_title || '';
+                document.getElementById('investor_card2_desc').value = siteContent.investors.card2_desc || '';
+                document.getElementById('investor_card3_title').value = siteContent.investors.card3_title || '';
+                document.getElementById('investor_card3_desc').value = siteContent.investors.card3_desc || '';
+                if (siteContent.investors.image_url) {
+                    document.getElementById('investorImagePreview').innerHTML = `<img src="${siteContent.investors.image_url}" class="w-full h-full object-cover rounded">`;
+                }
+            }
+
+            // Sourcing
+            if (siteContent.sourcing) {
+                document.getElementById('sourcing_headline1').value = siteContent.sourcing.headline1 || '';
+                document.getElementById('sourcing_headline2').value = siteContent.sourcing.headline2 || '';
+                document.getElementById('sourcing_description').value = siteContent.sourcing.description || '';
+                document.getElementById('sourcing_button_text').value = siteContent.sourcing.button_text || '';
+                if (siteContent.sourcing.before_image) {
+                    document.getElementById('beforeImagePreview').innerHTML = `<img src="${siteContent.sourcing.before_image}" class="w-full h-full object-cover rounded">`;
+                }
+                if (siteContent.sourcing.after_image) {
+                    document.getElementById('afterImagePreview').innerHTML = `<img src="${siteContent.sourcing.after_image}" class="w-full h-full object-cover rounded">`;
+                }
+            }
+
+            // Contact
+            if (siteContent.contact) {
+                document.getElementById('contact_label').value = siteContent.contact.label || '';
+                document.getElementById('contact_headline').value = siteContent.contact.headline || '';
+                document.getElementById('contact_email').value = siteContent.contact.email || '';
+                document.getElementById('contact_phone').value = siteContent.contact.phone || '';
+                document.getElementById('contact_address').value = siteContent.contact.address || '';
+                document.getElementById('form_name_placeholder').value = siteContent.contact.form_name || '';
+                document.getElementById('form_email_placeholder').value = siteContent.contact.form_email || '';
+                document.getElementById('form_message_placeholder').value = siteContent.contact.form_message || '';
+                document.getElementById('form_submit_text').value = siteContent.contact.form_submit || '';
+                document.getElementById('enquiry_option1').value = siteContent.contact.enquiry_option1 || '';
+                document.getElementById('enquiry_option2').value = siteContent.contact.enquiry_option2 || '';
+            }
+
+            // Footer
+            if (siteContent.footer) {
+                document.getElementById('footer_company').value = siteContent.footer.company || '';
+                document.getElementById('footer_copyright').value = siteContent.footer.copyright || '';
+                document.getElementById('footer_instagram').value = siteContent.footer.instagram || '';
+            }
+        }
+
+        // Gather all content from form fields
+        function gatherContent() {
+            return {
+                hero: {
+                    headline1: document.getElementById('hero_headline1').value,
+                    headline2: document.getElementById('hero_headline2').value,
+                    headline3: document.getElementById('hero_headline3').value,
+                    subheadline: document.getElementById('hero_subheadline').value,
+                    cta1_text: document.getElementById('hero_cta1_text').value,
+                    cta1_link: document.getElementById('hero_cta1_link').value,
+                    cta2_text: document.getElementById('hero_cta2_text').value,
+                    cta2_link: document.getElementById('hero_cta2_link').value,
+                    video_url: siteContent.hero?.video_url || ''
+                },
+                about: {
+                    label: document.getElementById('about_label').value,
+                    headline: document.getElementById('about_headline').value,
+                    paragraph1: document.getElementById('about_paragraph1').value,
+                    paragraph2: document.getElementById('about_paragraph2').value,
+                    link_text: document.getElementById('about_link_text').value,
+                    image1_url: siteContent.about?.image1_url || '',
+                    image2_url: siteContent.about?.image2_url || ''
+                },
+                investors: {
+                    label: document.getElementById('investors_label').value,
+                    headline: document.getElementById('investors_headline').value,
+                    card1_title: document.getElementById('investor_card1_title').value,
+                    card1_desc: document.getElementById('investor_card1_desc').value,
+                    card2_title: document.getElementById('investor_card2_title').value,
+                    card2_desc: document.getElementById('investor_card2_desc').value,
+                    card3_title: document.getElementById('investor_card3_title').value,
+                    card3_desc: document.getElementById('investor_card3_desc').value,
+                    image_url: siteContent.investors?.image_url || ''
+                },
+                sourcing: {
+                    headline1: document.getElementById('sourcing_headline1').value,
+                    headline2: document.getElementById('sourcing_headline2').value,
+                    description: document.getElementById('sourcing_description').value,
+                    button_text: document.getElementById('sourcing_button_text').value,
+                    before_image: siteContent.sourcing?.before_image || '',
+                    after_image: siteContent.sourcing?.after_image || ''
+                },
+                contact: {
+                    label: document.getElementById('contact_label').value,
+                    headline: document.getElementById('contact_headline').value,
+                    email: document.getElementById('contact_email').value,
+                    phone: document.getElementById('contact_phone').value,
+                    address: document.getElementById('contact_address').value,
+                    form_name: document.getElementById('form_name_placeholder').value,
+                    form_email: document.getElementById('form_email_placeholder').value,
+                    form_message: document.getElementById('form_message_placeholder').value,
+                    form_submit: document.getElementById('form_submit_text').value,
+                    enquiry_option1: document.getElementById('enquiry_option1').value,
+                    enquiry_option2: document.getElementById('enquiry_option2').value
+                },
+                footer: {
+                    company: document.getElementById('footer_company').value,
+                    copyright: document.getElementById('footer_copyright').value,
+                    instagram: document.getElementById('footer_instagram').value
+                }
+            };
+        }
+
+        // Save all content
+        async function saveAllContent() {
+            const statusEl = document.getElementById('saveStatus');
+            statusEl.textContent = 'Saving...';
+            statusEl.classList.remove('text-gray-400');
+            statusEl.classList.add('text-yellow-500');
+
+            try {
+                const content = gatherContent();
+                const response = await fetch('/api/content', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(content)
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    siteContent = content;
+                    statusEl.textContent = 'All changes saved';
+                    statusEl.classList.remove('text-yellow-500');
+                    statusEl.classList.add('text-green-500');
+                    setTimeout(() => {
+                        statusEl.classList.remove('text-green-500');
+                        statusEl.classList.add('text-gray-400');
+                    }, 2000);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                statusEl.textContent = 'Error saving';
+                statusEl.classList.remove('text-yellow-500');
+                statusEl.classList.add('text-red-500');
+                console.error('Save error:', error);
+            }
+        }
+
+        // Upload functions
+        async function uploadFile(file, prefix = 'admin/') {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('filename', file.name);
+            formData.append('isIntroVideo', 'false');
+
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error);
+            return data.url;
+        }
+
+        async function uploadHeroVideo(input) {
+            if (!input.files[0]) return;
+            try {
+                const url = await uploadFile(input.files[0]);
+                siteContent.hero = siteContent.hero || {};
+                siteContent.hero.video_url = url;
+                document.getElementById('heroVideoPreview').innerHTML = `<video src="${url}" class="w-full h-full object-cover rounded" muted></video>`;
+                await saveAllContent();
+            } catch (error) {
+                alert('Error uploading video: ' + error.message);
+            }
+        }
+
+        async function uploadAboutImage(input, num) {
+            if (!input.files[0]) return;
+            try {
+                const url = await uploadFile(input.files[0]);
+                siteContent.about = siteContent.about || {};
+                siteContent.about['image' + num + '_url'] = url;
+                document.getElementById('aboutImage' + num + 'Preview').innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded">`;
+                await saveAllContent();
+            } catch (error) {
+                alert('Error uploading image: ' + error.message);
+            }
+        }
+
+        async function uploadInvestorImage(input) {
+            if (!input.files[0]) return;
+            try {
+                const url = await uploadFile(input.files[0]);
+                siteContent.investors = siteContent.investors || {};
+                siteContent.investors.image_url = url;
+                document.getElementById('investorImagePreview').innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded">`;
+                await saveAllContent();
+            } catch (error) {
+                alert('Error uploading image: ' + error.message);
+            }
+        }
+
+        async function uploadSourcingImage(input, type) {
+            if (!input.files[0]) return;
+            try {
+                const url = await uploadFile(input.files[0]);
+                siteContent.sourcing = siteContent.sourcing || {};
+                siteContent.sourcing[type + '_image'] = url;
+                document.getElementById(type + 'ImagePreview').innerHTML = `<img src="${url}" class="w-full h-full object-cover rounded">`;
+                await saveAllContent();
+            } catch (error) {
+                alert('Error uploading image: ' + error.message);
+            }
+        }
+
+        async function uploadMedia(input) {
+            if (!input.files.length) return;
+            for (const file of input.files) {
+                try {
+                    await uploadFile(file);
+                } catch (error) {
+                    console.error('Error uploading:', error);
+                }
+            }
+            loadMediaLibrary();
+        }
+
+        // Load media library
+        async function loadMediaLibrary() {
+            try {
+                const response = await fetch('/api/list?prefix=uploads/');
+                const data = await response.json();
+                const grid = document.getElementById('mediaGrid');
+
+                if (!data.success || !data.blobs.length) {
+                    grid.innerHTML = '<p class="text-gray-400 col-span-4">No media files uploaded yet.</p>';
+                    return;
+                }
+
+                grid.innerHTML = data.blobs.map(blob => {
+                    const isVideo = blob.pathname.match(/\.(mp4|webm|mov)$/i);
+                    return `
+                        <div class="relative group cursor-pointer" onclick="copyToClipboard('${blob.url}')">
+                            ${isVideo
+                                ? `<video src="${blob.url}" class="w-full aspect-video object-cover rounded" muted></video>`
+                                : `<img src="${blob.url}" class="w-full aspect-video object-cover rounded">`
+                            }
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded">
+                                <span class="text-white text-xs">Click to copy URL</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading media:', error);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert('URL copied to clipboard!');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadContent);
+    </script>
+</body>
+</html>

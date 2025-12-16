@@ -4,14 +4,16 @@
     { "source": "/search", "destination": "/search.html" },
     { "source": "/investor", "destination": "/investor.html" },
     { "source": "/property", "destination": "/property.html" },
-    { "source": "/upload", "destination": "/upload.html" }
+    { "source": "/upload", "destination": "/upload.html" },
+    { "source": "/admin", "destination": "/admin.html" }
   ],
   "redirects": [
     { "source": "/coliving.html", "destination": "/coliving", "permanent": true },
     { "source": "/search.html", "destination": "/search", "permanent": true },
     { "source": "/investor.html", "destination": "/investor", "permanent": true },
     { "source": "/property.html", "destination": "/property", "permanent": true },
-    { "source": "/upload.html", "destination": "/upload", "permanent": true }
+    { "source": "/upload.html", "destination": "/upload", "permanent": true },
+    { "source": "/admin.html", "destination": "/admin", "permanent": true }
   ],
   "headers": [
     {
