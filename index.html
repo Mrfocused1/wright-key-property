@@ -145,6 +145,12 @@
             to { transform: translateY(0); }
         }
 
+        /* Fallback for h2 headers that use GSAP scroll animations */
+        main h2 {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
         /* Menu Overlay */
         .menu-overlay {
             position: fixed;
@@ -366,7 +372,7 @@
             <div class="absolute top-0 right-10 h-full w-[1px] bg-white/10 hidden md:block"></div>
 
             <div class="container mx-auto px-6 md:px-20">
-                <div class="mb-20">
+                <div class="mb-8 md:mb-20">
                     <span class="text-xs text-[#d4af37] uppercase tracking-widest block mb-4" id="investors-label">Investment Opportunities</span>
                     <h2 class="text-5xl md:text-7xl serif italic font-light split-text" id="investors-headline">Hands-off Investment</h2>
                 </div>
@@ -401,7 +407,7 @@
                 </div>
 
                 <!-- Large Parallax Image -->
-                <div class="mt-24 w-full h-[60vh] reveal-img-container transition-all duration-700">
+                <div class="mt-12 md:mt-24 w-full h-[40vh] md:h-[60vh] reveal-img-container transition-all duration-700">
                     <img src="assets/investment-property.jpg"
                          alt="Investment Property"
                          class="reveal-img object-center">
