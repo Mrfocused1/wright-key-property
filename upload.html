@@ -40,7 +40,7 @@
         <!-- Upload Section -->
         <section class="mb-12">
             <h1 class="text-4xl serif italic mb-2">Upload Media</h1>
-            <p class="text-gray-500 mb-8">Upload images and videos for your website. Files are stored in your browser.</p>
+            <p class="text-gray-500 mb-8">Upload images and videos for your website. Files are stored in Vercel Blob cloud storage.</p>
 
             <!-- Drop Zone -->
             <div id="dropZone" class="drop-zone rounded-lg p-12 text-center cursor-pointer bg-white">
@@ -74,9 +74,9 @@
         <section class="mt-12 bg-white rounded-lg p-8">
             <h3 class="text-xl serif italic mb-4">How to use uploaded files</h3>
             <div class="space-y-4 text-sm text-gray-600">
-                <p><strong>For Mobile Intro Video:</strong> Upload your video, then click "Set as Intro Video" on the video card.</p>
-                <p><strong>For Property Images:</strong> Copy the file URL and use it in your property listings.</p>
-                <p class="text-xs text-gray-400 mt-4">Note: Files are stored in your browser's IndexedDB. For permanent storage, download and add to your assets folder.</p>
+                <p><strong>For Mobile Intro Video:</strong> Upload your video, then click "Set as Intro Video" on the video card. The video will be displayed on the homepage loading screen for mobile users.</p>
+                <p><strong>For Property Images:</strong> Copy the file URL and use it in your property listings or website sections.</p>
+                <p class="text-xs text-gray-400 mt-4">Note: Files are stored in Vercel Blob cloud storage. URLs are permanent and can be used across all pages.</p>
             </div>
         </section>
 
@@ -90,92 +90,8 @@
     </footer>
 
     <script>
-        // IndexedDB Setup
-        const DB_NAME = 'WrightKeyMedia';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'uploads';
-        let db;
-
-        // Initialize IndexedDB
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-                request.onerror = () => reject(request.error);
-                request.onsuccess = () => {
-                    db = request.result;
-                    resolve(db);
-                };
-
-                request.onupgradeneeded = (event) => {
-                    const database = event.target.result;
-                    if (!database.objectStoreNames.contains(STORE_NAME)) {
-                        database.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
-                    }
-                };
-            });
-        }
-
-        // Save file to IndexedDB
-        function saveFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const fileData = {
-                        name: file.name,
-                        type: file.type,
-                        size: file.size,
-                        data: reader.result,
-                        uploadedAt: new Date().toISOString()
-                    };
-
-                    const transaction = db.transaction([STORE_NAME], 'readwrite');
-                    const store = transaction.objectStore(STORE_NAME);
-                    const request = store.add(fileData);
-
-                    request.onsuccess = () => resolve(request.result);
-                    request.onerror = () => reject(request.error);
-                };
-                reader.onerror = () => reject(reader.error);
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Get all files from IndexedDB
-        function getAllFiles() {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.getAll();
-
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
-            });
-        }
-
-        // Delete file from IndexedDB
-        function deleteFile(id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.delete(id);
-
-                request.onsuccess = () => resolve();
-                request.onerror = () => reject(request.error);
-            });
-        }
-
-        // Clear all files
-        function clearAllFiles() {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.clear();
-
-                request.onsuccess = () => resolve();
-                request.onerror = () => reject(request.error);
-            });
-        }
+        // Store blobs in memory for quick access
+        let blobs = [];
 
         // Format file size
         function formatSize(bytes) {
@@ -184,9 +100,75 @@
             return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
         }
 
+        // Get filename from pathname
+        function getFilename(pathname) {
+            const parts = pathname.split('/');
+            return parts[parts.length - 1];
+        }
+
+        // Check if pathname is a video
+        function isVideo(pathname) {
+            const ext = pathname.split('.').pop().toLowerCase();
+            return ['mp4', 'webm', 'mov', 'avi', 'mkv'].includes(ext);
+        }
+
+        // Fetch all blobs from API
+        async function fetchBlobs() {
+            try {
+                const response = await fetch('/api/list?prefix=uploads/');
+                const data = await response.json();
+                if (data.success) {
+                    blobs = data.blobs;
+                }
+                return blobs;
+            } catch (error) {
+                console.error('Error fetching blobs:', error);
+                return [];
+            }
+        }
+
+        // Upload file to Vercel Blob
+        async function uploadFile(file, isIntroVideo = false) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('filename', file.name);
+            formData.append('isIntroVideo', isIntroVideo.toString());
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Upload failed');
+                }
+                return data;
+            } catch (error) {
+                console.error('Upload error:', error);
+                throw error;
+            }
+        }
+
+        // Delete file from Vercel Blob
+        async function deleteBlob(url) {
+            try {
+                const response = await fetch('/api/delete', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url }),
+                });
+                const data = await response.json();
+                return data.success;
+            } catch (error) {
+                console.error('Delete error:', error);
+                return false;
+            }
+        }
+
         // Render gallery
         async function renderGallery() {
-            const files = await getAllFiles();
+            const files = await fetchBlobs();
             const gallery = document.getElementById('gallery');
             const gallerySection = document.getElementById('gallerySection');
 
@@ -198,36 +180,37 @@
             gallerySection.classList.remove('hidden');
             gallery.innerHTML = '';
 
-            files.forEach(file => {
-                const isVideo = file.type.startsWith('video/');
+            files.forEach((blob, index) => {
+                const filename = getFilename(blob.pathname);
+                const isVid = isVideo(blob.pathname);
                 const item = document.createElement('div');
                 item.className = 'upload-item bg-white rounded-lg overflow-hidden shadow-sm';
 
                 item.innerHTML = `
                     <div class="aspect-video bg-gray-100 relative overflow-hidden">
-                        ${isVideo
-                            ? `<video src="${file.data}" class="w-full h-full object-cover" muted></video>
+                        ${isVid
+                            ? `<video src="${blob.url}" class="w-full h-full object-cover" muted></video>
                                <div class="absolute inset-0 flex items-center justify-center">
                                    <svg class="w-12 h-12 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
                                        <path d="M8 5v14l11-7z"/>
                                    </svg>
                                </div>`
-                            : `<img src="${file.data}" class="w-full h-full object-cover" alt="${file.name}">`
+                            : `<img src="${blob.url}" class="w-full h-full object-cover" alt="${filename}">`
                         }
                     </div>
                     <div class="p-4">
-                        <p class="text-sm font-medium truncate mb-1">${file.name}</p>
-                        <p class="text-xs text-gray-400 mb-3">${formatSize(file.size)} • ${isVideo ? 'Video' : 'Image'}</p>
+                        <p class="text-sm font-medium truncate mb-1">${filename}</p>
+                        <p class="text-xs text-gray-400 mb-3">${formatSize(blob.size)} • ${isVid ? 'Video' : 'Image'}</p>
                         <div class="flex gap-2">
-                            ${isVideo ? `
-                                <button onclick="setAsIntroVideo(${file.id})" class="flex-1 bg-[#d4af37] text-white text-xs py-2 px-3 rounded hover:bg-[#b8962e] transition-colors">
+                            ${isVid ? `
+                                <button onclick="setAsIntroVideo('${blob.url}', '${filename}')" class="flex-1 bg-[#d4af37] text-white text-xs py-2 px-3 rounded hover:bg-[#b8962e] transition-colors">
                                     Set as Intro Video
                                 </button>
                             ` : ''}
-                            <button onclick="copyFileData(${file.id})" class="flex-1 border border-gray-200 text-xs py-2 px-3 rounded hover:bg-gray-50 transition-colors">
+                            <button onclick="copyUrl('${blob.url}')" class="flex-1 border border-gray-200 text-xs py-2 px-3 rounded hover:bg-gray-50 transition-colors">
                                 Copy URL
                             </button>
-                            <button onclick="removeFile(${file.id})" class="text-red-500 text-xs py-2 px-3 rounded hover:bg-red-50 transition-colors">
+                            <button onclick="removeFile('${blob.url}')" class="text-red-500 text-xs py-2 px-3 rounded hover:bg-red-50 transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                 </svg>
@@ -240,48 +223,112 @@
             });
         }
 
-        // Set video as intro video
-        async function setAsIntroVideo(id) {
-            const files = await getAllFiles();
-            const file = files.find(f => f.id === id);
-            if (file) {
-                localStorage.setItem('mobileIntroVideo', file.data);
-                localStorage.setItem('mobileIntroVideoName', file.name);
+        // Set video as intro video by re-uploading to intro-video folder
+        async function setAsIntroVideo(currentUrl, filename) {
+            try {
+                // Show loading state
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Setting...';
+                btn.disabled = true;
+
+                // Fetch the video and re-upload as intro video
+                const response = await fetch(currentUrl);
+                const videoBlob = await response.blob();
+                const file = new File([videoBlob], filename, { type: videoBlob.type });
+
+                await uploadFile(file, true);
                 alert('Video set as mobile intro! The homepage will now show this video during loading on mobile devices.');
+
+                btn.textContent = originalText;
+                btn.disabled = false;
+            } catch (error) {
+                console.error('Error setting intro video:', error);
+                alert('Error setting intro video. Please try again.');
             }
         }
 
-        // Copy file data URL
-        async function copyFileData(id) {
-            const files = await getAllFiles();
-            const file = files.find(f => f.id === id);
-            if (file) {
-                await navigator.clipboard.writeText(file.data);
-                alert('File URL copied to clipboard!');
+        // Copy URL to clipboard
+        async function copyUrl(url) {
+            try {
+                await navigator.clipboard.writeText(url);
+                alert('URL copied to clipboard!');
+            } catch (error) {
+                console.error('Error copying URL:', error);
             }
         }
 
         // Remove file
-        async function removeFile(id) {
-            if (confirm('Delete this file?')) {
-                await deleteFile(id);
-                renderGallery();
+        async function removeFile(url) {
+            if (confirm('Delete this file from cloud storage?')) {
+                const success = await deleteBlob(url);
+                if (success) {
+                    renderGallery();
+                } else {
+                    alert('Error deleting file. Please try again.');
+                }
             }
         }
 
         // Handle file upload
         async function handleFiles(files) {
+            const dropZone = document.getElementById('dropZone');
+            const originalContent = dropZone.innerHTML;
+
+            // Show uploading state
+            dropZone.innerHTML = `
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-[#d4af37] animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </div>
+                <p class="text-xl serif italic mb-2">Uploading...</p>
+                <p class="text-gray-400 text-sm">Please wait while files are uploaded</p>
+            `;
+
+            let uploadedCount = 0;
+            let errorCount = 0;
+
             for (const file of files) {
                 if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-                    await saveFile(file);
+                    try {
+                        await uploadFile(file, false);
+                        uploadedCount++;
+                    } catch (error) {
+                        errorCount++;
+                    }
                 }
             }
+
+            // Restore drop zone
+            dropZone.innerHTML = originalContent;
+
+            // Show result
+            if (errorCount > 0) {
+                alert(`Uploaded ${uploadedCount} file(s). ${errorCount} file(s) failed.`);
+            }
+
             renderGallery();
+        }
+
+        // Clear all files
+        async function clearAllFiles() {
+            const files = await fetchBlobs();
+            for (const blob of files) {
+                await deleteBlob(blob.url);
+            }
+            // Also clear intro videos
+            const introResponse = await fetch('/api/list?prefix=intro-video/');
+            const introData = await introResponse.json();
+            if (introData.success) {
+                for (const blob of introData.blobs) {
+                    await deleteBlob(blob.url);
+                }
+            }
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async () => {
-            await initDB();
             renderGallery();
 
             const dropZone = document.getElementById('dropZone');
@@ -314,10 +361,13 @@
 
             // Clear all
             document.getElementById('clearAll').addEventListener('click', async () => {
-                if (confirm('Delete all uploaded files?')) {
+                if (confirm('Delete all uploaded files from cloud storage? This cannot be undone.')) {
+                    const btn = document.getElementById('clearAll');
+                    btn.textContent = 'Deleting...';
+                    btn.disabled = true;
                     await clearAllFiles();
-                    localStorage.removeItem('mobileIntroVideo');
-                    localStorage.removeItem('mobileIntroVideoName');
+                    btn.textContent = 'Clear All';
+                    btn.disabled = false;
                     renderGallery();
                 }
             });
