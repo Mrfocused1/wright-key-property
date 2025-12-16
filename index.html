@@ -453,23 +453,23 @@
 
                 <form class="max-w-md mx-auto mt-20 text-left space-y-8" id="contact-form">
                     <div class="relative border-b border-black/20 focus-within:border-black transition-colors">
-                        <input type="text" name="name" placeholder="Your Name" class="w-full bg-transparent py-4 outline-none placeholder:text-gray-400 placeholder:italic placeholder:serif hoverable" required>
+                        <input type="text" name="name" id="form-name-input" placeholder="Your Name" class="w-full bg-transparent py-4 outline-none placeholder:text-gray-400 placeholder:italic placeholder:serif hoverable" required>
                     </div>
                     <div class="relative border-b border-black/20 focus-within:border-black transition-colors">
-                        <input type="email" name="email" placeholder="Email Address" class="w-full bg-transparent py-4 outline-none placeholder:text-gray-400 placeholder:italic placeholder:serif hoverable" required>
+                        <input type="email" name="email" id="form-email-input" placeholder="Email Address" class="w-full bg-transparent py-4 outline-none placeholder:text-gray-400 placeholder:italic placeholder:serif hoverable" required>
                     </div>
                     <div class="relative border-b border-black/20 focus-within:border-black transition-colors">
-                        <select name="enquiry_type" class="w-full bg-transparent py-4 outline-none text-gray-400 italic serif hoverable cursor-pointer" required>
+                        <select name="enquiry_type" id="form-enquiry-select" class="w-full bg-transparent py-4 outline-none text-gray-400 italic serif hoverable cursor-pointer" required>
                             <option value="" disabled selected>Enquiry Type</option>
-                            <option value="lettings" class="text-black">Enquiry for Lettings</option>
-                            <option value="investing" class="text-black">Enquiry for Investing</option>
+                            <option value="lettings" id="enquiry-option1" class="text-black">Enquiry for Lettings</option>
+                            <option value="investing" id="enquiry-option2" class="text-black">Enquiry for Investing</option>
                         </select>
                     </div>
                     <div class="relative border-b border-black/20 focus-within:border-black transition-colors">
-                        <textarea name="message" placeholder="Your Message" rows="3" class="w-full bg-transparent py-4 outline-none placeholder:text-gray-400 placeholder:italic placeholder:serif hoverable resize-none" required></textarea>
+                        <textarea name="message" id="form-message-input" placeholder="Your Message" rows="3" class="w-full bg-transparent py-4 outline-none placeholder:text-gray-400 placeholder:italic placeholder:serif hoverable resize-none" required></textarea>
                     </div>
-                    <button type="submit" class="mt-8 text-xs uppercase tracking-widest hover:text-[#d4af37] transition-colors flex items-center gap-2 group hoverable">
-                        Send Message
+                    <button type="submit" id="form-submit-btn" class="mt-8 text-xs uppercase tracking-widest hover:text-[#d4af37] transition-colors flex items-center gap-2 group hoverable">
+                        <span id="form-submit-text">Send Message</span>
                         <span class="group-hover:translate-x-2 transition-transform">→</span>
                     </button>
                 </form>
@@ -934,6 +934,33 @@
                     }
                     if (content.contact.address) {
                         document.getElementById('contact-address').innerHTML = content.contact.address.replace(/\n/g, '<br>');
+                    }
+
+                    // Form field placeholders
+                    const nameInput = document.getElementById('form-name-input');
+                    const emailInput = document.getElementById('form-email-input');
+                    const messageInput = document.getElementById('form-message-input');
+                    const submitText = document.getElementById('form-submit-text');
+                    const option1 = document.getElementById('enquiry-option1');
+                    const option2 = document.getElementById('enquiry-option2');
+
+                    if (content.contact.form_name_placeholder && nameInput) {
+                        nameInput.placeholder = content.contact.form_name_placeholder;
+                    }
+                    if (content.contact.form_email_placeholder && emailInput) {
+                        emailInput.placeholder = content.contact.form_email_placeholder;
+                    }
+                    if (content.contact.form_message_placeholder && messageInput) {
+                        messageInput.placeholder = content.contact.form_message_placeholder;
+                    }
+                    if (content.contact.form_submit_text && submitText) {
+                        submitText.textContent = content.contact.form_submit_text;
+                    }
+                    if (content.contact.enquiry_option1 && option1) {
+                        option1.textContent = content.contact.enquiry_option1;
+                    }
+                    if (content.contact.enquiry_option2 && option2) {
+                        option2.textContent = content.contact.enquiry_option2;
                     }
                 }
 
