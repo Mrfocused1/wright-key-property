@@ -1,6 +1,6 @@
 const { put, list, del } = require('@vercel/blob');
 
-const CONTENT_FILE = 'site-content.json';
+const CONTENT_PREFIX = 'site-content';
 
 module.exports = async function handler(request, response) {
   // Add cache control headers to prevent caching
@@ -11,7 +11,7 @@ module.exports = async function handler(request, response) {
   // GET - Load content
   if (request.method === 'GET') {
     try {
-      const { blobs } = await list({ prefix: CONTENT_FILE });
+      const { blobs } = await list({ prefix: CONTENT_PREFIX });
 
       if (blobs.length === 0) {
         return response.status(200).json({
@@ -20,9 +20,21 @@ module.exports = async function handler(request, response) {
         });
       }
 
-      // Fetch the content from the blob URL
-      const contentBlob = blobs[0];
-      const contentResponse = await fetch(contentBlob.url);
+      // Sort blobs by uploadedAt descending to get the most recent
+      const sortedBlobs = blobs.sort((a, b) =>
+        new Date(b.uploadedAt) - new Date(a.uploadedAt)
+      );
+
+      const contentBlob = sortedBlobs[0];
+
+      // Fetch the content from the blob URL with cache-busting
+      const blobUrl = contentBlob.url + '?t=' + Date.now();
+      const contentResponse = await fetch(blobUrl, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
       const content = await contentResponse.json();
 
       return response.status(200).json({
@@ -50,22 +62,27 @@ module.exports = async function handler(request, response) {
         });
       }
 
-      // Delete existing content file if it exists
-      try {
-        const { blobs } = await list({ prefix: CONTENT_FILE });
-        for (const blob of blobs) {
-          await del(blob.url);
-        }
-      } catch (e) {
-        // Ignore errors when deleting
-      }
-
-      // Save new content
-      const blob = await put(CONTENT_FILE, JSON.stringify(content, null, 2), {
+      // Save new content with unique filename (addRandomSuffix adds unique ID)
+      const blob = await put(CONTENT_PREFIX + '.json', JSON.stringify(content, null, 2), {
         access: 'public',
         contentType: 'application/json',
-        addRandomSuffix: false
+        addRandomSuffix: true,
+        cacheControlMaxAge: 0
       });
+
+      // Delete old content files (keep only the new one)
+      try {
+        const { blobs } = await list({ prefix: CONTENT_PREFIX });
+        for (const oldBlob of blobs) {
+          // Don't delete the blob we just created
+          if (oldBlob.url !== blob.url) {
+            await del(oldBlob.url);
+          }
+        }
+      } catch (e) {
+        // Ignore errors when deleting old files
+        console.log('Cleanup warning:', e.message);
+      }
 
       return response.status(200).json({
         success: true,
