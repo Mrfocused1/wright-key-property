@@ -845,15 +845,21 @@
 
         // --- Load Dynamic Content from Admin ---
         async function loadDynamicContent() {
+            console.log('[Public Site] Loading dynamic content...');
             try {
                 const response = await fetch('/api/content?t=' + Date.now(), {
                     cache: 'no-store'
                 });
                 const data = await response.json();
+                console.log('[Public Site] API response:', data.success, data.content ? 'has content' : 'no content');
 
-                if (!data.success || !data.content) return;
+                if (!data.success || !data.content) {
+                    console.log('[Public Site] No content to load');
+                    return;
+                }
 
                 const content = data.content;
+                console.log('[Public Site] Hero headline1 from API:', content.hero?.headline1);
 
                 // Apply visibility settings
                 if (content.visibility) {
@@ -908,7 +914,12 @@
 
                 // Hero Section
                 if (content.hero) {
-                    if (content.hero.headline1) document.getElementById('hero-headline1').textContent = content.hero.headline1;
+                    console.log('[Public Site] Updating hero section...');
+                    if (content.hero.headline1) {
+                        const el = document.getElementById('hero-headline1');
+                        console.log('[Public Site] Setting headline1 to:', content.hero.headline1, 'Element found:', !!el);
+                        if (el) el.textContent = content.hero.headline1;
+                    }
                     if (content.hero.headline2) document.getElementById('hero-headline2').textContent = content.hero.headline2;
                     if (content.hero.headline3) document.getElementById('hero-headline3').textContent = content.hero.headline3;
                     if (content.hero.subheadline) document.getElementById('hero-subheadline').textContent = content.hero.subheadline;
