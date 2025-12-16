@@ -214,7 +214,9 @@
 
     <!-- Preloader -->
     <div class="loader">
-        <div class="text-center">
+        <!-- Mobile Video Intro (hidden by default) -->
+        <video id="intro-video" class="hidden absolute inset-0 w-full h-full object-cover" muted playsinline webkit-playsinline></video>
+        <div class="text-center" id="loader-content">
             <h2 class="text-3xl font-light serif italic tracking-widest opacity-0" id="loader-text">WRIGHT KEY PROPERTY</h2>
             <div class="loader-line"></div>
         </div>
@@ -599,18 +601,70 @@
         });
 
 
-        // --- Preloader Animation ---
-        const tlLoader = gsap.timeline();
+        // --- Mobile Intro Video & Preloader Animation ---
+        const isMobile = window.innerWidth <= 768;
+        const introVideoSrc = localStorage.getItem('mobileIntroVideo');
+        const introVideo = document.getElementById('intro-video');
+        const loaderContent = document.getElementById('loader-content');
 
-        tlLoader.to('#loader-text', { opacity: 1, duration: 1, ease: "power2.out" })
-            .to('.loader-line', { width: '100%', duration: 1.5, ease: "power2.inOut" })
-            .to('#loader-text, .loader-line', { opacity: 0, duration: 0.5 })
-            .to('.loader', {
-                height: 0,
-                duration: 1,
-                ease: "expo.inOut",
-                onComplete: initSiteAnimations
+        function runDefaultLoader() {
+            const tlLoader = gsap.timeline();
+            tlLoader.to('#loader-text', { opacity: 1, duration: 1, ease: "power2.out" })
+                .to('.loader-line', { width: '100%', duration: 1.5, ease: "power2.inOut" })
+                .to('#loader-text, .loader-line', { opacity: 0, duration: 0.5 })
+                .to('.loader', {
+                    height: 0,
+                    duration: 1,
+                    ease: "expo.inOut",
+                    onComplete: initSiteAnimations
+                });
+        }
+
+        // Check for mobile intro video
+        if (isMobile && introVideoSrc && introVideo) {
+            // Hide default loader content, show video
+            loaderContent.style.display = 'none';
+            introVideo.classList.remove('hidden');
+            introVideo.src = introVideoSrc;
+            introVideo.muted = true;
+            introVideo.playsInline = true;
+
+            // Play video and close loader when done
+            introVideo.play().then(() => {
+                introVideo.addEventListener('ended', () => {
+                    gsap.to('.loader', {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => {
+                            document.querySelector('.loader').style.height = '0';
+                            initSiteAnimations();
+                        }
+                    });
+                });
+
+                // Fallback: if video is longer than 8 seconds, close anyway
+                setTimeout(() => {
+                    if (document.querySelector('.loader').style.height !== '0') {
+                        gsap.to('.loader', {
+                            opacity: 0,
+                            duration: 0.5,
+                            onComplete: () => {
+                                document.querySelector('.loader').style.height = '0';
+                                initSiteAnimations();
+                            }
+                        });
+                    }
+                }, 8000);
+            }).catch(() => {
+                // If video fails to play, run default loader
+                loaderContent.style.display = 'block';
+                introVideo.classList.add('hidden');
+                runDefaultLoader();
             });
+        } else {
+            // Run default text loader
+            runDefaultLoader();
+        }
 
 
         function initSiteAnimations() {
