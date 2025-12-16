@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "vercel": {
+      "command": "npx",
+      "args": ["@vercel/mcp@latest"]
+    }
+  }
+}
