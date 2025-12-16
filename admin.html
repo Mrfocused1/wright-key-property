@@ -1294,7 +1294,9 @@ En-Suite
         // Load content from API
         async function loadContent() {
             try {
-                const response = await fetch('/api/content');
+                const response = await fetch('/api/content?t=' + Date.now(), {
+                    cache: 'no-store'
+                });
                 const data = await response.json();
                 if (data.success && data.content) {
                     siteContent = data.content;
