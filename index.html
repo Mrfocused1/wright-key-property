@@ -687,13 +687,20 @@
 
 
         async function initSiteAnimations() {
-            // Load dynamic content FIRST before animations
-            await loadDynamicContent();
+            // Load dynamic content with timeout (don't block animations forever)
+            try {
+                await Promise.race([
+                    loadDynamicContent(),
+                    new Promise((_, reject) => setTimeout(() => reject('timeout'), 3000))
+                ]);
+            } catch (e) {
+                console.log('[Public Site] Content load timed out or failed:', e);
+            }
 
             // Try to play video again after loader finishes
             playVideo();
 
-            // Hero Text Reveal
+            // Hero Text Reveal - ALWAYS run this animation
             gsap.to('.text-reveal-inner', {
                 y: 0,
                 duration: 1.5,
