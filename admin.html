@@ -1293,17 +1293,33 @@ En-Suite
 
         // Load content from API
         async function loadContent() {
+            console.log('[Admin] Loading content...');
             try {
-                const response = await fetch('/api/content?t=' + Date.now(), {
-                    cache: 'no-store'
+                const url = '/api/content?t=' + Date.now();
+                console.log('[Admin] Fetching:', url);
+                const response = await fetch(url, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
                 });
                 const data = await response.json();
+                console.log('[Admin] Load response:', JSON.stringify(data, null, 2));
+
                 if (data.success && data.content) {
                     siteContent = data.content;
+                    console.log('[Admin] Content loaded, keys:', Object.keys(siteContent));
+                    console.log('[Admin] Hero headline1:', siteContent.hero?.headline1);
                     populateFields();
+                    console.log('[Admin] Fields populated');
+                } else if (data.success && !data.content) {
+                    console.log('[Admin] No content saved yet');
+                } else {
+                    console.error('[Admin] Load failed:', data.error);
                 }
             } catch (error) {
-                console.log('No existing content found, using defaults');
+                console.error('[Admin] Load error:', error);
             }
         }
 
@@ -1524,19 +1540,46 @@ En-Suite
         // Save all content
         async function saveAllContent() {
             updateStatus('Saving...', 'text-yellow-500');
+            console.log('[Admin] Saving content...');
 
             try {
                 const content = gatherContent();
+                console.log('[Admin] Content to save:', JSON.stringify(content, null, 2));
+                console.log('[Admin] Hero headline1 being saved:', content.hero?.headline1);
+
                 const response = await fetch('/api/content', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(content)
                 });
                 const data = await response.json();
+                console.log('[Admin] Save response:', JSON.stringify(data, null, 2));
 
                 if (data.success) {
                     siteContent = content;
-                    updateStatus('Saved', 'text-green-500');
+                    console.log('[Admin] Save successful, blob URL:', data.url);
+
+                    // Verify save by immediately reloading
+                    console.log('[Admin] Verifying save...');
+                    const verifyResponse = await fetch('/api/content?verify=' + Date.now(), {
+                        cache: 'no-store',
+                        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                    });
+                    const verifyData = await verifyResponse.json();
+                    console.log('[Admin] Verification response:', JSON.stringify(verifyData, null, 2));
+
+                    if (verifyData.success && verifyData.content) {
+                        console.log('[Admin] Verified hero headline1:', verifyData.content.hero?.headline1);
+                        if (verifyData.content.hero?.headline1 === content.hero?.headline1) {
+                            updateStatus('Saved & Verified', 'text-green-500');
+                        } else {
+                            console.warn('[Admin] Verification mismatch!');
+                            console.warn('[Admin] Saved:', content.hero?.headline1);
+                            console.warn('[Admin] Loaded:', verifyData.content.hero?.headline1);
+                            updateStatus('Saved (verify mismatch)', 'text-yellow-500');
+                        }
+                    }
+
                     setTimeout(() => {
                         updateStatus('All changes saved', 'text-gray-400');
                     }, 2000);
@@ -1544,8 +1587,9 @@ En-Suite
                     throw new Error(data.error);
                 }
             } catch (error) {
-                updateStatus('Error saving', 'text-red-500');
-                console.error('Save error:', error);
+                updateStatus('Error: ' + error.message, 'text-red-500');
+                console.error('[Admin] Save error:', error);
+                alert('Error saving content: ' + error.message);
             }
         }
 
