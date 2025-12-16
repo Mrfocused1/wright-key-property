@@ -133,6 +133,11 @@
         .text-reveal-inner {
             display: inline-block;
             transform: translateY(110%);
+            animation: fallback-reveal 0.5s ease-out 4s forwards;
+        }
+
+        @keyframes fallback-reveal {
+            to { transform: translateY(0); }
         }
 
         /* Menu Overlay */
@@ -686,11 +691,21 @@
         }
 
 
-        function initSiteAnimations() {
+        async function initSiteAnimations() {
+            // Load dynamic content with timeout (don't block animations forever)
+            try {
+                await Promise.race([
+                    loadDynamicContent(),
+                    new Promise((_, reject) => setTimeout(() => reject('timeout'), 3000))
+                ]);
+            } catch (e) {
+                // Content load timed out or failed, continue with animations
+            }
+
             // Try to play video again after loader finishes
             playVideo();
 
-            // Hero Text Reveal
+            // Hero Text Reveal - ALWAYS run this animation
             gsap.to('.text-reveal-inner', {
                 y: 0,
                 duration: 1.5,
@@ -1043,7 +1058,7 @@
                 }
 
             } catch (error) {
-                console.log('No custom content loaded, using defaults');
+                // No custom content loaded, using defaults
             }
         }
 
