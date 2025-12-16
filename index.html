@@ -686,7 +686,10 @@
         }
 
 
-        function initSiteAnimations() {
+        async function initSiteAnimations() {
+            // Load dynamic content FIRST before animations
+            await loadDynamicContent();
+
             // Try to play video again after loader finishes
             playVideo();
 
@@ -1058,8 +1061,10 @@
             }
         }
 
-        // Load dynamic content on page load
-        loadDynamicContent();
+        // Load dynamic content IMMEDIATELY on page load (before animations)
+        loadDynamicContent().then(() => {
+            console.log('[Public Site] Content loaded, ready for display');
+        });
     </script>
 </body>
 </html>
