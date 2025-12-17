@@ -230,10 +230,6 @@
                     <h1 id="hero-title" class="text-6xl md:text-8xl serif italic font-light leading-none mb-2">Property Name</h1>
                     <p id="hero-location" class="text-sm font-light tracking-widest uppercase opacity-80">Location</p>
                 </div>
-                <div class="mt-8 md:mt-0 text-right">
-                    <p class="text-3xl serif italic"><span id="hero-price">£0</span> <span class="text-xs font-sans not-italic text-white/60 uppercase tracking-widest">pcm</span></p>
-                    <p class="text-xs uppercase tracking-widest mt-2 opacity-60">Bills Included</p>
-                </div>
             </div>
         </section>
 
@@ -377,7 +373,6 @@
                 name: 'The Kensington Edit',
                 preloaderName: 'THE KENSINGTON',
                 location: 'Kensington • London W8',
-                price: '£1,450',
                 status: 'Available Now',
                 type: 'Studio Suite',
                 image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=1000&auto=format&fit=crop',
@@ -411,7 +406,6 @@
                 name: 'Shoreditch Loft',
                 preloaderName: 'SHOREDITCH LOFT',
                 location: 'Shoreditch • E1',
-                price: '£1,200',
                 status: 'Available Now',
                 type: 'Double Room',
                 image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1000&auto=format&fit=crop',
@@ -445,7 +439,6 @@
                 name: 'Chelsea Townhouse',
                 preloaderName: 'CHELSEA',
                 location: 'Chelsea • SW3',
-                price: '£1,600',
                 status: 'Available Now',
                 type: 'Master Room',
                 image: 'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1000&auto=format&fit=crop',
@@ -479,7 +472,6 @@
                 name: 'Greenwich Collection',
                 preloaderName: 'GREENWICH',
                 location: 'Greenwich • SE10',
-                price: '£1,100',
                 status: 'Available Now',
                 type: 'En-Suite Room',
                 image: 'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?q=80&w=1000&auto=format&fit=crop',
@@ -513,7 +505,6 @@
                 name: 'Hackney Warehouse',
                 preloaderName: 'HACKNEY',
                 location: 'Hackney • E8',
-                price: '£1,350',
                 status: 'Available Now',
                 type: 'Double Room',
                 image: 'https://images.unsplash.com/photo-1556020685-ae41abfc9365?q=80&w=1000&auto=format&fit=crop',
@@ -547,7 +538,6 @@
                 name: 'Islington Terrace',
                 preloaderName: 'ISLINGTON',
                 location: 'Islington • N1',
-                price: '£1,550',
                 status: 'Available Now',
                 type: 'Studio',
                 image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1000&auto=format&fit=crop',
@@ -596,7 +586,6 @@
         document.getElementById('hero-status').textContent = property.status;
         document.getElementById('hero-title').textContent = property.name;
         document.getElementById('hero-location').textContent = property.location;
-        document.getElementById('hero-price').textContent = property.price;
 
         // Update specs
         const specsSection = document.getElementById('specs-section');

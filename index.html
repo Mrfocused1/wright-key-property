@@ -668,8 +668,11 @@
             });
         }
 
-        // Check for intro video from Vercel Blob
-        if (introVideo) {
+        // Check if device is mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+        // Check for intro video from Vercel Blob (only on mobile)
+        if (introVideo && isMobile) {
             // Fetch intro video URL from API
             fetch('/api/intro-video')
                 .then(response => response.json())
@@ -685,7 +688,7 @@
                     runDefaultLoader();
                 });
         } else {
-            // Run default text loader
+            // Run default text loader (desktop or no video)
             runDefaultLoader();
         }
 
