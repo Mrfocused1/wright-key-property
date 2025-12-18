@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
     <style>
         .serif { font-family: 'Cormorant Garamond', serif; }
-        .tab-btn.active { background: #d4af37; color: white; }
+        .tab-btn.active { background: #E5A137; color: white; }
         .save-indicator { transition: all 0.3s ease; }
         .save-indicator.saving { opacity: 1; }
         .save-indicator.saved { background: #22c55e; }
@@ -66,13 +66,13 @@
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <span class="text-sm serif italic">WKP</span>
-                        <span class="text-[10px] bg-[#d4af37] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
+                        <span class="text-[10px] bg-[#E5A137] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
                     </div>
                     <a href="/" class="text-[10px] text-gray-400 hover:text-white">View Site</a>
                 </div>
                 <div class="flex items-center justify-between gap-2">
                     <span id="saveStatusMobile" class="text-[10px] text-gray-400 truncate">All changes saved</span>
-                    <button onclick="saveAllContent()" class="bg-[#d4af37] text-black px-3 py-1.5 rounded text-[10px] uppercase tracking-wider hover:bg-[#b8962e] transition-colors flex-shrink-0">
+                    <button onclick="saveAllContent()" class="bg-[#E5A137] text-black px-3 py-1.5 rounded text-[10px] uppercase tracking-wider hover:bg-[#C3892F] transition-colors flex-shrink-0">
                         Save Changes
                     </button>
                 </div>
@@ -81,11 +81,11 @@
             <div class="hidden sm:flex justify-between items-center">
                 <div class="flex items-center gap-4">
                     <a href="/" class="text-xl serif italic">Wright Key Property</a>
-                    <span class="text-xs bg-[#d4af37] px-2 py-1 rounded">ADMIN</span>
+                    <span class="text-xs bg-[#E5A137] px-2 py-1 rounded">ADMIN</span>
                 </div>
                 <div class="flex items-center gap-4">
                     <span id="saveStatus" class="text-xs text-gray-400">All changes saved</span>
-                    <button onclick="saveAllContent()" class="bg-[#d4af37] text-black px-4 py-2 rounded text-xs uppercase tracking-wider hover:bg-[#b8962e] transition-colors">
+                    <button onclick="saveAllContent()" class="bg-[#E5A137] text-black px-4 py-2 rounded text-xs uppercase tracking-wider hover:bg-[#C3892F] transition-colors">
                         Save All Changes
                     </button>
                     <a href="/" class="text-xs text-gray-400 hover:text-white transition-colors">View Site</a>
@@ -100,7 +100,7 @@
         <div class="mb-4 sm:mb-6">
             <label class="block text-xs sm:text-sm text-gray-500 mb-2">Select Page to Edit</label>
             <div class="flex flex-wrap gap-2">
-                <button class="page-btn active px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-[#d4af37] bg-[#d4af37] text-white" onclick="selectPage('home')">Home</button>
+                <button class="page-btn active px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-[#E5A137] bg-[#E5A137] text-white" onclick="selectPage('home')">Home</button>
                 <button class="page-btn px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-gray-300 bg-white text-gray-700" onclick="selectPage('coliving')">Co-Living</button>
                 <button class="page-btn px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-gray-300 bg-white text-gray-700" onclick="selectPage('investor')">Investor</button>
                 <button class="page-btn px-4 py-2 rounded-full text-xs sm:text-sm border-2 border-gray-300 bg-white text-gray-700" onclick="selectPage('search')">Search</button>
@@ -622,7 +622,7 @@ By Appointment Only</textarea>
                 <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
                     <div class="flex justify-between items-center mb-3 sm:mb-4">
                         <h3 class="text-base sm:text-lg font-medium">Form Fields</h3>
-                        <button onclick="addFormField()" class="bg-[#d4af37] text-black px-3 py-1.5 rounded text-xs hover:bg-[#b8962e] transition-colors">
+                        <button onclick="addFormField()" class="bg-[#E5A137] text-black px-3 py-1.5 rounded text-xs hover:bg-[#C3892F] transition-colors">
                             + Add Field
                         </button>
                     </div>
@@ -679,7 +679,7 @@ By Appointment Only</textarea>
 
                 <div class="mb-4 sm:mb-6">
                     <input type="file" id="mediaUploadInput" accept="image/*,video/*" class="hidden" onchange="uploadMedia(this)" multiple>
-                    <button onclick="document.getElementById('mediaUploadInput').click()" class="bg-[#d4af37] text-black px-3 sm:px-4 py-2 rounded text-xs sm:text-sm hover:bg-[#b8962e] transition-colors">
+                    <button onclick="document.getElementById('mediaUploadInput').click()" class="bg-[#E5A137] text-black px-3 sm:px-4 py-2 rounded text-xs sm:text-sm hover:bg-[#C3892F] transition-colors">
                         Upload New Media
                     </button>
                 </div>
@@ -1216,7 +1216,7 @@ En-Suite
                         <div class="mt-3 pt-3 border-t">
                             <div class="flex justify-between items-center mb-2">
                                 <span class="text-[10px] sm:text-xs text-gray-500">Options</span>
-                                <button onclick="addFieldOption(${index})" class="text-[#d4af37] text-xs hover:underline">+ Add Option</button>
+                                <button onclick="addFieldOption(${index})" class="text-[#E5A137] text-xs hover:underline">+ Add Option</button>
                             </div>
                             <div class="space-y-2">
                                 ${(field.options || []).map((opt, optIndex) => `
@@ -1235,7 +1235,7 @@ En-Suite
         // Tab switching
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active', 'bg-[#d4af37]', 'text-white'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active', 'bg-[#E5A137]', 'text-white'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.add('bg-white'));
 
             document.getElementById('tab-' + tabName).classList.remove('hidden');
@@ -1253,10 +1253,10 @@ En-Suite
 
             // Update page buttons
             document.querySelectorAll('.page-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-[#d4af37]', 'text-white', 'border-[#d4af37]');
+                btn.classList.remove('active', 'bg-[#E5A137]', 'text-white', 'border-[#E5A137]');
                 btn.classList.add('bg-white', 'text-gray-700', 'border-gray-300');
             });
-            event.target.classList.add('active', 'bg-[#d4af37]', 'text-white', 'border-[#d4af37]');
+            event.target.classList.add('active', 'bg-[#E5A137]', 'text-white', 'border-[#E5A137]');
             event.target.classList.remove('bg-white', 'text-gray-700', 'border-gray-300');
 
             // Hide all page tabs and content

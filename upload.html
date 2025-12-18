@@ -9,12 +9,12 @@
     <style>
         .serif { font-family: 'Cormorant Garamond', serif; }
         .drop-zone {
-            border: 2px dashed #d4af37;
+            border: 2px dashed #E5A137;
             transition: all 0.3s ease;
         }
         .drop-zone.dragover {
-            background: rgba(212, 175, 55, 0.1);
-            border-color: #b8962e;
+            background: rgba(229, 161, 55, 0.1);
+            border-color: #C3892F;
         }
         .upload-item {
             animation: fadeIn 0.3s ease;
@@ -45,7 +45,7 @@
             <!-- Drop Zone -->
             <div id="dropZone" class="drop-zone rounded-lg p-12 text-center cursor-pointer bg-white">
                 <div class="mb-4">
-                    <svg class="w-16 h-16 mx-auto text-[#d4af37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-16 h-16 mx-auto text-[#E5A137]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
                 </div>
@@ -203,7 +203,7 @@
                         <p class="text-xs text-gray-400 mb-3">${formatSize(blob.size)} • ${isVid ? 'Video' : 'Image'}</p>
                         <div class="flex gap-2">
                             ${isVid ? `
-                                <button onclick="setAsIntroVideo('${blob.url}', '${filename}')" class="flex-1 bg-[#d4af37] text-white text-xs py-2 px-3 rounded hover:bg-[#b8962e] transition-colors">
+                                <button onclick="setAsIntroVideo('${blob.url}', '${filename}')" class="flex-1 bg-[#E5A137] text-white text-xs py-2 px-3 rounded hover:bg-[#C3892F] transition-colors">
                                     Set as Intro Video
                                 </button>
                             ` : ''}
@@ -278,7 +278,7 @@
             // Show uploading state
             dropZone.innerHTML = `
                 <div class="mb-4">
-                    <svg class="w-16 h-16 mx-auto text-[#d4af37] animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-16 h-16 mx-auto text-[#E5A137] animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                     </svg>
                 </div>
