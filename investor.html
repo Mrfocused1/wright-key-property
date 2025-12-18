@@ -163,6 +163,68 @@
             background: #fff;
             margin-top: 20px;
         }
+
+        /* Comparison Slider Styles */
+        .comparison-slider {
+            position: relative;
+            overflow: hidden;
+            cursor: ew-resize;
+            user-select: none;
+        }
+
+        .after-image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            transform: translateX(-50%);
+            cursor: ew-resize;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .slider-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transform: translateX(-50%);
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            color: var(--color-dark);
+            transition: background-color 0.3s ease;
+        }
+
+        .comparison-slider:active .slider-button,
+        .comparison-slider:hover .slider-button {
+            background: var(--color-gold);
+            color: white;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-[#E5A137] selection:text-white">
@@ -391,77 +453,117 @@
             <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Transformation 1: Exterior -->
                 <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <div class="relative aspect-[4/3]">
-                        <img src="/assets/transformations/before1.JPG" alt="Before: Property Exterior" class="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
-                        <img src="/assets/transformations/after1.JPG" alt="After: Property Exterior" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
-                            Hover to Compare
+                    <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="0">
+                        <img src="/assets/transformations/before1.JPG" alt="Before: Property Exterior" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="after-image-container" style="clip-path: inset(0 50% 0 0);">
+                            <img src="/assets/transformations/after1.JPG" alt="After: Property Exterior" class="absolute inset-0 w-full h-full object-cover">
                         </div>
-                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs">
-                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-100 group-hover:opacity-0 transition-opacity">BEFORE</span>
-                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">AFTER</span>
+                        <div class="slider-handle" style="left: 50%;">
+                            <div class="slider-line"></div>
+                            <div class="slider-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8L22 12L18 16M6 8L2 12L6 16"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
+                            Drag to Compare
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs pointer-events-none">
+                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm">BEFORE</span>
+                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm">AFTER</span>
                         </div>
                     </div>
                     <div class="p-6 bg-white">
                         <h3 class="text-xl serif italic mb-2">Exterior Transformation</h3>
-                        <p class="text-gray-600 text-sm">Complete exterior renovation with modern finishes</p>
+                        <p class="text-gray-600 text-sm">New black windows, garage door and stone driveway</p>
                     </div>
                 </div>
 
-                <!-- Transformation 2: Kitchen -->
+                <!-- Transformation 2: Kitchen to Bathroom -->
                 <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <div class="relative aspect-[4/3]">
-                        <img src="/assets/transformations/before kitchen.JPG" alt="Before: Kitchen" class="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
-                        <img src="/assets/transformations/after 3.JPG" alt="After: Kitchen" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
-                            Hover to Compare
+                    <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="1">
+                        <img src="/assets/transformations/before kitchen.JPG" alt="Before: Dated Kitchen" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="after-image-container" style="clip-path: inset(0 50% 0 0);">
+                            <img src="/assets/transformations/after 3.JPG" alt="After: Luxury Bathroom" class="absolute inset-0 w-full h-full object-cover">
                         </div>
-                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs">
-                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-100 group-hover:opacity-0 transition-opacity">BEFORE</span>
-                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">AFTER</span>
+                        <div class="slider-handle" style="left: 50%;">
+                            <div class="slider-line"></div>
+                            <div class="slider-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8L22 12L18 16M6 8L2 12L6 16"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
+                            Drag to Compare
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs pointer-events-none">
+                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm">BEFORE</span>
+                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm">AFTER</span>
                         </div>
                     </div>
                     <div class="p-6 bg-white">
-                        <h3 class="text-xl serif italic mb-2">Kitchen Renovation</h3>
-                        <p class="text-gray-600 text-sm">Modern black matte kitchen with marble countertops</p>
+                        <h3 class="text-xl serif italic mb-2">Quality Transformations</h3>
+                        <p class="text-gray-600 text-sm">From dated spaces to luxury black marble bathroom with freestanding tub</p>
                     </div>
                 </div>
 
-                <!-- Transformation 3: Bedroom/Hallway -->
+                <!-- Transformation 3: Bedroom to Living Room -->
                 <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <div class="relative aspect-[4/3]">
-                        <img src="/assets/transformations/before bedroom.JPG" alt="Before: Bedroom" class="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
-                        <img src="/assets/transformations/after 4.JPG" alt="After: Hallway" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
-                            Hover to Compare
+                    <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="2">
+                        <img src="/assets/transformations/before bedroom.JPG" alt="Before: Old Bedroom" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="after-image-container" style="clip-path: inset(0 50% 0 0);">
+                            <img src="/assets/transformations/after 4.JPG" alt="After: Modern Living Room" class="absolute inset-0 w-full h-full object-cover">
                         </div>
-                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs">
-                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-100 group-hover:opacity-0 transition-opacity">BEFORE</span>
-                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">AFTER</span>
+                        <div class="slider-handle" style="left: 50%;">
+                            <div class="slider-line"></div>
+                            <div class="slider-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8L22 12L18 16M6 8L2 12L6 16"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
+                            Drag to Compare
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs pointer-events-none">
+                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm">BEFORE</span>
+                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm">AFTER</span>
                         </div>
                     </div>
                     <div class="p-6 bg-white">
-                        <h3 class="text-xl serif italic mb-2">Interior Spaces</h3>
-                        <p class="text-gray-600 text-sm">Elegant hallway with designer tiling and fixtures</p>
+                        <h3 class="text-xl serif italic mb-2">Complete Renovations</h3>
+                        <p class="text-gray-600 text-sm">From neglected rooms to modern living spaces with feature walls</p>
                     </div>
                 </div>
 
-                <!-- Transformation 4: Before Bed -->
+                <!-- Transformation 4: Attic Bedroom to Kitchen -->
                 <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <div class="relative aspect-[4/3]">
-                        <img src="/assets/transformations/before bed.JPG" alt="Before: Bedroom" class="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0">
-                        <img src="/assets/transformations/after5.JPG" alt="After: Bedroom" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
-                            Hover to Compare
+                    <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="3">
+                        <img src="/assets/transformations/before bed.JPG" alt="Before: Attic Bedroom" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="after-image-container" style="clip-path: inset(0 50% 0 0);">
+                            <img src="/assets/transformations/after5.JPG" alt="After: Modern Kitchen" class="absolute inset-0 w-full h-full object-cover">
                         </div>
-                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs">
-                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-100 group-hover:opacity-0 transition-opacity">BEFORE</span>
-                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">AFTER</span>
+                        <div class="slider-handle" style="left: 50%;">
+                            <div class="slider-line"></div>
+                            <div class="slider-button">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 8L22 12L18 16M6 8L2 12L6 16"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">
+                            Drag to Compare
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs pointer-events-none">
+                            <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm">BEFORE</span>
+                            <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm">AFTER</span>
                         </div>
                     </div>
                     <div class="p-6 bg-white">
-                        <h3 class="text-xl serif italic mb-2">Bedroom Upgrade</h3>
-                        <p class="text-gray-600 text-sm">Premium finishes and modern styling</p>
+                        <h3 class="text-xl serif italic mb-2">High-End Finishes</h3>
+                        <p class="text-gray-600 text-sm">From damaged spaces to luxury black kitchens with marble islands</p>
                     </div>
                 </div>
 
@@ -816,6 +918,75 @@
 
         // Initialize Lucide icons
         lucide.createIcons();
+
+        // --- Comparison Slider Functionality ---
+        function initComparisonSliders() {
+            const sliders = document.querySelectorAll('.comparison-slider');
+
+            sliders.forEach(slider => {
+                const afterContainer = slider.querySelector('.after-image-container');
+                const handle = slider.querySelector('.slider-handle');
+                let isActive = false;
+
+                function updateSlider(e) {
+                    const rect = slider.getBoundingClientRect();
+                    let x = e.clientX || (e.touches && e.touches[0].clientX);
+
+                    if (!x) return;
+
+                    x = x - rect.left;
+                    let position = (x / rect.width) * 100;
+
+                    // Clamp between 0 and 100
+                    position = Math.max(0, Math.min(100, position));
+
+                    // Update the clip path and handle position
+                    afterContainer.style.clipPath = `inset(0 ${100 - position}% 0 0)`;
+                    handle.style.left = `${position}%`;
+                }
+
+                // Mouse events
+                slider.addEventListener('mousedown', (e) => {
+                    isActive = true;
+                    updateSlider(e);
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isActive) {
+                        updateSlider(e);
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isActive = false;
+                });
+
+                // Touch events for mobile
+                slider.addEventListener('touchstart', (e) => {
+                    isActive = true;
+                    updateSlider(e);
+                }, { passive: true });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (isActive) {
+                        updateSlider(e);
+                    }
+                }, { passive: true });
+
+                document.addEventListener('touchend', () => {
+                    isActive = false;
+                });
+
+                // Optional: Update on hover/move even without clicking
+                slider.addEventListener('mousemove', (e) => {
+                    if (!isActive) return;
+                    updateSlider(e);
+                });
+            });
+        }
+
+        // Initialize sliders after page load
+        window.addEventListener('load', initComparisonSliders);
     </script>
 </body>
 </html>
