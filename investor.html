@@ -313,13 +313,6 @@
                 <h2 class="text-4xl md:text-5xl serif font-light process-header">How It Works</h2>
             </div>
 
-            <!-- Timeline Connector (Desktop) -->
-            <div class="hidden lg:block max-w-5xl mx-auto mb-8 relative">
-                <div class="absolute top-1/2 left-0 right-0 h-[2px] bg-gray-200">
-                    <div class="timeline-progress absolute top-0 left-0 h-full bg-[#E5A137]" style="width: 0%"></div>
-                </div>
-            </div>
-
             <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
                 <!-- Step 1 -->
                 <div class="process-card group hoverable bg-white p-8 rounded-2xl border border-black/5 hover:border-[#E5A137] transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 relative">
@@ -567,17 +560,6 @@
                     scrollTrigger: {
                         trigger: '#how-it-works',
                         start: "top 80%"
-                    }
-                });
-
-                // Animate timeline progress bar
-                gsap.to('.timeline-progress', {
-                    width: "100%",
-                    duration: 2,
-                    ease: "power2.inOut",
-                    scrollTrigger: {
-                        trigger: '#how-it-works',
-                        start: "top 60%"
                     }
                 });
 
