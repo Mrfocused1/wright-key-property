@@ -433,16 +433,8 @@
                     { label: 'Kitchen', value: 'Fully Equipped' },
                     { label: 'Location', value: 'Transport Links' },
                     { label: 'Management', value: 'Professional' }
-                ],
-                gallery: [
-                    '/assets/properties/harrow/image-1.jpg',
-                    '/assets/properties/harrow/image-2.jpg',
-                    '/assets/properties/harrow/image-3.jpg',
-                    '/assets/properties/harrow/image-4.jpg',
-                    '/assets/properties/harrow/image-5.jpg',
-                    '/assets/properties/harrow/image-6.jpg',
-                    '/assets/properties/harrow/image-7.jpg'
                 ]
+                // Gallery is now static HTML in the page (no array needed)
             },
             'kensington': {
                 name: 'The Kensington Edit',
@@ -686,10 +678,7 @@
             </li>
         `).join('');
 
-        // Update gallery
-        document.getElementById('gallery-1').src = property.gallery[0];
-        document.getElementById('gallery-2').src = property.gallery[1];
-        document.getElementById('gallery-3').src = property.gallery[2];
+        // Gallery is now static HTML (no JavaScript update needed)
 
         // Update enquiry form
         document.getElementById('enquiry-property-name').textContent = property.name;
