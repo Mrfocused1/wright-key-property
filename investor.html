@@ -929,6 +929,7 @@
                 let isActive = false;
 
                 function updateSlider(e) {
+                    e.preventDefault();
                     const rect = slider.getBoundingClientRect();
                     let x = e.clientX || (e.touches && e.touches[0].clientX);
 
@@ -945,43 +946,46 @@
                     handle.style.left = `${position}%`;
                 }
 
-                // Mouse events
-                slider.addEventListener('mousedown', (e) => {
+                function onMouseDown(e) {
                     isActive = true;
+                    slider.style.cursor = 'ew-resize';
                     updateSlider(e);
-                });
+                }
 
-                document.addEventListener('mousemove', (e) => {
-                    if (isActive) {
-                        updateSlider(e);
-                    }
-                });
-
-                document.addEventListener('mouseup', () => {
-                    isActive = false;
-                });
-
-                // Touch events for mobile
-                slider.addEventListener('touchstart', (e) => {
-                    isActive = true;
-                    updateSlider(e);
-                }, { passive: true });
-
-                document.addEventListener('touchmove', (e) => {
-                    if (isActive) {
-                        updateSlider(e);
-                    }
-                }, { passive: true });
-
-                document.addEventListener('touchend', () => {
-                    isActive = false;
-                });
-
-                // Optional: Update on hover/move even without clicking
-                slider.addEventListener('mousemove', (e) => {
+                function onMouseMove(e) {
                     if (!isActive) return;
                     updateSlider(e);
-                });
+                }
+
+                function onMouseUp() {
+                    isActive = false;
+                    slider.style.cursor = 'ew-resize';
+                }
+
+                function onTouchStart(e) {
+                    isActive = true;
+                    updateSlider(e);
+                }
+
+                function onTouchMove(e) {
+                    if (!isActive) return;
+                    e.preventDefault();
+                    updateSlider(e);
+                }
+
+                function onTouchEnd() {
+                    isActive = false;
+                }
+
+                // Mouse events
+                slider.addEventListener('mousedown', onMouseDown);
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+
+                // Touch events for mobile
+                slider.addEventListener('touchstart', onTouchStart, { passive: true });
+                window.addEventListener('touchmove', onTouchMove, { passive: false });
+                window.addEventListener('touchend', onTouchEnd);
             });
         }
 
