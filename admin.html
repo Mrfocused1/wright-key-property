@@ -1619,6 +1619,12 @@ En-Suite
                 document.getElementById('footer_copyright').value = siteContent.footer.copyright || '';
                 document.getElementById('footer_instagram').value = siteContent.footer.instagram || '';
             }
+
+            // Transformations
+            if (siteContent.transformations && siteContent.transformations.length > 0) {
+                transformations = siteContent.transformations;
+                renderTransformations();
+            }
         }
 
         // Gather all content from form fields
@@ -1700,7 +1706,8 @@ En-Suite
                     company: document.getElementById('footer_company').value,
                     copyright: document.getElementById('footer_copyright').value,
                     instagram: document.getElementById('footer_instagram').value
-                }
+                },
+                transformations: transformations
             };
         }
 
