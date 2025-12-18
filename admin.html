@@ -140,6 +140,7 @@
                 <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-strategy')">Strategy</button>
                 <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-metrics')">Metrics</button>
                 <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-process')">Process</button>
+                <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-transformations')">Transformations</button>
                 <button class="tab-btn px-3 sm:px-4 py-2 rounded text-xs sm:text-sm bg-white" onclick="showTab('investor-cta')">CTA Section</button>
             </div>
         </div>
@@ -1032,6 +1033,43 @@ By Appointment Only</textarea>
             </div>
         </div>
 
+        <!-- Investor Transformations Gallery -->
+        <div id="tab-investor-transformations" class="tab-content hidden">
+            <div class="bg-white rounded-lg p-4 sm:p-6 shadow-sm mb-4 sm:mb-6">
+                <div class="section-header mb-4 sm:mb-6">
+                    <h2 class="text-xl sm:text-2xl serif italic">Transformation Gallery</h2>
+                    <button onclick="addTransformation()" class="bg-[#E5A137] text-white px-4 py-2 rounded text-xs sm:text-sm hover:bg-[#C3892F] transition-colors">
+                        + Add Transformation
+                    </button>
+                </div>
+                <p class="text-gray-500 text-sm mb-6">Manage before/after transformation images and videos for the investor page gallery.</p>
+
+                <!-- Section Header Settings -->
+                <div class="border-b pb-6 mb-6">
+                    <h3 class="text-lg font-medium mb-4">Section Header</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5">Section Label</label>
+                            <input type="text" id="transformations_label" class="w-full border rounded px-3 py-2 text-sm" value="Our Work">
+                        </div>
+                        <div>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5">Section Title</label>
+                            <input type="text" id="transformations_title" class="w-full border rounded px-3 py-2 text-sm" value="Transformation Gallery">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label class="block text-xs sm:text-sm font-medium mb-1.5">Section Description</label>
+                        <textarea id="transformations_desc" class="w-full border rounded px-3 py-2 text-sm" rows="2">See how we transform dated properties into premium rental investments through strategic renovations and luxury finishes.</textarea>
+                    </div>
+                </div>
+
+                <!-- Transformations List -->
+                <div id="transformationsList" class="space-y-6">
+                    <!-- Transformation items will be rendered here -->
+                </div>
+            </div>
+        </div>
+
         <!-- ==================== SEARCH PAGE SECTIONS ==================== -->
 
         <!-- Search Hero -->
@@ -1101,6 +1139,159 @@ En-Suite
         // Content storage
         let siteContent = {};
         let currentPage = 'home';
+
+        // Transformations storage
+        let transformations = [
+            { type: 'comparison', beforeUrl: '/assets/transformations/before1.JPG', afterUrl: '/assets/transformations/after1.JPG', title: 'Exterior Transformation', description: 'New black windows, garage door and stone driveway' },
+            { type: 'comparison', beforeUrl: '/assets/transformations/before kitchen.JPG', afterUrl: '/assets/transformations/after 3.JPG', title: 'Quality Transformations', description: 'From dated spaces to luxury black marble bathroom with freestanding tub' },
+            { type: 'comparison', beforeUrl: '/assets/transformations/before bedroom.JPG', afterUrl: '/assets/transformations/after 4.JPG', title: 'Complete Renovations', description: 'From neglected rooms to modern living spaces with feature walls' },
+            { type: 'comparison', beforeUrl: '/assets/transformations/before bed.JPG', afterUrl: '/assets/transformations/after5.JPG', title: 'High-End Finishes', description: 'From damaged spaces to luxury black kitchens with marble islands' },
+            { type: 'video', videoUrl: '/assets/transformations/after flat 1.MOV', title: 'Completed Property Tour', description: 'Full walkthrough of finished flat' },
+            { type: 'video', videoUrl: '/assets/transformations/after flat 2.MOV', title: 'Property Showcase', description: 'Luxury living spaces ready for tenants' },
+            { type: 'video', videoUrl: '/assets/transformations/after roomm.MOV', title: 'Room Transformation', description: 'Modern finishes and premium details' }
+        ];
+
+        // Add a new transformation
+        function addTransformation() {
+            transformations.push({
+                type: 'comparison',
+                beforeUrl: '',
+                afterUrl: '',
+                title: 'New Transformation',
+                description: 'Description here'
+            });
+            renderTransformations();
+        }
+
+        // Remove a transformation
+        function removeTransformation(index) {
+            if (confirm('Remove this transformation?')) {
+                transformations.splice(index, 1);
+                renderTransformations();
+            }
+        }
+
+        // Update transformation property
+        function updateTransformationProp(index, prop, value) {
+            transformations[index][prop] = value;
+            if (prop === 'type') {
+                // Reset URLs when changing type
+                if (value === 'video') {
+                    transformations[index].videoUrl = transformations[index].afterUrl || '';
+                    delete transformations[index].beforeUrl;
+                    delete transformations[index].afterUrl;
+                } else {
+                    transformations[index].beforeUrl = '';
+                    transformations[index].afterUrl = transformations[index].videoUrl || '';
+                    delete transformations[index].videoUrl;
+                }
+                renderTransformations();
+            }
+        }
+
+        // Upload transformation image
+        async function uploadTransformationImage(index, field, input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('filename', file.name);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    transformations[index][field] = data.url;
+                    renderTransformations();
+                } else {
+                    alert('Upload failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Upload failed. Please try again.');
+            }
+        }
+
+        // Render all transformations
+        function renderTransformations() {
+            const container = document.getElementById('transformationsList');
+            if (!container) return;
+
+            container.innerHTML = transformations.map((item, index) => `
+                <div class="p-4 border rounded bg-gray-50">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-sm font-medium text-gray-700">Transformation ${index + 1}</span>
+                        <div class="flex gap-2">
+                            <select onchange="updateTransformationProp(${index}, 'type', this.value)" class="border rounded px-2 py-1 text-xs">
+                                <option value="comparison" ${item.type === 'comparison' ? 'selected' : ''}>Before/After Comparison</option>
+                                <option value="video" ${item.type === 'video' ? 'selected' : ''}>Video Only</option>
+                            </select>
+                            <button onclick="removeTransformation(${index})" class="text-red-500 text-xs hover:underline">Remove</button>
+                        </div>
+                    </div>
+
+                    ${item.type === 'comparison' ? `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Before Image</label>
+                            <div class="flex items-center gap-2">
+                                <div class="w-24 h-16 bg-gray-200 rounded overflow-hidden flex-shrink-0">
+                                    ${item.beforeUrl ? `<img src="${item.beforeUrl}" class="w-full h-full object-cover">` : '<span class="text-gray-400 text-xs flex items-center justify-center h-full">No image</span>'}
+                                </div>
+                                <div class="flex-1">
+                                    <input type="file" id="before_${index}" accept="image/*,video/*" class="hidden" onchange="uploadTransformationImage(${index}, 'beforeUrl', this)">
+                                    <button onclick="document.getElementById('before_${index}').click()" class="bg-gray-200 px-3 py-1.5 rounded text-xs hover:bg-gray-300 w-full mb-1">Upload</button>
+                                    <input type="text" value="${item.beforeUrl || ''}" onchange="updateTransformationProp(${index}, 'beforeUrl', this.value)" placeholder="Or paste URL..." class="w-full border rounded px-2 py-1 text-xs">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">After Image</label>
+                            <div class="flex items-center gap-2">
+                                <div class="w-24 h-16 bg-gray-200 rounded overflow-hidden flex-shrink-0">
+                                    ${item.afterUrl ? `<img src="${item.afterUrl}" class="w-full h-full object-cover">` : '<span class="text-gray-400 text-xs flex items-center justify-center h-full">No image</span>'}
+                                </div>
+                                <div class="flex-1">
+                                    <input type="file" id="after_${index}" accept="image/*,video/*" class="hidden" onchange="uploadTransformationImage(${index}, 'afterUrl', this)">
+                                    <button onclick="document.getElementById('after_${index}').click()" class="bg-gray-200 px-3 py-1.5 rounded text-xs hover:bg-gray-300 w-full mb-1">Upload</button>
+                                    <input type="text" value="${item.afterUrl || ''}" onchange="updateTransformationProp(${index}, 'afterUrl', this.value)" placeholder="Or paste URL..." class="w-full border rounded px-2 py-1 text-xs">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    ` : `
+                    <div class="mb-4">
+                        <label class="block text-xs text-gray-500 mb-1">Video</label>
+                        <div class="flex items-center gap-2">
+                            <div class="w-24 h-16 bg-black rounded overflow-hidden flex-shrink-0 flex items-center justify-center">
+                                ${item.videoUrl ? `<video src="${item.videoUrl}" class="w-full h-full object-cover"></video>` : '<span class="text-gray-500 text-xs">No video</span>'}
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="video_${index}" accept="video/*" class="hidden" onchange="uploadTransformationImage(${index}, 'videoUrl', this)">
+                                <button onclick="document.getElementById('video_${index}').click()" class="bg-gray-200 px-3 py-1.5 rounded text-xs hover:bg-gray-300 w-full mb-1">Upload Video</button>
+                                <input type="text" value="${item.videoUrl || ''}" onchange="updateTransformationProp(${index}, 'videoUrl', this.value)" placeholder="Or paste URL..." class="w-full border rounded px-2 py-1 text-xs">
+                            </div>
+                        </div>
+                    </div>
+                    `}
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Title</label>
+                            <input type="text" value="${item.title}" onchange="updateTransformationProp(${index}, 'title', this.value)" class="w-full border rounded px-2 py-1.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">Description</label>
+                            <input type="text" value="${item.description}" onchange="updateTransformationProp(${index}, 'description', this.value)" class="w-full border rounded px-2 py-1.5 text-sm">
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
 
         // Dynamic form fields storage
         let formFields = [
@@ -1778,6 +1969,7 @@ En-Suite
         document.addEventListener('DOMContentLoaded', () => {
             loadContent();
             renderFormFields();
+            renderTransformations();
         });
     </script>
 </body>
