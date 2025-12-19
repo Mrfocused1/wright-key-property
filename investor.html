@@ -443,14 +443,14 @@
         <!-- Before & After Transformations -->
         <section class="py-20 md:py-32 px-6 md:px-20 bg-white border-t border-black/5">
             <div class="text-center mb-12 md:mb-20">
-                <span class="text-xs text-[#E5A137] uppercase tracking-widest block mb-4">Our Work</span>
-                <h2 class="text-4xl md:text-5xl serif font-light mb-6">Transformation Gallery</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
+                <span id="transformations-label" class="text-xs text-[#E5A137] uppercase tracking-widest block mb-4">Our Work</span>
+                <h2 id="transformations-title" class="text-4xl md:text-5xl serif font-light mb-6">Transformation Gallery</h2>
+                <p id="transformations-desc" class="text-gray-600 max-w-2xl mx-auto">
                     See how we transform dated properties into premium rental investments through strategic renovations and luxury finishes.
                 </p>
             </div>
 
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="transformationsGrid" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Transformation 1: Exterior -->
                 <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                     <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="0">
@@ -815,6 +815,78 @@
     <!-- Scripts -->
     <script>
         gsap.registerPlugin(ScrollTrigger);
+
+        // --- Load Transformations from API ---
+        async function loadTransformations() {
+            try {
+                const response = await fetch('/api/content?t=' + Date.now());
+                const data = await response.json();
+                if (data.success && data.content && data.content.transformations) {
+                    renderTransformations(data.content.transformations);
+                }
+            } catch (error) {
+                console.log('Using default transformations');
+            }
+        }
+
+        function renderTransformations(transformations) {
+            const grid = document.getElementById('transformationsGrid');
+            if (!grid || !transformations || transformations.length === 0) return;
+
+            grid.innerHTML = transformations.map((item, index) => {
+                if (item.type === 'video') {
+                    return `
+                        <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                            <div class="relative aspect-[4/3] bg-black">
+                                <video src="${item.videoUrl}" class="w-full h-full object-cover" loop muted playsinline preload="metadata" onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;"></video>
+                                <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">Hover to Play</div>
+                                <div class="absolute inset-0 flex items-center justify-center opacity-100 group-hover:opacity-0 transition-opacity pointer-events-none">
+                                    <div class="w-16 h-16 rounded-full bg-[#E5A137]/90 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-6 bg-white">
+                                <h3 class="text-xl serif italic mb-2">${item.title}</h3>
+                                <p class="text-gray-600 text-sm">${item.description}</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                            <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="${index}">
+                                <img src="${item.beforeUrl}" alt="Before" class="absolute inset-0 w-full h-full object-cover">
+                                <div class="after-image-container" style="clip-path: inset(0 50% 0 0);">
+                                    <img src="${item.afterUrl}" alt="After" class="absolute inset-0 w-full h-full object-cover">
+                                </div>
+                                <div class="slider-handle" style="left: 50%;">
+                                    <div class="slider-line"></div>
+                                    <div class="slider-button">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8L22 12L18 16M6 8L2 12L6 16"/></svg>
+                                    </div>
+                                </div>
+                                <div class="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 text-xs uppercase tracking-widest rounded-full">Drag to Compare</div>
+                                <div class="absolute bottom-4 left-4 right-4 flex justify-between text-xs pointer-events-none">
+                                    <span class="bg-gray-900/80 text-white px-3 py-1 rounded-full backdrop-blur-sm">BEFORE</span>
+                                    <span class="bg-[#E5A137]/90 text-white px-3 py-1 rounded-full backdrop-blur-sm">AFTER</span>
+                                </div>
+                            </div>
+                            <div class="p-6 bg-white">
+                                <h3 class="text-xl serif italic mb-2">${item.title}</h3>
+                                <p class="text-gray-600 text-sm">${item.description}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+
+            // Re-initialize comparison sliders after rendering
+            initComparisonSliders();
+        }
+
+        // Load transformations on page load
+        loadTransformations();
 
         // --- Custom Cursor (Desktop only) ---
         const cursorDot = document.querySelector('.cursor-dot');
