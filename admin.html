@@ -543,15 +543,15 @@ Guaranteed Rent Options</textarea>
                 </div>
 
                 <div class="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
-                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Before/After Images</h3>
+                    <h3 class="text-base sm:text-lg font-medium mb-3 sm:mb-4">Before/After Media (Images or Videos)</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Before Image</label>
-                            <div id="beforeImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                                <span class="text-gray-400 text-xs sm:text-sm">No image</span>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Before Media</label>
+                            <div id="beforeImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2 overflow-hidden">
+                                <span class="text-gray-400 text-xs sm:text-sm">No media</span>
                             </div>
                             <div class="flex gap-2 mb-2">
-                                <input type="file" id="beforeImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'before')">
+                                <input type="file" id="beforeImageInput" accept="image/*,video/*" class="hidden" onchange="uploadSourcingImage(this, 'before')">
                                 <button onclick="document.getElementById('beforeImageInput').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                                 <button onclick="removeSourcingImage('before')" class="text-red-500 text-xs hover:underline">Remove</button>
                             </div>
@@ -561,12 +561,12 @@ Guaranteed Rent Options</textarea>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">After Image</label>
-                            <div id="afterImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2">
-                                <span class="text-gray-400 text-xs sm:text-sm">No image</span>
+                            <label class="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">After Media</label>
+                            <div id="afterImagePreview" class="w-full h-36 sm:h-48 bg-gray-200 rounded flex items-center justify-center mb-2 overflow-hidden">
+                                <span class="text-gray-400 text-xs sm:text-sm">No media</span>
                             </div>
                             <div class="flex gap-2 mb-2">
-                                <input type="file" id="afterImageInput" accept="image/*" class="hidden" onchange="uploadSourcingImage(this, 'after')">
+                                <input type="file" id="afterImageInput" accept="image/*,video/*" class="hidden" onchange="uploadSourcingImage(this, 'after')">
                                 <button onclick="document.getElementById('afterImageInput').click()" class="bg-black text-white px-3 py-1.5 rounded text-xs">Upload</button>
                                 <button onclick="removeSourcingImage('after')" class="text-red-500 text-xs hover:underline">Remove</button>
                             </div>
@@ -1140,6 +1140,23 @@ En-Suite
         let siteContent = {};
         let currentPage = 'home';
 
+        // Helper function to check if URL is a video
+        function isVideoUrl(url) {
+            if (!url) return false;
+            const videoExtensions = ['.mp4', '.mov', '.webm', '.avi', '.mkv', '.m4v'];
+            const lowerUrl = url.toLowerCase();
+            return videoExtensions.some(ext => lowerUrl.includes(ext));
+        }
+
+        // Helper function to render media (image or video)
+        function renderMediaPreview(url, className = 'w-full h-full object-cover') {
+            if (!url) return '<span class="text-gray-400 text-xs flex items-center justify-center h-full">No media</span>';
+            if (isVideoUrl(url)) {
+                return `<video src="${url}" class="${className}" muted playsinline></video>`;
+            }
+            return `<img src="${url}" class="${className}">`;
+        }
+
         // Transformations storage
         let transformations = [
             { type: 'comparison', beforeUrl: '/assets/transformations/before1.JPG', afterUrl: '/assets/transformations/after1.JPG', title: 'Exterior Transformation', description: 'New black windows, garage door and stone driveway' },
@@ -1241,10 +1258,10 @@ En-Suite
                     ${item.type === 'comparison' ? `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">Before Image</label>
+                            <label class="block text-xs text-gray-500 mb-1">Before Media (Image or Video)</label>
                             <div class="flex items-center gap-2">
                                 <div class="w-24 h-16 bg-gray-200 rounded overflow-hidden flex-shrink-0">
-                                    ${item.beforeUrl ? `<img src="${item.beforeUrl}" class="w-full h-full object-cover">` : '<span class="text-gray-400 text-xs flex items-center justify-center h-full">No image</span>'}
+                                    ${renderMediaPreview(item.beforeUrl)}
                                 </div>
                                 <div class="flex-1">
                                     <input type="file" id="before_${index}" accept="image/*,video/*" class="hidden" onchange="uploadTransformationImage(${index}, 'beforeUrl', this)">
@@ -1254,10 +1271,10 @@ En-Suite
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs text-gray-500 mb-1">After Image</label>
+                            <label class="block text-xs text-gray-500 mb-1">After Media (Image or Video)</label>
                             <div class="flex items-center gap-2">
                                 <div class="w-24 h-16 bg-gray-200 rounded overflow-hidden flex-shrink-0">
-                                    ${item.afterUrl ? `<img src="${item.afterUrl}" class="w-full h-full object-cover">` : '<span class="text-gray-400 text-xs flex items-center justify-center h-full">No image</span>'}
+                                    ${renderMediaPreview(item.afterUrl)}
                                 </div>
                                 <div class="flex-1">
                                     <input type="file" id="after_${index}" accept="image/*,video/*" class="hidden" onchange="uploadTransformationImage(${index}, 'afterUrl', this)">
@@ -1591,10 +1608,16 @@ En-Suite
                 document.getElementById('sourcing_description').value = siteContent.sourcing.description || '';
                 document.getElementById('sourcing_button_text').value = siteContent.sourcing.button_text || '';
                 if (siteContent.sourcing.before_image) {
-                    document.getElementById('beforeImagePreview').innerHTML = `<img src="${siteContent.sourcing.before_image}" class="w-full h-full object-cover rounded">`;
+                    const beforeMedia = isVideoUrl(siteContent.sourcing.before_image)
+                        ? `<video src="${siteContent.sourcing.before_image}" class="w-full h-full object-cover rounded" muted playsinline></video>`
+                        : `<img src="${siteContent.sourcing.before_image}" class="w-full h-full object-cover rounded">`;
+                    document.getElementById('beforeImagePreview').innerHTML = beforeMedia;
                 }
                 if (siteContent.sourcing.after_image) {
-                    document.getElementById('afterImagePreview').innerHTML = `<img src="${siteContent.sourcing.after_image}" class="w-full h-full object-cover rounded">`;
+                    const afterMedia = isVideoUrl(siteContent.sourcing.after_image)
+                        ? `<video src="${siteContent.sourcing.after_image}" class="w-full h-full object-cover rounded" muted playsinline></video>`
+                        : `<img src="${siteContent.sourcing.after_image}" class="w-full h-full object-cover rounded">`;
+                    document.getElementById('afterImagePreview').innerHTML = afterMedia;
                 }
             }
 

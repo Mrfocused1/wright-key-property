@@ -816,6 +816,23 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
+        // --- Helper function to check if URL is a video ---
+        function isVideoUrl(url) {
+            if (!url) return false;
+            const videoExtensions = ['.mp4', '.mov', '.webm', '.avi', '.mkv', '.m4v'];
+            const lowerUrl = url.toLowerCase();
+            return videoExtensions.some(ext => lowerUrl.includes(ext));
+        }
+
+        // --- Helper function to render media (image or video) ---
+        function renderMedia(url, altText, className = 'absolute inset-0 w-full h-full object-cover') {
+            if (!url) return '';
+            if (isVideoUrl(url)) {
+                return `<video src="${url}" class="${className}" loop muted playsinline preload="metadata"></video>`;
+            }
+            return `<img src="${url}" alt="${altText}" class="${className}">`;
+        }
+
         // --- Load Transformations from API ---
         async function loadTransformations() {
             try {
@@ -856,9 +873,9 @@
                     return `
                         <div class="group hoverable relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                             <div class="relative aspect-[4/3] bg-gray-100 comparison-slider" data-index="${index}">
-                                <img src="${item.beforeUrl}" alt="Before" class="absolute inset-0 w-full h-full object-cover">
+                                ${renderMedia(item.beforeUrl, 'Before')}
                                 <div class="after-image-container" style="clip-path: inset(0 50% 0 0);">
-                                    <img src="${item.afterUrl}" alt="After" class="absolute inset-0 w-full h-full object-cover">
+                                    ${renderMedia(item.afterUrl, 'After')}
                                 </div>
                                 <div class="slider-handle" style="left: 50%;">
                                     <div class="slider-line"></div>
