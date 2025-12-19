@@ -1198,13 +1198,20 @@ En-Suite
             if (prop === 'type') {
                 // Reset URLs when changing type
                 if (value === 'video') {
-                    transformations[index].videoUrl = transformations[index].afterUrl || '';
+                    transformations[index].videoUrl = transformations[index].mediaUrl || transformations[index].afterUrl || '';
                     delete transformations[index].beforeUrl;
                     delete transformations[index].afterUrl;
-                } else {
-                    transformations[index].beforeUrl = '';
-                    transformations[index].afterUrl = transformations[index].videoUrl || '';
+                    delete transformations[index].mediaUrl;
+                } else if (value === 'single') {
+                    transformations[index].mediaUrl = transformations[index].videoUrl || transformations[index].afterUrl || transformations[index].beforeUrl || '';
+                    delete transformations[index].beforeUrl;
+                    delete transformations[index].afterUrl;
                     delete transformations[index].videoUrl;
+                } else if (value === 'comparison') {
+                    transformations[index].beforeUrl = transformations[index].mediaUrl || transformations[index].videoUrl || '';
+                    transformations[index].afterUrl = '';
+                    delete transformations[index].videoUrl;
+                    delete transformations[index].mediaUrl;
                 }
                 renderTransformations();
             }
@@ -1249,6 +1256,7 @@ En-Suite
                         <div class="flex gap-2">
                             <select onchange="updateTransformationProp(${index}, 'type', this.value)" class="border rounded px-2 py-1 text-xs">
                                 <option value="comparison" ${item.type === 'comparison' ? 'selected' : ''}>Before/After Comparison</option>
+                                <option value="single" ${item.type === 'single' ? 'selected' : ''}>Single Media</option>
                                 <option value="video" ${item.type === 'video' ? 'selected' : ''}>Video Only</option>
                             </select>
                             <button onclick="removeTransformation(${index})" class="text-red-500 text-xs hover:underline">Remove</button>
@@ -1281,6 +1289,20 @@ En-Suite
                                     <button onclick="document.getElementById('after_${index}').click()" class="bg-gray-200 px-3 py-1.5 rounded text-xs hover:bg-gray-300 w-full mb-1">Upload</button>
                                     <input type="text" value="${item.afterUrl || ''}" onchange="updateTransformationProp(${index}, 'afterUrl', this.value)" placeholder="Or paste URL..." class="w-full border rounded px-2 py-1 text-xs">
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    ` : item.type === 'single' ? `
+                    <div class="mb-4">
+                        <label class="block text-xs text-gray-500 mb-1">Media (Image or Video)</label>
+                        <div class="flex items-center gap-2">
+                            <div class="w-24 h-16 bg-gray-200 rounded overflow-hidden flex-shrink-0">
+                                ${renderMediaPreview(item.mediaUrl)}
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="media_${index}" accept="image/*,video/*" class="hidden" onchange="uploadTransformationImage(${index}, 'mediaUrl', this)">
+                                <button onclick="document.getElementById('media_${index}').click()" class="bg-gray-200 px-3 py-1.5 rounded text-xs hover:bg-gray-300 w-full mb-1">Upload Media</button>
+                                <input type="text" value="${item.mediaUrl || ''}" onchange="updateTransformationProp(${index}, 'mediaUrl', this.value)" placeholder="Or paste URL..." class="w-full border rounded px-2 py-1 text-xs">
                             </div>
                         </div>
                     </div>
